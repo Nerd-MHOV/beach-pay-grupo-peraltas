@@ -4,7 +4,15 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Dumbbell, LayoutDashboard, LogOut, Menu } from "lucide-react";
+import {
+  Dumbbell,
+  HandCoins,
+  LayoutDashboard,
+  LogOut,
+  MapPinned,
+  Menu,
+  Trophy,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { deleteSession } from "@/lib/session";
 
@@ -15,13 +23,28 @@ const links = [
     title: "Home",
   },
   {
-    link: "/athletes",
+    link: "/panel/athletes",
     icon: Dumbbell,
     title: "Atletas",
   },
+  {
+    link: "/panel/investiments",
+    icon: HandCoins,
+    title: "Investimentos",
+  },
+  {
+    link: "/panel/tournaments",
+    icon: Trophy,
+    title: "Torneios",
+  },
+  {
+    link: "/panel/arenas",
+    icon: MapPinned,
+    title: "Arenas",
+  },
 ];
 
-const Sidebar = ({ hasPendency }: { hasPendency: boolean }) => {
+const Sidebar = () => {
   const { activeSidebar, dispatch } = useSidebar();
   const pathname = usePathname();
 
@@ -80,9 +103,6 @@ const Sidebar = ({ hasPendency }: { hasPendency: boolean }) => {
               >
                 <span className="relative ml-4">
                   <link.icon className="ml-1" width={22} height={22} />
-                  {hasPendency && link.link === "/panel/orders" && (
-                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full z-50"></span>
-                  )}
                 </span>
                 <span className="py-3 ml-2 whitespace-normal text-lg">
                   {link.title}
@@ -104,7 +124,7 @@ const Sidebar = ({ hasPendency }: { hasPendency: boolean }) => {
           </li>
         </ul>
         <span
-          className="flex text-panelWhite sm:hidden h-14 w-14 top-0 absolute right-0 items-center justify-center cursor-pointer transition-all duration-500"
+          className="flex text-white sm:hidden h-14 w-14 top-0 absolute right-0 items-center justify-center cursor-pointer transition-all duration-500"
           onClick={() => dispatch!({ type: "TOGGLE" })}
         >
           <Menu height={25} width={25} />

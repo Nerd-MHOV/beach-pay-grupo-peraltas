@@ -14,8 +14,8 @@ datasource db {
 }
 
 enum UserRole {
-  ADMIN
-  USER
+  admin
+  user
 }
 
 model User {
@@ -24,8 +24,98 @@ model User {
   user   String   @unique
   passwd String
   email  String
-  role   UserRole @default(USER)
+  role   UserRole @default(user)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Athlete {
+  id          String   @id @default(cuid())
+  name        String
+  birthday    DateTime
+  phone       String
+  responsible String?
+  startDate   DateTime
+  pixKey      String
+
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+  investiments              Investiment[]
+  investiment_group_athlete InvestimentGroup[] @relation("athlete_investiment_group")
+  investiment_group_pair    InvestimentGroup[] @relation("pair_investiment_group")
+}
+
+model Investiment {
+  id                 String   @id @default(cuid())
+  invetimentTypeId   String
+  athleteId          String
+  value              Float
+  description        String
+  date               DateTime
+  investimentGroupId String?
+
+  athlete           Athlete           @relation(fields: [athleteId], references: [id])
+  investimentTypeId InvestimentType   @relation(fields: [invetimentTypeId], references: [id])
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  investimentGroup  InvestimentGroup? @relation(fields: [investimentGroupId], references: [id])
+}
+
+model InvestimentType {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  canSee      UserRole[]
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  investiments Investiment[]
+}
+
+model InvestimentGroup {
+  id           String  @id @default(cuid())
+  athleteId    String
+  pairId       String?
+  tournamentId String?
+  podium       String?
+  description  String?
+  pairAmount   Int?
+  km           Float?
+  km_racional  Float?
+
+  investiments Investiment[]
+  athlete      Athlete       @relation(fields: [athleteId], references: [id], name: "athlete_investiment_group")
+  pair         Athlete?      @relation(fields: [pairId], references: [id], name: "pair_investiment_group")
+  tournament   Tournament?   @relation(fields: [tournamentId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Arena {
+  id   String @id @default(cuid())
+  name String
+  city String
+
+  tournaments Tournament[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([name, city])
+}
+
+model Tournament {
+  id          String   @id @default(cuid())
+  name        String
+  fromDate    DateTime
+  toDate      DateTime
+  description String?
+  arenaId     String
+
+  arena            Arena              @relation(fields: [arenaId], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  investimentGroup InvestimentGroup[]
+
+  @@unique([name, arenaId, fromDate, toDate])
 }

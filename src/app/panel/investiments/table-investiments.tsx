@@ -1,0 +1,30 @@
+"use client";
+
+import { InvestimentType } from "@prisma/client";
+import { getInvestiments } from "./actions";
+import LoadingData from "@/components/LoadingData";
+import { DataTable } from "@/components/ui/data-table";
+import { columns } from "./columns";
+import { useQuery } from "@tanstack/react-query";
+
+const TableInvestiments = ({
+  invetiments,
+}: {
+  invetiments: InvestimentType[];
+}) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["investiments-type"],
+    queryFn: getInvestiments,
+    initialData: invetiments,
+  });
+
+  if (isLoading) return <LoadingData message="Buscando Investimentos" />;
+
+  return (
+    <div className="bg-white p-7 rounded-xl shadow-lg">
+      <DataTable columns={columns} data={data} />
+    </div>
+  );
+};
+
+export default TableInvestiments;

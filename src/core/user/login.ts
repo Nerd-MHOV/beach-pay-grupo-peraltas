@@ -1,17 +1,17 @@
 "use server";
 
 import { compare } from "bcryptjs";
-import db from "../db";
+import db from "../infra/db/db";
 
 const login = async (data: { user: string; passwd: string }) => {
   try {
-    const dUser = await db.user.getByUser({ user: data.user });
+    const dUser = await db.user.findUnique({ where: { user: data.user } });
     if (!dUser) throw new Error("Usuário ou Senha não conferem!");
-    const passwdMatch = await compare(data.passwd, dUser.user.passwd);
+    const passwdMatch = await compare(data.passwd, dUser.passwd);
     if (!passwdMatch) throw new Error("Usuário ou Senha não conferem!");
     return {
       user: {
-        id: dUser.user.id,
+        id: dUser.id,
       },
     };
   } catch {

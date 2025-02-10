@@ -1,7 +1,8 @@
+import LoadingData from "@/components/LoadingData";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { SidebarContextProvider } from "@/context/sidebar.context";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -10,7 +11,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <Sidebar />
         <div className="w-full max-h-screen overflow-auto transition-all duration-300">
           <Navbar />
-          {children}
+          <Suspense fallback={<LoadingData />}>{children}</Suspense>
         </div>
       </main>
     </SidebarContextProvider>

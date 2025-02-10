@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import dbUser from "./user.db";
 
 const prismaClientSingleton = () => {
   return new PrismaClient();
@@ -10,8 +9,5 @@ declare const globalThis: {
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
 
-const db = {
-  user: dbUser(prisma),
-};
-
+const db = prisma;
 export default db;
