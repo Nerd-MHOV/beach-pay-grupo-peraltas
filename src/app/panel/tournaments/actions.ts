@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db/db";
+import db from "@/core/infra/db";
 import { Tournament } from "@prisma/client";
 
 export async function createTournament(

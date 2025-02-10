@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db/db";
+import db from "@/core/infra/db";
 import { Arena } from "@prisma/client";
 
 export async function getArenas(): Promise<Arena[]> {

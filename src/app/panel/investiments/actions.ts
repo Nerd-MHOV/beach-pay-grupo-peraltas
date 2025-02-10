@@ -1,5 +1,5 @@
 "use server";
-import db from "@/core/infra/db/db";
+import db from "@/core/infra/db";
 import { InvestimentType } from "@prisma/client";
 
 export async function createInvestimentType(
@@ -11,5 +11,9 @@ export async function createInvestimentType(
 }
 
 export async function getInvestiments() {
-  return await db.investimentType.findMany();
+  return await db.investimentType.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
 }

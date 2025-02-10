@@ -29,9 +29,17 @@ export const columns: ColumnDef<InvestimentType>[] = [
     // },
   },
   {
+    accessorKey: "canSee",
+    header: "Visível para",
+    cell: ({ row }) => {
+      const canSee = row.original.canSee;
+      return <span>{canSee.join(", ")}</span>;
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({}) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

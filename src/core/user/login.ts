@@ -1,7 +1,7 @@
 "use server";
 
 import { compare } from "bcryptjs";
-import db from "../infra/db/db";
+import db from "../infra/db";
 
 const login = async (data: { user: string; passwd: string }) => {
   try {

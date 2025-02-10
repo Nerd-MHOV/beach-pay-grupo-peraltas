@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db/db";
+import db from "@/core/infra/db";
 import { Athlete } from "@prisma/client";
 
 export async function createAthlete(
@@ -10,5 +10,9 @@ export async function createAthlete(
 }
 
 export async function getAthletes() {
-  return await db.athlete.findMany();
+  return await db.athlete.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
 }
