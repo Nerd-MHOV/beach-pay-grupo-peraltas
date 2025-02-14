@@ -30,8 +30,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { getInvestiments } from "../../investiments/actions";
 import { format } from "date-fns";
 import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   athleteId: z.string().min(2).max(255),
@@ -120,9 +120,11 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
   });
 
   const { data: investiments = [] } = useQuery({
-    queryKey: ["investiments"],
+    queryKey: ["investment-athletes"],
     queryFn: async () => {
-      return await getInvestiments(form.getValues().athleteId);
+      return (await getInvestiments(form.getValues().athleteId)).filter(
+        (investiments) => investiments.investimentGroupId === null
+      );
     },
   });
 
@@ -175,10 +177,10 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["investment-athletes"], (old: undefined) => [
-        ...(old || []),
-        data,
-      ]);
+      queryClient.setQueryData(
+        ["group-investment-athletes"],
+        (old: undefined) => [...(old || []), data]
+      );
       form.reset({
         investiments: [],
         total: 0,
@@ -221,6 +223,26 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
       }, 0)
     );
   };
+
+  useEffect(() => {
+    // add investiment on created...
+    investiments.forEach((investiment) => {
+      if ((investiment as unknown as { new: boolean }).new) {
+        form.setValue(
+          "investiments",
+          [
+            ...form.getValues().investiments,
+            ...(form
+              .getValues()
+              .investiments.some((inv) => inv === investiment.id)
+              ? []
+              : [investiment.id]),
+          ].filter((id): id is string => id !== null)
+        );
+      }
+    });
+  }, [investiments]);
+
   return (
     <Form {...form}>
       <form className="space-y-3">
@@ -406,7 +428,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
             <FormItem>
               <FormLabel>Investimentos*</FormLabel>
               <FormControl>
-                <ScrollArea className="h-32 rounded-md border">
+                <div className="h-32 rounded-md border overflow-auto py-1">
                   <div className="p-4">
                     {field.value?.map((id, index) => {
                       const investiment = investiments?.find(
@@ -457,7 +479,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
                       );
                     })}
                   </div>
-                </ScrollArea>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -474,16 +496,23 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
                   <Combobox
                     placeholder="Selecione o Investimento"
                     items={
-                      investiments?.map((investiment) => ({
-                        label: `${format(
-                          investiment.date,
-                          "dd/MM/yy"
-                        )} - ${investiment.value.toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })} - ${investiment.investimentType.name}`,
-                        value: investiment.id,
-                      })) || []
+                      investiments
+                        ?.filter(
+                          (investiment) =>
+                            !form
+                              .getValues()
+                              .investiments.includes(investiment.id)
+                        )
+                        .map((investiment) => ({
+                          label: `${format(
+                            investiment.date,
+                            "dd/MM/yy"
+                          )} - ${investiment.value.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })} - ${investiment.investimentType.name}`,
+                          value: investiment.id,
+                        })) || []
                     }
                     selected={""}
                     onSelect={(value) => {

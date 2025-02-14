@@ -22,7 +22,12 @@ export async function getAthletes() {
 export async function createInvestmentAthlete(
   data: Omit<Investiment, "id" | "createdAt" | "updatedAt">
 ) {
-  return await db.investiment.create({ data });
+  return await db.investiment.create({
+    data,
+    include: {
+      investimentType: true,
+    },
+  });
 }
 
 export async function createGroupInvetimentAthlete(

@@ -101,7 +101,10 @@ const FormInvestmentAthlete = ({
     onSuccess: (data) => {
       queryClient.setQueryData(["investment-athletes"], (old: undefined) => [
         ...(old || []),
-        data,
+        {
+          ...data,
+          new: true,
+        },
       ]);
       form.reset({
         description: "",
