@@ -7,7 +7,7 @@ export async function createInvestimentType(
 ) {
   console.log(data, data.canSee);
 
-  await db.investimentType.create({ data });
+  return await db.investimentType.create({ data });
 }
 
 export async function getInvestimentsType() {

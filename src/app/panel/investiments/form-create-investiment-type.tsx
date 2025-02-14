@@ -40,10 +40,10 @@ const FormCreateInvestimentType = () => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["investiment-types"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       form.reset();
       toast({

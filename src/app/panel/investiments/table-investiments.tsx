@@ -13,7 +13,7 @@ const TableInvestiments = ({
   invetiments: InvestimentType[];
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["investiments-type"],
+    queryKey: ["investiment-types"],
     queryFn: getInvestimentsType,
     initialData: invetiments,
   });

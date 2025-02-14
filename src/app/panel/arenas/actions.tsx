@@ -10,5 +10,5 @@ export async function getArenas(): Promise<Arena[]> {
 export async function createArena(
   data: Omit<Arena, "id" | "createdAt" | "updatedAt">
 ) {
-  await db.arena.create({ data });
+  return await db.arena.create({ data });
 }

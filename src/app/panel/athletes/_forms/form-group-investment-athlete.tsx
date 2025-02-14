@@ -152,7 +152,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
         );
       }
 
-      await createGroupInvetimentAthlete(
+      return await createGroupInvetimentAthlete(
         {
           athleteId: values.athleteId,
           pairId: values.pairId,
@@ -174,10 +174,10 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["investment-athletes"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       // form.reset();
       toast({

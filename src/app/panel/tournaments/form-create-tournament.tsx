@@ -78,10 +78,10 @@ const FormCreateTournament = () => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["tournaments"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       form.reset();
       toast({

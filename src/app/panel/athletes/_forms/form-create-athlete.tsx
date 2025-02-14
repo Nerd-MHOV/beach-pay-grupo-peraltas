@@ -64,10 +64,10 @@ const FormCreateAthlete = () => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["athletes"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       form.reset();
       toast({

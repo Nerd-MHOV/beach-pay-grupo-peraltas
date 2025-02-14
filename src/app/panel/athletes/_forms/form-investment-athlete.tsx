@@ -64,7 +64,7 @@ const FormInvestmentAthlete = ({
   const queryClient = useQueryClient();
 
   const { data: investmentTypes } = useQuery({
-    queryKey: ["investiments-type"],
+    queryKey: ["investiment-types"],
     queryFn: getInvestimentsType,
   });
   const { mutateAsync: createInvestmentAthleteFn, isPending } = useMutation({
@@ -83,7 +83,7 @@ const FormInvestmentAthlete = ({
 
         file = filePath;
       }
-      await createInvestmentAthlete({
+      return await createInvestmentAthlete({
         ...values,
         proof: file,
         investimentGroupId: null,
@@ -98,10 +98,10 @@ const FormInvestmentAthlete = ({
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["investment-athletes"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       // form.reset();
       toast({

@@ -8,7 +8,7 @@ import path from "path";
 export async function createAthlete(
   data: Omit<Athlete, "id" | "createdAt" | "updatedAt">
 ) {
-  await db.athlete.create({ data });
+  return await db.athlete.create({ data });
 }
 
 export async function getAthletes() {
@@ -22,14 +22,14 @@ export async function getAthletes() {
 export async function createInvestmentAthlete(
   data: Omit<Investiment, "id" | "createdAt" | "updatedAt">
 ) {
-  await db.investiment.create({ data });
+  return await db.investiment.create({ data });
 }
 
 export async function createGroupInvetimentAthlete(
   data: Omit<InvestimentGroup, "id" | "createdAt" | "updatedAt">,
   investiments: { id: string }[]
 ) {
-  await db.investimentGroup.create({
+  return await db.investimentGroup.create({
     data: {
       ...data,
       investiments: {

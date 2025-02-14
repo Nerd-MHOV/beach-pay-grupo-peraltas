@@ -47,10 +47,10 @@ const FormCreateArena = () => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.setQueryData(["arenas"], (old: undefined) => [
         ...(old || []),
-        variables,
+        data,
       ]);
       form.reset();
       toast({
