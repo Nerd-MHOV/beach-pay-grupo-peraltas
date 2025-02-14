@@ -124,7 +124,7 @@ const FormInvestmentAthlete = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form className="space-y-3">
         <FormField
           control={form.control}
           name="athleteId"
@@ -238,7 +238,7 @@ const FormInvestmentAthlete = ({
         </div>
 
         <div className="flex w-full justify-end mt-5">
-          <Button isLoading={isPending} type="submit">
+          <Button isLoading={isPending} onClick={form.handleSubmit(onSubmit)}>
             Investir
           </Button>
         </div>

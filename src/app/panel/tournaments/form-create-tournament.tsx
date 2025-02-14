@@ -105,7 +105,7 @@ const FormCreateTournament = () => {
   });
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form className="space-y-3">
         <FormField
           control={form.control}
           name="name"
@@ -212,7 +212,7 @@ const FormCreateTournament = () => {
         />
 
         <div className="flex w-full justify-end mt-5">
-          <Button type="submit">Adicionar</Button>
+          <Button onClick={form.handleSubmit(onSubmit)}>Adicionar</Button>
         </div>
       </form>
     </Form>

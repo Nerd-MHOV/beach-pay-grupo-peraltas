@@ -87,7 +87,7 @@ const FormCreateAthlete = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form className="space-y-3">
         <FormField
           control={form.control}
           name="name"
@@ -154,7 +154,7 @@ const FormCreateAthlete = () => {
         />
 
         <div className="flex w-full justify-end mt-5">
-          <Button type="submit" className="">
+          <Button onClick={form.handleSubmit(onSubmit)}>
             Cadastrar Atleta
           </Button>
         </div>
