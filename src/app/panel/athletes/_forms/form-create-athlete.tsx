@@ -7,26 +7,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale/pt-BR";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAthlete } from "./actions";
+import { createAthlete } from "../actions";
 import { useToast } from "@/hooks/use-toast";
+import CalendarPickerInput from "@/components/calendarPickerInput";
 
 const formSchema = z.object({
   name: z
@@ -48,6 +38,7 @@ const formSchema = z.object({
   responsible: z
     .string()
     .max(255)
+    .optional()
     .nullable()
     .transform((v) => v ?? ""),
   birthday: z.date(),
@@ -169,64 +160,6 @@ const FormCreateAthlete = () => {
         </div>
       </form>
     </Form>
-  );
-};
-
-const CalendarPickerInput = ({
-  form,
-  name,
-  label,
-}: {
-  form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>;
-  name: keyof z.infer<typeof formSchema>;
-  label: string;
-}) => {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
-  return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Popover onOpenChange={setIsCalendarOpen} open={isCalendarOpen}>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
-                  )}
-                >
-                  {field.value ? (
-                    format(field.value, "PPP", { locale: ptBR })
-                  ) : (
-                    <span>Selecione uma Data</span>
-                  )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={field.value as Date}
-                onSelect={(value) => {
-                  field.onChange(value);
-                  setIsCalendarOpen(false);
-                }}
-                autoFocus
-                showOutsideDays={false}
-                captionLayout="dropdown"
-              />
-            </PopoverContent>
-          </Popover>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
   );
 };
 

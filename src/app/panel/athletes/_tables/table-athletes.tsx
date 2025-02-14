@@ -4,7 +4,7 @@ import React from "react";
 import { columns } from "./columns";
 import { Athlete } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { getAthletes } from "./actions";
+import { getAthletes } from "../actions";
 import LoadingData from "@/components/LoadingData";
 
 const TableAthletes = ({ athletes }: { athletes: Athlete[] }) => {

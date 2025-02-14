@@ -11,14 +11,24 @@ import { Plus } from "lucide-react";
 import React from "react";
 import FormCreateInvestimentType from "./form-create-investiment-type";
 
-const DialogCreateInvestimentType = () => {
+const DialogCreateInvestimentType = ({
+  combobox = false,
+}: {
+  combobox?: boolean;
+}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus />
-          Investimento
-        </Button>
+        {combobox ? (
+          <Button size="sm" variant="ghost">
+            <Plus /> Novo Tipo de Investimento
+          </Button>
+        ) : (
+          <Button size="sm">
+            <Plus />
+            Investimento
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import React from "react";
-import FormCreateAthlete from "./form-create-athlete";
+import FormCreateAthlete from "../_forms/form-create-athlete";
 
 const DialogCreateAthlete = () => {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -24,12 +24,14 @@ export function Combobox({
   selected,
   onSelect,
   placeholder,
+  disabled,
   above,
 }: {
   items: { label: string; value: string }[];
   selected: string;
   onSelect: (value: string) => void;
   placeholder: string;
+  disabled?: boolean;
   above?: React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -41,6 +43,7 @@ export function Combobox({
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          disabled={disabled}
         >
           {selected
             ? items.find((item) => item.value === selected)?.label

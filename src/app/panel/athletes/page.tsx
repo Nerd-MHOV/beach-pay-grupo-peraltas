@@ -1,7 +1,7 @@
 import React from "react";
-import DialogCreateAthlete from "./dialog-create-athlete";
+import DialogCreateAthlete from "./_dialogs/dialog-create-athlete";
 import { getAthletes } from "./actions";
-import TableAthletes from "./table-athletes";
+import TableAthletes from "./_tables/table-athletes";
 import Header from "@/components/Header";
 
 const Page = async () => {

@@ -10,10 +10,22 @@ export async function createInvestimentType(
   await db.investimentType.create({ data });
 }
 
-export async function getInvestiments() {
+export async function getInvestimentsType() {
   return await db.investimentType.findMany({
     orderBy: {
       name: "asc",
+    },
+  });
+}
+
+export async function getInvestiments(athleteId?: string) {
+  return await db.investiment.findMany({
+    ...(athleteId && { where: { athleteId } }),
+    include: {
+      investimentType: true,
+    },
+    orderBy: {
+      date: "desc",
     },
   });
 }

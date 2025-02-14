@@ -47,19 +47,21 @@ model Athlete {
 }
 
 model Investiment {
-  id                 String   @id @default(cuid())
-  invetimentTypeId   String
+  id                 String    @id @default(cuid())
+  investimentTypeId  String    @map("invetimentTypeId")
   athleteId          String
   value              Float
   description        String
   date               DateTime
+  paid               DateTime?
+  proof              String?
   investimentGroupId String?
 
-  athlete           Athlete           @relation(fields: [athleteId], references: [id])
-  investimentTypeId InvestimentType   @relation(fields: [invetimentTypeId], references: [id])
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  investimentGroup  InvestimentGroup? @relation(fields: [investimentGroupId], references: [id])
+  athlete          Athlete           @relation(fields: [athleteId], references: [id])
+  investimentType  InvestimentType   @relation(fields: [investimentTypeId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  investimentGroup InvestimentGroup? @relation(fields: [investimentGroupId], references: [id])
 }
 
 model InvestimentType {

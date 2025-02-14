@@ -79,7 +79,7 @@ const FormCreateTournament = () => {
       });
     },
     onSuccess: (_, variables) => {
-      queryClient.setQueryData(["arenas"], (old: undefined) => [
+      queryClient.setQueryData(["tournaments"], (old: undefined) => [
         ...(old || []),
         variables,
       ]);

@@ -11,14 +11,24 @@ import { Plus } from "lucide-react";
 import React from "react";
 import FormCreateTournament from "./form-create-tournament";
 
-const DialogCreateTournament = () => {
+const DialogCreateTournament = ({
+  combobox = false,
+}: {
+  combobox?: boolean;
+}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus />
-          Torneio
-        </Button>
+        {combobox ? (
+          <Button size="sm" variant="ghost">
+            <Plus /> Novo Torneio
+          </Button>
+        ) : (
+          <Button size="sm">
+            <Plus />
+            Torneio
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">

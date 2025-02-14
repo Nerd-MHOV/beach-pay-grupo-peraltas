@@ -12,6 +12,8 @@ import {
 import { Athlete } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
+import DialogGroupInvestmentAthlete from "../_dialogs/dialog-group-investment-athlete";
 
 export type AthleteTable = Athlete & {
   age: number;
@@ -66,7 +68,7 @@ export const columns: ColumnDef<Athlete>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const athlete = row.original;
 
       return (
         <DropdownMenu>
@@ -78,13 +80,17 @@ export const columns: ColumnDef<Athlete>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.pixKey)}
+              onClick={() => navigator.clipboard.writeText(athlete.pixKey)}
             >
               Copy Chave PIX
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Declarar Grupo de Investimento</DropdownMenuItem>
-            <DropdownMenuItem>Declarar Investimento</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <DialogGroupInvestmentAthlete athlete={athlete} />
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <DialogInvestmentAthlete athlete={athlete} />
+            </DropdownMenuItem>
             <DropdownMenuItem>Detalhes</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

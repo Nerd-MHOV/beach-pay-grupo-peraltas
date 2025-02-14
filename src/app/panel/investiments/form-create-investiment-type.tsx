@@ -88,7 +88,7 @@ const FormCreateInvestimentType = () => {
               <FormLabel>Descrição*</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Nome do Tipo de Investimento"
+                  placeholder="Descrição do Tipo de Investimento"
                   {...field}
                 />
               </FormControl>

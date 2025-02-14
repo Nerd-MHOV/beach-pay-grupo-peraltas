@@ -1,11 +1,11 @@
 import Header from "@/components/Header";
 import React from "react";
 import DialogCreateInvestimentType from "./dialog-create-investiment-type";
-import { getInvestiments } from "./actions";
+import { getInvestimentsType } from "./actions";
 import TableInvestiments from "./table-investiments";
 
 const Page = async () => {
-  const investiments = await getInvestiments();
+  const investiments = await getInvestimentsType();
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header title="Investimentos">

@@ -1,7 +1,7 @@
 "use client";
 
 import { InvestimentType } from "@prisma/client";
-import { getInvestiments } from "./actions";
+import { getInvestimentsType } from "./actions";
 import LoadingData from "@/components/LoadingData";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
@@ -14,7 +14,7 @@ const TableInvestiments = ({
 }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["investiments-type"],
-    queryFn: getInvestiments,
+    queryFn: getInvestimentsType,
     initialData: invetiments,
   });
 
