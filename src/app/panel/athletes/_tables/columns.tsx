@@ -14,6 +14,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../_dialogs/dialog-group-investment-athlete";
+import Link from "next/link";
 
 export type AthleteTable = Athlete & {
   age: number;
@@ -91,7 +92,10 @@ export const columns: ColumnDef<Athlete>[] = [
             <DropdownMenuItem asChild>
               <DialogInvestmentAthlete athlete={athlete} />
             </DropdownMenuItem>
-            <DropdownMenuItem>Detalhes</DropdownMenuItem>
+            <DropdownMenuItem asChild></DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/panel/athletes/${athlete.id}`}>Detalhes</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
