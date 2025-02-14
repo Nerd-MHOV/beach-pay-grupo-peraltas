@@ -17,6 +17,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAthlete } from "../actions";
 import { useToast } from "@/hooks/use-toast";
 import CalendarPickerInput from "@/components/calendarPickerInput";
+import { Athlete } from "@prisma/client";
+import { updateAthlete } from "../[id]/actions";
 
 const formSchema = z.object({
   name: z
@@ -51,7 +53,7 @@ const formSchema = z.object({
     .max(255),
 });
 
-const FormCreateAthlete = () => {
+const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { mutateAsync: createAthleteFn } = useMutation({
@@ -82,12 +84,48 @@ const FormCreateAthlete = () => {
     },
   });
 
+  const { mutateAsync: updateAthleteFn } = useMutation({
+    mutationKey: ["update-athlete"],
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      if (!athlete) throw new Error("Atleta não encontrado.");
+      return await updateAthlete(athlete?.id, values);
+    },
+    onError: () => {
+      toast({
+        title: "Algo de Errado",
+        description: "Não foi possivel atualizar o atleta. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["athletes"], (old: Athlete[]) => [
+        ...(old || []).map((item) => (item.id === data.id ? data : item)),
+      ]);
+      toast({
+        title: "Atleta Atualizado",
+        description: "O atleta foi atualizado com sucesso.",
+      });
+    },
+  });
+
   // 1.define form.
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createAthleteFn(values);
+    if (athlete) {
+      updateAthleteFn(values);
+    } else {
+      createAthleteFn(values);
+    }
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: athlete?.name ?? "",
+      phone: athlete?.phone ?? "",
+      responsible: athlete?.responsible ?? "",
+      birthday: athlete?.birthday ?? new Date(),
+      startDate: athlete?.startDate ?? new Date(),
+      pixKey: athlete?.pixKey ?? "",
+    },
   });
 
   return (
@@ -160,7 +198,7 @@ const FormCreateAthlete = () => {
 
         <div className="flex w-full justify-end mt-5">
           <Button onClick={form.handleSubmit(onSubmit)}>
-            Cadastrar Atleta
+            {!athlete ? "Cadastrar" : "Atualizar"} Atleta
           </Button>
         </div>
       </form>
