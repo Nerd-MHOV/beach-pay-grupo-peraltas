@@ -179,7 +179,18 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
         ...(old || []),
         data,
       ]);
-      // form.reset();
+      form.reset({
+        investiments: [],
+        total: 0,
+        description: "",
+        km: 0,
+        km_racional: 0,
+        paid: null,
+        proof: null,
+        podium: "",
+        pairAmount: 0,
+        pairId: null,
+      });
       toast({
         title: "Investimento Adicionado",
         description: "O investimento foi adicionado com sucesso.",

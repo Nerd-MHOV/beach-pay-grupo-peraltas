@@ -103,7 +103,13 @@ const FormInvestmentAthlete = ({
         ...(old || []),
         data,
       ]);
-      // form.reset();
+      form.reset({
+        description: "",
+        investimentTypeId: "",
+        value: 0,
+        paid: null,
+        proof: null,
+      });
       toast({
         title: "Investimento Adicionado",
         description: "O investimento foi adicionado com sucesso.",

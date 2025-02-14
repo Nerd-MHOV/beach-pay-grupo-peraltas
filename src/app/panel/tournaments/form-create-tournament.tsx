@@ -83,7 +83,10 @@ const FormCreateTournament = () => {
         ...(old || []),
         data,
       ]);
-      form.reset();
+      form.reset({
+        description: "",
+        name: "",
+      });
       toast({
         title: "Torneio Adicionado",
         description: "O torneio foi adicionada com sucesso.",

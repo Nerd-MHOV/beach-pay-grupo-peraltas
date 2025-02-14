@@ -69,7 +69,12 @@ const FormCreateAthlete = () => {
         ...(old || []),
         data,
       ]);
-      form.reset();
+      form.reset({
+        name: "",
+        phone: "",
+        pixKey: "",
+        responsible: "",
+      });
       toast({
         title: "Atleta Adicionado",
         description: "O atleta foi adicionado com sucesso.",

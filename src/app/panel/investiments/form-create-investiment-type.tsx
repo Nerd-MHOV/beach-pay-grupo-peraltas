@@ -45,7 +45,11 @@ const FormCreateInvestimentType = () => {
         ...(old || []),
         data,
       ]);
-      form.reset();
+      form.reset({
+        name: "",
+        description: "",
+        canSee: ["admin"],
+      });
       toast({
         title: "Tipo de Investimento Adicionado",
         description: "O tipo de investimento foi adicionado com sucesso.",

@@ -52,7 +52,10 @@ const FormCreateArena = () => {
         ...(old || []),
         data,
       ]);
-      form.reset();
+      form.reset({
+        city: "",
+        name: "",
+      });
       toast({
         title: "Arena Adicionada",
         description: "A arena foi adicionada com sucesso.",
