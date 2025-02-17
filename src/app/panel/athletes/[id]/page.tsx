@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { format } from "date-fns";
 import FormCreateAthlete from "../_forms/form-create-athlete";
+import DialogDeleteAthlete from "./dialog-delete-athlete";
 
 const Page = async ({
   params,
@@ -39,6 +40,10 @@ const Page = async ({
 
       <div className="bg-white p-7 rounded-xl shadow-lg">
         <FormCreateAthlete athlete={athlete} />
+      </div>
+
+      <div className="flex w-full items-end justify-end mt-20 mb-5 pr-5">
+        <DialogDeleteAthlete athlete={athlete} />
       </div>
     </div>
   );

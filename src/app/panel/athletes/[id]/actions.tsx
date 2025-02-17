@@ -18,3 +18,9 @@ export async function updateAthlete(
     data,
   });
 }
+
+export async function deleteAthlete(id: string) {
+  return await db.athlete.delete({
+    where: { id },
+  });
+}

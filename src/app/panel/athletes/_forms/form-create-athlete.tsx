@@ -196,7 +196,7 @@ const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
           label="Data de Início*"
         />
 
-        <div className="flex w-full justify-end mt-5">
+        <div className="flex w-full justify-end pt-5">
           <Button onClick={form.handleSubmit(onSubmit)}>
             {!athlete ? "Cadastrar" : "Atualizar"} Atleta
           </Button>
