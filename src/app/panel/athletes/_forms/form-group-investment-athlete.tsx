@@ -95,7 +95,7 @@ const formSchema = z.object({
     })
     .refine(
       (file) =>
-        ["aplication/pdf", "image/png", "image/jpeg", "image/jpg"].includes(
+        ["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(
           file.type
         ),
       { message: "O arquivo deve ser uma imagem ou PDF." }

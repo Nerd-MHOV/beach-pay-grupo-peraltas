@@ -26,7 +26,7 @@ const DialogCreateInvestimentType = ({
         ) : (
           <Button size="sm">
             <Plus />
-            Investimento
+            Tipo de investimento
           </Button>
         )}
       </DialogTrigger>

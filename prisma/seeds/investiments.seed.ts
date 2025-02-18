@@ -159,7 +159,7 @@ export const investimentsSeed: Omit<Investiment, "createdAt" | "updatedAt">[] =
       athleteId: "athleteseed1",
       investimentTypeId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
       value: 1000,
-      date: new Date("2023-11-01"),
+      date: new Date("2024-08-10"),
       description: "Investimento inicial",
       paid: null,
       proof: null,
@@ -170,7 +170,7 @@ export const investimentsSeed: Omit<Investiment, "createdAt" | "updatedAt">[] =
       athleteId: "athleteseed2",
       investimentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
       value: 2000,
-      date: new Date("2023-12-01"),
+      date: new Date("2024-10-20"),
       description: "Investimento secundário",
       paid: null,
       proof: null,
@@ -181,7 +181,7 @@ export const investimentsSeed: Omit<Investiment, "createdAt" | "updatedAt">[] =
       athleteId: "athleteseed3",
       investimentTypeId: "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", // Pedágio
       value: 1500,
-      date: new Date("2024-01-01"),
+      date: new Date("2024-11-15"),
       description: "Investimento terciário",
       paid: null,
       proof: null,
@@ -192,7 +192,7 @@ export const investimentsSeed: Omit<Investiment, "createdAt" | "updatedAt">[] =
       athleteId: "athleteseed1",
       investimentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
       value: 2500,
-      date: new Date("2024-02-01"),
+      date: new Date("2023-12-05"),
       description: "Investimento adicional",
       paid: null,
       proof: null,
@@ -203,7 +203,7 @@ export const investimentsSeed: Omit<Investiment, "createdAt" | "updatedAt">[] =
       athleteId: "athleteseed2",
       investimentTypeId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
       value: 3000,
-      date: new Date("2024-03-01"),
+      date: new Date("2025-01-01"),
       description: "Investimento final",
       paid: null,
       proof: null,

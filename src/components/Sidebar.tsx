@@ -30,7 +30,7 @@ const links = [
   {
     link: "/panel/investiments",
     icon: HandCoins,
-    title: "Investimentos",
+    title: "Tipos",
   },
   {
     link: "/panel/tournaments",
