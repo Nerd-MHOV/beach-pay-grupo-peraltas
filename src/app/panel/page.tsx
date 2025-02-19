@@ -34,7 +34,7 @@ const Panel = async () => {
   );
 
   return (
-    <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
+    <div className="px-2 sm:px-10 py-3 mb-20 relative grid grid-cols gap-5">
       <Header.Root>
         <Header.Title>Dashboard</Header.Title>
         <Header.Content>
@@ -147,7 +147,7 @@ const Panel = async () => {
             </CardContent>
           </Card>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-4 bg-background  border-none shadow-lg">
             <CardHeader>
               <CardTitle>Visão Geral</CardTitle>
@@ -171,7 +171,7 @@ const Panel = async () => {
               </div>
             </CardFooter>
           </Card>
-          <Card className="col-span-3 bg-background border-none shadow-lg">
+          <Card className="col-span-4 md:col-span-3 bg-background border-none shadow-lg">
             <CardHeader>
               <CardTitle>Investimentos Recentes</CardTitle>
               <CardDescription>

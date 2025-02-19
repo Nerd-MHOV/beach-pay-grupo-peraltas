@@ -7,7 +7,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
 
-const TableInvestiments = ({
+const TableInvestimentTypes = ({
   invetiments,
 }: {
   invetiments: InvestimentType[];
@@ -27,4 +27,4 @@ const TableInvestiments = ({
   );
 };
 
-export default TableInvestiments;
+export default TableInvestimentTypes;

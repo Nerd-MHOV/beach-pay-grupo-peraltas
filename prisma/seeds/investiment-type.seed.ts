@@ -25,7 +25,7 @@ export const InvestimentTypeSeed: Omit<
 >[] = [
   {
     id: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
-    name: "Incrições",
+    name: "Incrição",
     description: "Investimento em inscrições de campenatos",
     canSee: ["admin", "user"],
   },
@@ -50,31 +50,31 @@ export const InvestimentTypeSeed: Omit<
   },
   {
     id: "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
-    name: "Premiações",
+    name: "Premiação",
     description: "Investimento em premiações",
     canSee: ["admin"],
   },
   {
     id: "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
-    name: "Aulas",
+    name: "Aula",
     description: "Investimento em aulas para atletas",
     canSee: ["admin"],
   },
   {
     id: "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
-    name: "Camisetas",
+    name: "Camiseta",
     description: "Investimento em camisetas para atletas",
     canSee: ["admin"],
   },
   {
     id: "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
-    name: "Uniformes",
+    name: "Uniforme",
     description: "Investimento em uniformes para atletas",
     canSee: ["admin"],
   },
   {
     id: "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
-    name: "Equipamentos",
+    name: "Equipamento",
     description: "Investimento em equipamentos para atletas",
     canSee: ["admin"],
   },

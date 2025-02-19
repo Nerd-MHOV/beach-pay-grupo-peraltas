@@ -11,6 +11,7 @@ import {
   LogOut,
   MapPinned,
   Menu,
+  Receipt,
   Trophy,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -30,6 +31,11 @@ const links = [
   {
     link: "/panel/investiments",
     icon: HandCoins,
+    title: "Investimentos",
+  },
+  {
+    link: "/panel/investiment-types",
+    icon: Receipt,
     title: "Tipos",
   },
   {

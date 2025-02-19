@@ -49,7 +49,7 @@ const FormDownloadReport = () => {
   });
   return (
     <Form {...form}>
-      <form className="flex gap-4">
+      <form className="flex gap-4 flex-col sm:flex-row">
         <FormField
           control={form.control}
           name="date"

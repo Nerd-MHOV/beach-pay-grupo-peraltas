@@ -52,27 +52,7 @@ export function Combobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
-        <Command
-          filter={(value, search) => {
-            const normalize = (str: string) =>
-              str
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase();
-
-            const sanitizedSearch = normalize(search).replace(
-              /[-\/\\^$*+?.()|[\]{}]/g,
-              "\\$&"
-            );
-
-            const searchRegex = new RegExp(sanitizedSearch, "i");
-
-            const platformLabel =
-              items.find((item) => item.value === value)?.label || "";
-
-            return searchRegex.test(normalize(platformLabel)) ? 1 : 0;
-          }}
-        >
+        <Command>
           <CommandInput placeholder={placeholder} className="h-9" />
           {above}
           <CommandList>

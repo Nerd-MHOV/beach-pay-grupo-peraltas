@@ -27,7 +27,7 @@ import {
 import DialogCreateTournament from "../../tournaments/dialog-create-tournament";
 import { getTournaments } from "../../tournaments/actions";
 import { Textarea } from "@/components/ui/textarea";
-import { getInvestiments } from "../../investiments/actions";
+import { getInvestiments } from "../../investiment-types/actions";
 import { format } from "date-fns";
 import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
