@@ -99,13 +99,16 @@ const FormInvestmentAthlete = ({
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["investment-athletes"], (old: undefined) => [
-        ...(old || []),
-        {
-          ...data,
-          new: true,
-        },
-      ]);
+      queryClient.setQueryData(
+        ["investment-athletes", "investiments", "investiment-list-athlete"],
+        (old: undefined) => [
+          ...(old || []),
+          {
+            ...data,
+            new: true,
+          },
+        ]
+      );
       form.reset({
         description: "",
         investimentTypeId: "",

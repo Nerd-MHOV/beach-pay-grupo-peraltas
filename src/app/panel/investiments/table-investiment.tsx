@@ -11,9 +11,13 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
 import { getInvestiments } from "./actions";
+import DialogInvestmentAthlete from "../athletes/_dialogs/dialog-investment-athlete";
+import DialogGroupInvestmentAthlete from "../athletes/_dialogs/dialog-group-investment-athlete";
 
 const TableInvestiments = ({
   invetiments,
+  athlete,
+  actions = false,
 }: {
   invetiments: ({
     athlete: Athlete;
@@ -26,9 +30,12 @@ const TableInvestiments = ({
         } & InvestimentGroup)
       | null;
   } & Investiment)[];
+  athlete?: Athlete;
+  actions?: boolean;
 }) => {
+  const queryKey = athlete ? "investiment-list-athlete" : "investiments";
   const { data, isLoading } = useQuery({
-    queryKey: ["investiments"],
+    queryKey: [queryKey],
     queryFn: getInvestiments,
     initialData: invetiments,
   });
@@ -37,6 +44,12 @@ const TableInvestiments = ({
 
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
+      {actions && (
+        <div>
+          <DialogInvestmentAthlete combobox athlete={athlete} />
+          <DialogGroupInvestmentAthlete combobox athlete={athlete} />
+        </div>
+      )}
       <DataTable
         columns={columns}
         data={data.map((investiment) => {

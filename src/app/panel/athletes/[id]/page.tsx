@@ -155,7 +155,11 @@ const Page = async ({
       </div>
 
       <div className="">
-        <TableInvestiments invetiments={athlete.investiments} />
+        <TableInvestiments
+          invetiments={athlete.investiments}
+          actions
+          athlete={athlete}
+        />
       </div>
 
       <div className="bg-white p-7 rounded-xl shadow-lg">

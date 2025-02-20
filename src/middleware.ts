@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
   // 1. Check if router is protected
-  const protectedRoutes = ["/panel"];
+  // const protectedRoutes = ["/panel"];
+  const freeRoutes = ["/login"];
   const currentPath = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(currentPath);
+  const isProtectedRoute = !freeRoutes.includes(currentPath);
   if (isProtectedRoute) {
     // 2. check for valid session
     const cookie = (await cookies()).get("session")?.value || "";
