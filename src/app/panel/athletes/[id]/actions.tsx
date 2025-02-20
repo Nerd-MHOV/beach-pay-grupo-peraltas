@@ -6,6 +6,23 @@ import { Athlete } from "@prisma/client";
 export async function getAthleteById(id: string) {
   return await db.athlete.findFirst({
     where: { id },
+    include: {
+      investiments: {
+        include: {
+          athlete: true,
+          investimentGroup: {
+            include: {
+              investiments: {
+                include: {
+                  investimentType: true,
+                },
+              },
+            },
+          },
+          investimentType: true,
+        },
+      },
+    },
   });
 }
 
