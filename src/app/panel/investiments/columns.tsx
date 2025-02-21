@@ -6,7 +6,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Investiment, InvestimentGroup, InvestimentType } from "@prisma/client";
+import {
+  Arena,
+  Athlete,
+  Investiment,
+  InvestimentGroup,
+  InvestimentType,
+  Tournament,
+} from "@prisma/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -22,8 +29,13 @@ export const columns: ColumnDef<
   {
     athlete: string;
     investimentType: string;
+
     investimentGroup:
       | ({
+          pair?: Athlete;
+          tournament?: {
+            arena: Arena;
+          } & Tournament;
           investiments: ({
             investimentType: InvestimentType;
           } & Investiment)[];
@@ -99,6 +111,27 @@ export const columns: ColumnDef<
                 <span className="font-medium">
                   {investimentGroup.description}
                 </span>
+
+                <ul>
+                  <li>
+                    <b>Torneio:</b> {investimentGroup?.tournament?.name}
+                  </li>
+                  <li>
+                    <b>Arena:</b> {investimentGroup?.tournament?.arena.name}
+                  </li>
+                  <li>
+                    <b>KM:</b> {investimentGroup.km}
+                  </li>
+                  <li>
+                    <b>Duplas:</b> {investimentGroup.pairAmount}
+                  </li>
+                  <li>
+                    <b>Colocação:</b> {investimentGroup.podium}
+                  </li>
+                  <li>
+                    <b>Dupla:</b> {investimentGroup?.pair?.name}
+                  </li>
+                </ul>
                 <span className="font-medium mt-2">
                   <ol>
                     {investimentGroup.investiments.map((investiment) => (

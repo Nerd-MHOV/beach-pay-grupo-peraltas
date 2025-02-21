@@ -5,6 +5,12 @@ export async function getInvestiments() {
     include: {
       investimentGroup: {
         include: {
+          pair: true,
+          tournament: {
+            include: {
+              arena: true,
+            },
+          },
           investiments: {
             include: {
               investimentType: true,
