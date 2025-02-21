@@ -26,3 +26,24 @@ export async function getInvestiments() {
     },
   });
 }
+export async function getGroupInvestiments() {
+  return db.investimentGroup.findMany({
+    include: {
+      pair: true,
+      athlete: true,
+      tournament: {
+        include: {
+          arena: true,
+        },
+      },
+      investiments: {
+        include: {
+          investimentType: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}

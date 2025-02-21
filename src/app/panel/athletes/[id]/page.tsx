@@ -157,7 +157,7 @@ const Page = async ({
       <div className="">
         <TableInvestiments
           invetiments={athlete.investiments}
-          actions
+          groupInvestiments={athlete.investiment_group_athlete}
           athlete={athlete}
         />
       </div>

@@ -25,24 +25,26 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export const columns: ColumnDef<
-  {
+export interface InvestimentColumns {
+  columns: {
     athlete: string;
     investimentType: string;
-
     investimentGroup:
       | ({
-          pair?: Athlete;
-          tournament?: {
-            arena: Arena;
-          } & Tournament;
+          pair: Athlete | null;
+          tournament:
+            | ({
+                arena: Arena;
+              } & Tournament)
+            | null;
           investiments: ({
             investimentType: InvestimentType;
           } & Investiment)[];
         } & InvestimentGroup)
       | null;
-  } & Investiment
->[] = [
+  } & Investiment;
+}
+export const columns: ColumnDef<InvestimentColumns["columns"]>[] = [
   {
     header: "Status",
     accessorKey: "paid",
@@ -169,7 +171,7 @@ export const columns: ColumnDef<
   {
     id: "actions",
     enableHiding: false,
-    cell: ({}) => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -179,6 +181,9 @@ export const columns: ColumnDef<
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {row.original.investimentGroup && (
+              <DropdownMenuItem>Detalhes do Grupo</DropdownMenuItem>
+            )}
             <DropdownMenuItem>Detalhes</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -12,6 +12,12 @@ export async function getAthleteById(id: string) {
           athlete: true,
           investimentGroup: {
             include: {
+              pair: true,
+              tournament: {
+                include: {
+                  arena: true,
+                },
+              },
               investiments: {
                 include: {
                   investimentType: true,
@@ -20,6 +26,22 @@ export async function getAthleteById(id: string) {
             },
           },
           investimentType: true,
+        },
+      },
+      investiment_group_athlete: {
+        include: {
+          athlete: true,
+          pair: true,
+          tournament: {
+            include: {
+              arena: true,
+            },
+          },
+          investiments: {
+            include: {
+              investimentType: true,
+            },
+          },
         },
       },
     },

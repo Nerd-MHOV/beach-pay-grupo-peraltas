@@ -1,38 +1,28 @@
 "use client";
 
-import {
-  Athlete,
-  Investiment,
-  InvestimentGroup,
-  InvestimentType,
-} from "@prisma/client";
+import { Athlete } from "@prisma/client";
 import LoadingData from "@/components/LoadingData";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
-import { getInvestiments } from "./actions";
+import { getGroupInvestiments, getInvestiments } from "./actions";
 import DialogInvestmentAthlete from "../athletes/_dialogs/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../athletes/_dialogs/dialog-group-investment-athlete";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
+import { columnsGroup } from "./columns-group";
 
 const TableInvestiments = ({
   invetiments,
+  groupInvestiments,
   athlete,
-  actions = false,
 }: {
-  invetiments: ({
-    athlete: Athlete;
-    investimentType: InvestimentType;
-    investimentGroup:
-      | ({
-          investiments: ({
-            investimentType: InvestimentType;
-          } & Investiment)[];
-        } & InvestimentGroup)
-      | null;
-  } & Investiment)[];
+  invetiments: Awaited<ReturnType<typeof getInvestiments>>;
+  groupInvestiments: Awaited<ReturnType<typeof getGroupInvestiments>>;
   athlete?: Athlete;
-  actions?: boolean;
 }) => {
+  const [showGroup, setShowGroup] = useState(false);
   const queryKey = athlete ? "investiment-list-athlete" : "investiments";
   const { data, isLoading } = useQuery({
     queryKey: [queryKey],
@@ -40,26 +30,50 @@ const TableInvestiments = ({
     initialData: invetiments,
   });
 
-  if (isLoading) return <LoadingData message="Buscando Investimentos" />;
+  const { data: dataGroup, isLoading: isLoadingGroup } = useQuery({
+    queryKey: ["group-investiments"],
+    queryFn: getGroupInvestiments,
+    initialData: groupInvestiments,
+  });
+  if (isLoading || isLoadingGroup)
+    return <LoadingData message="Buscando Investimentos" />;
 
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
-      {actions && (
-        <div>
-          <DialogInvestmentAthlete combobox athlete={athlete} />
-          <DialogGroupInvestmentAthlete combobox athlete={athlete} />
+      <div className="flex gap-1 flex-wrap justify-center sm:justify-normal">
+        <DialogInvestmentAthlete combobox athlete={athlete} />
+        <DialogGroupInvestmentAthlete combobox athlete={athlete} />
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="table-mode">Único</Label>
+          <Switch
+            id="table-mode"
+            onCheckedChange={setShowGroup}
+            checked={showGroup}
+          />
+          <Label htmlFor="table-mode">Grupo</Label>
         </div>
+      </div>
+
+      {showGroup ? (
+        <DataTable
+          columns={columnsGroup}
+          data={dataGroup.map((group) => ({
+            ...group,
+            athlete: group.athlete.name,
+          }))}
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={data.map((investiment) => {
+            return {
+              ...investiment,
+              athlete: investiment.athlete.name,
+              investimentType: investiment.investimentType.name,
+            };
+          })}
+        />
       )}
-      <DataTable
-        columns={columns}
-        data={data.map((investiment) => {
-          return {
-            ...investiment,
-            athlete: investiment.athlete.name,
-            investimentType: investiment.investimentType.name,
-          };
-        })}
-      />
     </div>
   );
 };
