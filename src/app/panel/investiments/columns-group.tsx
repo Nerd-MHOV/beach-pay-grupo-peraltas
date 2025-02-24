@@ -5,12 +5,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Investiment, InvestimentGroup } from "@prisma/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 
 export interface InvestimentColumns {
   columns: {
@@ -78,7 +80,7 @@ export const columnsGroup: ColumnDef<InvestimentColumns["columns"]>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({}) => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -88,6 +90,11 @@ export const columnsGroup: ColumnDef<InvestimentColumns["columns"]>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <Link href={`/panel/athletes/${row.original.athleteId}`}>
+              <DropdownMenuItem>Atleta</DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+
             <DropdownMenuItem>Detalhes</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

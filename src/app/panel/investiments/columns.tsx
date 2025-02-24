@@ -5,6 +5,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Arena,
@@ -14,7 +16,6 @@ import {
   InvestimentType,
   Tournament,
 } from "@prisma/client";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { CircleCheck, CircleMinus, MoreHorizontal } from "lucide-react";
@@ -25,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import DialogInvestmentAthlete from "../athletes/_dialogs/dialog-investment-athlete";
+import Link from "next/link";
 
 export interface InvestimentColumns {
   columns: {
@@ -182,7 +184,13 @@ export const columns: ColumnDef<InvestimentColumns["columns"]>[] = [
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
+            <Link href={`/panel/athletes/${row.original.athleteId}`}>
+              <DropdownMenuItem>Atleta</DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+
             {row.original.investimentGroup && (
               <DropdownMenuItem>Detalhes do Grupo</DropdownMenuItem>
             )}

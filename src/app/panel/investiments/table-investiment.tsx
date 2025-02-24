@@ -25,15 +25,20 @@ const TableInvestiments = ({
   athlete?: Athlete;
 }) => {
   const [showGroup, setShowGroup] = useState(false);
-  const queryKey = athlete ? "investiment-list-athlete" : "investiments";
+  const queryKey = athlete
+    ? ["investiment-list-athlete", athlete.id]
+    : ["investiments"];
   const { data, isLoading } = useQuery({
-    queryKey: [queryKey],
+    queryKey: queryKey,
     queryFn: getInvestiments,
     initialData: invetiments,
   });
 
+  const queryGroupKey = athlete
+    ? ["group-investiment-list-athlete", athlete.id]
+    : ["group-investiments"];
   const { data: dataGroup, isLoading: isLoadingGroup } = useQuery({
-    queryKey: ["group-investiments"],
+    queryKey: queryGroupKey,
     queryFn: getGroupInvestiments,
     initialData: groupInvestiments,
   });
