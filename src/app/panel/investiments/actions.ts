@@ -47,3 +47,28 @@ export async function getGroupInvestiments() {
     },
   });
 }
+
+export async function getInvestimentById(id: string) {
+  return db.investiment.findUnique({
+    where: { id },
+    include: {
+      investimentGroup: {
+        include: {
+          pair: true,
+          tournament: {
+            include: {
+              arena: true,
+            },
+          },
+          investiments: {
+            include: {
+              investimentType: true,
+            },
+          },
+        },
+      },
+      athlete: true,
+      investimentType: true,
+    },
+  });
+}
