@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,15 +6,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Plus } from "lucide-react";
 import React from "react";
 import FormCreateArena from "./form-create-arena";
+import { Arena } from "@prisma/client";
 
-const DialogCreateArena = ({ combobox = false }: { combobox?: boolean }) => {
+const DialogCreateArena = ({
+  trigger,
+  arena,
+}: {
+  trigger: React.JSX.Element;
+  arena?: Arena;
+}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {combobox ? (
+        {/* {combobox ? (
           <Button size="sm" variant="ghost">
             <Plus /> Nova arena
           </Button>
@@ -24,15 +29,16 @@ const DialogCreateArena = ({ combobox = false }: { combobox?: boolean }) => {
             <Plus />
             Arena
           </Button>
-        )}
+        )} */}
+        {trigger}
       </DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>
-          <DialogTitle>Adicionar Arena</DialogTitle>
+          <DialogTitle>{arena ? "Editar" : "Adicionar"} Arena</DialogTitle>
           <DialogDescription>Informe os dados da Arena.</DialogDescription>
         </DialogHeader>
-        <FormCreateArena />
+        <FormCreateArena arena={arena} />
       </DialogContent>
     </Dialog>
   );

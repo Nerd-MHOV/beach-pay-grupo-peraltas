@@ -12,3 +12,17 @@ export async function createArena(
 ) {
   return await db.arena.create({ data });
 }
+
+export async function updateArena(
+  data: Omit<Arena, "createdAt" | "updatedAt">
+) {
+  return await db.arena.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      ...data,
+      updatedAt: new Date(),
+    },
+  });
+}

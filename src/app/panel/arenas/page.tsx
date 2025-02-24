@@ -3,6 +3,8 @@ import DialogCreateArena from "../arenas/dialog-create-arena";
 import TableArenas from "./table-arenas";
 import { getArenas } from "./actions";
 import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const Page = async () => {
   const arenas = await getArenas();
@@ -11,7 +13,14 @@ const Page = async () => {
       <Header.Root>
         <Header.Title>Arenas</Header.Title>
         <Header.Content>
-          <DialogCreateArena />
+          <DialogCreateArena
+            trigger={
+              <Button size="sm">
+                <Plus />
+                Arena
+              </Button>
+            }
+          />
         </Header.Content>
       </Header.Root>
 

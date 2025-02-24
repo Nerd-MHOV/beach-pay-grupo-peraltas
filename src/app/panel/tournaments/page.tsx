@@ -3,6 +3,8 @@ import DialogCreateTournament from "./dialog-create-tournament";
 import TableTournaments from "./table-tournaments";
 import { getTournaments } from "./actions";
 import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const Page = async () => {
   const tournaments = await getTournaments();
@@ -11,7 +13,14 @@ const Page = async () => {
       <Header.Root>
         <Header.Title>Torneios</Header.Title>
         <Header.Content>
-          <DialogCreateTournament />
+          <DialogCreateTournament
+            trigger={
+              <Button size="sm">
+                <Plus />
+                Torneio
+              </Button>
+            }
+          />
         </Header.Content>
       </Header.Root>
 

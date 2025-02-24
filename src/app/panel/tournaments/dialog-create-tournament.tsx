@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,19 +6,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Plus } from "lucide-react";
 import React from "react";
 import FormCreateTournament from "./form-create-tournament";
+import { Tournament } from "@prisma/client";
 
 const DialogCreateTournament = ({
-  combobox = false,
+  trigger,
+  tournament,
 }: {
-  combobox?: boolean;
+  trigger: React.JSX.Element;
+  tournament?: Tournament;
 }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {combobox ? (
+        {/* {combobox ? (
           <Button size="sm" variant="ghost">
             <Plus /> Novo Torneio
           </Button>
@@ -28,7 +29,8 @@ const DialogCreateTournament = ({
             <Plus />
             Torneio
           </Button>
-        )}
+        )} */}
+        {trigger}
       </DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
@@ -36,7 +38,7 @@ const DialogCreateTournament = ({
           <DialogTitle>Adicionar Torneio</DialogTitle>
           <DialogDescription>Informe os dados do torneio.</DialogDescription>
         </DialogHeader>
-        <FormCreateTournament />
+        <FormCreateTournament tournament={tournament} />
       </DialogContent>
     </Dialog>
   );

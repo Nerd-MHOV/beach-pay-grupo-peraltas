@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { z } from "zod";
-import { createArena } from "./actions";
+import { createArena, updateArena } from "./actions";
 import {
   Form,
   FormControl,
@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/combobox";
 import { cities } from "./cities";
+import { Arena } from "@prisma/client";
 
 const formSchema = z.object({
   name: z
@@ -34,10 +35,10 @@ const formSchema = z.object({
     .max(255),
 });
 
-const FormCreateArena = () => {
+const FormCreateArena = ({ arena }: { arena?: Arena }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { mutateAsync: createArenaFn } = useMutation({
+  const { mutateAsync: createArenaFn, isPending } = useMutation({
     mutationKey: ["create-arena"],
     mutationFn: createArena,
     onError: () => {
@@ -63,12 +64,46 @@ const FormCreateArena = () => {
     },
   });
 
+  const { mutateAsync: updateArenaFn, isPending: isPendingUpdate } =
+    useMutation({
+      mutationKey: ["update-arena"],
+      mutationFn: updateArena,
+      onError: () => {
+        toast({
+          title: "Algo de Errado",
+          description: "Não foi possivel atualizar a arena. Tente novamente.",
+          variant: "destructive",
+        });
+      },
+      onSuccess: (data) => {
+        queryClient.setQueryData(["arenas"], (old: Arena[]) =>
+          old.map((a) => (a.id === data.id ? data : a))
+        );
+        toast({
+          title: "Arena Atualizada",
+          description: "A arena foi atualizada com sucesso.",
+        });
+      },
+    });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (arena) {
+      updateArenaFn({ ...values, id: arena.id || "" });
+      return;
+    }
     createArenaFn(values);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      ...(arena
+        ? {
+            name: arena.name,
+            city: arena.city,
+          }
+        : {}),
+    },
   });
   return (
     <Form {...form}>
@@ -108,7 +143,12 @@ const FormCreateArena = () => {
           )}
         />
         <div className="flex w-full justify-end mt-5">
-          <Button onClick={form.handleSubmit(onSubmit)}>Adicionar</Button>
+          <Button
+            isLoading={isPending || isPendingUpdate}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {arena ? "Atualizar" : "Adicionar"}
+          </Button>
         </div>
       </form>
     </Form>

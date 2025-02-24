@@ -3,6 +3,8 @@ import DialogCreateInvestimentType from "./dialog-create-investiment-type";
 import { getInvestimentsType } from "./actions";
 import TableInvestimentTypes from "./table-investiment-types";
 import { Header } from "@/components/Header";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Page = async () => {
   const investiments = await getInvestimentsType();
@@ -11,7 +13,14 @@ const Page = async () => {
       <Header.Root>
         <Header.Title>Tipos de Investimentos</Header.Title>
         <Header.Content>
-          <DialogCreateInvestimentType />
+          <DialogCreateInvestimentType
+            trigger={
+              <Button size="sm">
+                <Plus />
+                Tipo de investimento
+              </Button>
+            }
+          />
         </Header.Content>
       </Header.Root>
 

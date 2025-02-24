@@ -11,11 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserRole } from "@prisma/client";
+import { InvestimentType, UserRole } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createInvestimentType } from "./actions";
+import { createInvestimentType, updateInvestimentType } from "./actions";
 import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/multiSelect";
 
@@ -25,10 +25,14 @@ const formSchema = z.object({
   canSee: z.array(z.nativeEnum(UserRole)).min(1),
 });
 
-const FormCreateInvestimentType = () => {
+const FormCreateInvestimentType = ({
+  investimentType,
+}: {
+  investimentType?: InvestimentType;
+}) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { mutateAsync: createInvestimentTypeFn } = useMutation({
+  const { mutateAsync: createInvestimentTypeFn, isPending } = useMutation({
     mutationKey: ["create-investiment-type"],
     mutationFn: createInvestimentType,
     onError: (error) => {
@@ -57,8 +61,37 @@ const FormCreateInvestimentType = () => {
     },
   });
 
+  const { mutateAsync: updateInvestimentTypeFn, isPending: isPendingUpdate } =
+    useMutation({
+      mutationKey: ["update-investiment-type"],
+      mutationFn: updateInvestimentType,
+      onError: (error) => {
+        console.error(error);
+        toast({
+          title: "Algo de Errado",
+          description:
+            "Não foi possivel atualizar o tipo de investimento. Tente novamente.",
+          variant: "destructive",
+        });
+      },
+      onSuccess: (data) => {
+        queryClient.setQueryData(
+          ["investiment-types"],
+          (old: InvestimentType[]) =>
+            old.map((type) => (type.id === data.id ? data : type))
+        );
+        toast({
+          title: "Tipo de Investimento Atualizado",
+          description: "O tipo de investimento foi atualizado com sucesso.",
+        });
+      },
+    });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (investimentType) {
+      updateInvestimentTypeFn({ ...values, id: investimentType.id });
+      return;
+    }
     createInvestimentTypeFn(values);
   };
 
@@ -66,6 +99,13 @@ const FormCreateInvestimentType = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       canSee: ["admin"],
+      ...(investimentType
+        ? {
+            name: investimentType.name,
+            description: investimentType.description,
+            canSee: investimentType.canSee,
+          }
+        : {}),
     },
   });
   return (
@@ -131,8 +171,12 @@ const FormCreateInvestimentType = () => {
         />
 
         <div className="flex w-full justify-end mt-5">
-          <Button type="button" onClick={form.handleSubmit(onSubmit)}>
-            Adicionar
+          <Button
+            isLoading={isPending || isPendingUpdate}
+            type="button"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {investimentType ? "Atualizar" : "Adicionar"}
           </Button>
         </div>
       </form>

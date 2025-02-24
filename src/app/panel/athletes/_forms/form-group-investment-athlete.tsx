@@ -160,7 +160,7 @@ const FormGroupInvestmentAthlete = ({
   });
 
   const { mutateAsync: createInvestmentAthleteFn, isPending } = useMutation({
-    mutationKey: ["create-investment-athlete"],
+    mutationKey: ["create-group-investment-athlete"],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       let file: string | null = null;
       if (values.proof) {
@@ -228,7 +228,7 @@ const FormGroupInvestmentAthlete = ({
     mutateAsync: updateInvestimentAthleteFn,
     isPending: isPendingUpdate,
   } = useMutation({
-    mutationKey: ["create-investment-athlete"],
+    mutationKey: ["update-group-investment-athlete"],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       let file: string | null = null;
       if (values.proof) {
@@ -429,7 +429,15 @@ const FormGroupInvestmentAthlete = ({
                     }
                     selected={field.value || ""}
                     onSelect={(value) => field.onChange(value)}
-                    above={<DialogCreateTournament combobox />}
+                    above={
+                      <DialogCreateTournament
+                        trigger={
+                          <Button size="sm" variant="ghost">
+                            <Plus /> Novo Torneio
+                          </Button>
+                        }
+                      />
+                    }
                   />
                 </FormControl>
                 <FormMessage />

@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
-import { CircleX } from "lucide-react";
+import { CircleX, Plus } from "lucide-react";
 import { useState } from "react";
 
 const formSchema = z.object({
@@ -269,7 +269,15 @@ const FormInvestmentAthlete = ({
                   }))}
                   selected={field.value}
                   onSelect={(value) => field.onChange(value)}
-                  above={<DialogCreateInvestimentType combobox />}
+                  above={
+                    <DialogCreateInvestimentType
+                      trigger={
+                        <Button size="sm" variant="ghost">
+                          <Plus /> Novo Tipo de Investimento
+                        </Button>
+                      }
+                    />
+                  }
                 />
               </FormControl>
               <FormMessage />

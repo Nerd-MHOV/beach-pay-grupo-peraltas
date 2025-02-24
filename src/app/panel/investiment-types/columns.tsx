@@ -10,6 +10,7 @@ import { InvestimentType } from "@prisma/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import DialogCreateInvestimentType from "./dialog-create-investiment-type";
 
 export const columns: ColumnDef<InvestimentType>[] = [
   {
@@ -39,7 +40,7 @@ export const columns: ColumnDef<InvestimentType>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({}) => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -49,7 +50,19 @@ export const columns: ColumnDef<InvestimentType>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Detalhes</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <DialogCreateInvestimentType
+                investimentType={row.original}
+                trigger={
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                  >
+                    Detalhes
+                  </Button>
+                }
+              />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

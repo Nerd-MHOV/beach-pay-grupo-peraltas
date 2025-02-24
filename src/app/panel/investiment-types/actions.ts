@@ -5,9 +5,21 @@ import { InvestimentType } from "@prisma/client";
 export async function createInvestimentType(
   data: Omit<InvestimentType, "id" | "createdAt" | "updatedAt">
 ) {
-  console.log(data, data.canSee);
-
   return await db.investimentType.create({ data });
+}
+
+export async function updateInvestimentType(
+  data: Omit<InvestimentType, "createdAt" | "updatedAt">
+) {
+  return await db.investimentType.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      ...data,
+      updatedAt: new Date(),
+    },
+  });
 }
 
 export async function getInvestimentsType() {

@@ -11,10 +11,12 @@ import { Arena, Tournament } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
+import DialogCreateTournament from "./dialog-create-tournament";
 
 export const columns: ColumnDef<
   Tournament & {
     arena: Arena;
+    arena_name: string;
   }
 >[] = [
   {
@@ -22,12 +24,8 @@ export const columns: ColumnDef<
     header: "Nome",
   },
   {
-    id: "arena",
+    id: "arena_name",
     header: "Arena",
-    cell: ({ row }) => {
-      const tournament = row.original;
-      return <span>{tournament.arena.name}</span>;
-    },
   },
   {
     accessorKey: "description",
@@ -50,8 +48,6 @@ export const columns: ColumnDef<
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const tournament = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -61,7 +57,19 @@ export const columns: ColumnDef<
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Detalhes</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <DialogCreateTournament
+                tournament={row.original}
+                trigger={
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                  >
+                    Detalhes
+                  </Button>
+                }
+              />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

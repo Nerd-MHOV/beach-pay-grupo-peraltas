@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/combobox";
-import { createTournament } from "./actions";
+import { createTournament, updateTournament } from "./actions";
 import { getArenas } from "../arenas/actions";
 import { format } from "date-fns";
 import DialogCreateArena from "../arenas/dialog-create-arena";
@@ -25,11 +25,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
+import { Tournament } from "@prisma/client";
 
 const formSchema = z.object({
   name: z
@@ -59,7 +60,7 @@ const formSchema = z.object({
     .transform((v) => v || ""),
 });
 
-const FormCreateTournament = () => {
+const FormCreateTournament = ({ tournament }: { tournament?: Tournament }) => {
   const { toast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -68,7 +69,7 @@ const FormCreateTournament = () => {
     queryKey: ["arenas"],
     queryFn: getArenas,
   });
-  const { mutateAsync: createArenaFn } = useMutation({
+  const { mutateAsync: createTournamentFn, isPending } = useMutation({
     mutationKey: ["create-tournament"],
     mutationFn: createTournament,
     onError: () => {
@@ -94,9 +95,40 @@ const FormCreateTournament = () => {
     },
   });
 
+  const { mutateAsync: updateTournamentFn, isPending: isPendingUpdate } =
+    useMutation({
+      mutationKey: ["update-tournament"],
+      mutationFn: updateTournament,
+      onError: () => {
+        toast({
+          title: "Algo de Errado",
+          description: "Não foi possivel atualizar o torneio. Tente novamente.",
+          variant: "destructive",
+        });
+      },
+      onSuccess: (data) => {
+        queryClient.setQueryData(["tournaments"], (old: Tournament[]) =>
+          old.map((torn) => (torn.id === data.id ? data : torn))
+        );
+        toast({
+          title: "Torneio Atualizado",
+          description: "O torneio foi atualizado com sucesso.",
+        });
+      },
+    });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { date, ...rest } = values;
-    createArenaFn({
+    if (tournament) {
+      updateTournamentFn({
+        ...rest,
+        fromDate: date.from,
+        toDate: date.to,
+        id: tournament.id || "",
+      });
+      return;
+    }
+    createTournamentFn({
       ...rest,
       fromDate: date.from,
       toDate: date.to,
@@ -105,6 +137,19 @@ const FormCreateTournament = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      ...(tournament
+        ? {
+            name: tournament.name,
+            arenaId: tournament.arenaId,
+            date: {
+              from: tournament.fromDate,
+              to: tournament.toDate,
+            },
+            description: tournament.description || "",
+          }
+        : {}),
+    },
   });
   return (
     <Form {...form}>
@@ -137,7 +182,15 @@ const FormCreateTournament = () => {
                   }))}
                   selected={field.value}
                   onSelect={(value) => field.onChange(value)}
-                  above={<DialogCreateArena combobox />}
+                  above={
+                    <DialogCreateArena
+                      trigger={
+                        <Button size="sm" variant="ghost">
+                          <Plus /> Nova arena
+                        </Button>
+                      }
+                    />
+                  }
                 />
               </FormControl>
               <FormMessage />
@@ -215,7 +268,12 @@ const FormCreateTournament = () => {
         />
 
         <div className="flex w-full justify-end mt-5">
-          <Button onClick={form.handleSubmit(onSubmit)}>Adicionar</Button>
+          <Button
+            isLoading={isPending || isPendingUpdate}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {tournament ? "Atualizar" : "Adicionar"}
+          </Button>
         </div>
       </form>
     </Form>

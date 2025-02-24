@@ -40,7 +40,9 @@ const DialogGroupInvestmentAthlete = ({
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>
-          <DialogTitle>Declarar Grupo de Investimento</DialogTitle>
+          <DialogTitle>
+            {investimentGroup ? "Editar" : "Declarar"} Grupo de Investimento
+          </DialogTitle>
           <DialogDescription>
             Informe os dados do investimento.
           </DialogDescription>
