@@ -23,6 +23,7 @@ export async function getInvestiments(athleteId?: string) {
     ...(athleteId && { where: { athleteId } }),
     include: {
       investimentType: true,
+      athlete: true,
     },
     orderBy: {
       date: "desc",

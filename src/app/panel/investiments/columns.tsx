@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import DialogInvestmentAthlete from "../athletes/_dialogs/dialog-investment-athlete";
 import Link from "next/link";
+import DialogGroupInvestmentAthlete from "../athletes/_dialogs/dialog-group-investment-athlete";
 
 export interface InvestimentColumns {
   columns: {
@@ -192,7 +193,19 @@ export const columns: ColumnDef<InvestimentColumns["columns"]>[] = [
             <DropdownMenuSeparator />
 
             {row.original.investimentGroup && (
-              <DropdownMenuItem>Detalhes do Grupo</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <DialogGroupInvestmentAthlete
+                  investimentGroup={row.original.investimentGroup}
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                    >
+                      Detalhes do Grupo
+                    </Button>
+                  }
+                />
+              </DropdownMenuItem>
             )}
             <DropdownMenuItem asChild>
               <DialogInvestmentAthlete

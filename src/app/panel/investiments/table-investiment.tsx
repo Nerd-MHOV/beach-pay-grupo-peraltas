@@ -56,7 +56,14 @@ const TableInvestiments = ({
           }
           athlete={athlete}
         />
-        <DialogGroupInvestmentAthlete combobox athlete={athlete} />
+        <DialogGroupInvestmentAthlete
+          trigger={
+            <Button size="sm" variant="ghost">
+              <Plus /> Novo Grupo de Investimento
+            </Button>
+          }
+          athlete={athlete}
+        />
         <div className="flex items-center space-x-2">
           <Label htmlFor="table-mode">Único</Label>
           <Switch

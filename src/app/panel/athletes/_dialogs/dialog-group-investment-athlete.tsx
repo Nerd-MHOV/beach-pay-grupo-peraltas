@@ -6,22 +6,24 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Athlete } from "@prisma/client";
+import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
 import FormGroupInvestmentAthlete from "../_forms/form-group-investment-athlete";
-import { Plus } from "lucide-react";
 
 const DialogGroupInvestmentAthlete = ({
   athlete,
-  combobox = false,
+  trigger,
+  investimentGroup,
 }: {
   athlete?: Athlete;
-  combobox?: boolean;
+  trigger: React.JSX.Element;
+  investimentGroup?: {
+    investiments: Investiment[];
+  } & InvestimentGroup;
 }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {combobox ? (
+        {/* {combobox ? (
           <Button size="sm" variant="ghost">
             <Plus /> Novo Grupo de Investimento
           </Button>
@@ -32,7 +34,8 @@ const DialogGroupInvestmentAthlete = ({
           >
             Declarar Grupo de Investimento
           </Button>
-        )}
+        )} */}
+        {trigger}
       </DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
@@ -42,7 +45,10 @@ const DialogGroupInvestmentAthlete = ({
             Informe os dados do investimento.
           </DialogDescription>
         </DialogHeader>
-        <FormGroupInvestmentAthlete athlete={athlete} />
+        <FormGroupInvestmentAthlete
+          investimentGroup={investimentGroup}
+          athlete={athlete}
+        />
       </DialogContent>
     </Dialog>
   );

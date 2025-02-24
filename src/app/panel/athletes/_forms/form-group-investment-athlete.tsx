@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Athlete } from "@prisma/client";
+import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
   createGroupInvetimentAthlete,
   getAthletes,
   saveProof,
+  updateGroupInvestimentAthlete,
   updateInvestimentProof,
 } from "../actions";
 import DialogCreateTournament from "../../tournaments/dialog-create-tournament";
@@ -31,8 +32,9 @@ import { getInvestiments } from "../../investiment-types/actions";
 import { format } from "date-fns";
 import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
-import { useEffect } from "react";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CircleX, Plus } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   athleteId: z.string().min(2).max(255),
@@ -106,7 +108,37 @@ const formSchema = z.object({
     .transform((v) => v ?? null),
 });
 
-const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
+const getFileName = (values: z.infer<typeof formSchema>) => {
+  if (!values.proof) return "";
+  const fileExtension = values.proof.name.split(".").pop();
+  return `investments-${values.athleteId}-group-${format(
+    new Date(),
+    "dd-mm-yy"
+  )}.${fileExtension}`;
+};
+
+const FormGroupInvestmentAthlete = ({
+  athlete,
+  investimentGroup,
+}: {
+  athlete?: Athlete;
+  investimentGroup?: {
+    investiments: Investiment[];
+  } & InvestimentGroup;
+}) => {
+  const paid = investimentGroup?.investiments?.every(
+    (investiment) => investiment.paid
+  )
+    ? investimentGroup?.investiments[0]?.paid
+    : null;
+  const proof = investimentGroup?.investiments?.every(
+    (investiment) => investiment.proof
+  )
+    ? investimentGroup.investiments[0]?.proof
+    : null;
+  const [investimentProof, setInvestimentProof] = useState<string | null>(
+    proof
+  );
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -123,9 +155,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
   const { data: investiments = [] } = useQuery({
     queryKey: ["investment-athletes"],
     queryFn: async () => {
-      return (await getInvestiments(form.getValues().athleteId)).filter(
-        (investiments) => investiments.investimentGroupId === null
-      );
+      return await getInvestiments(form.getValues().athleteId);
     },
   });
 
@@ -134,14 +164,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       let file: string | null = null;
       if (values.proof) {
-        const fileExtension = values.proof.name.split(".").pop();
-        const filePath = await saveProof(
-          values.proof,
-          `investments-${values.athleteId}-group-${format(
-            new Date(),
-            "dd-mm-yy"
-          )}.${fileExtension}`
-        );
+        const filePath = await saveProof(values.proof, getFileName(values));
         file = filePath;
       }
 
@@ -179,7 +202,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ["group-investment-athletes"],
+        ["group-investiments", "group-investiment-list-athlete"],
         (old: undefined) => [...(old || []), data]
       );
       form.reset({
@@ -201,7 +224,70 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
     },
   });
 
+  const {
+    mutateAsync: updateInvestimentAthleteFn,
+    isPending: isPendingUpdate,
+  } = useMutation({
+    mutationKey: ["create-investment-athlete"],
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      let file: string | null = null;
+      if (values.proof) {
+        const filePath = await saveProof(values.proof, getFileName(values));
+        file = filePath;
+      }
+
+      if (values.proof || values.paid) {
+        await updateInvestimentProof(
+          values.investiments.map((id) => ({ id })),
+          {
+            file,
+            date: values.paid,
+          }
+        );
+      }
+
+      return await updateGroupInvestimentAthlete(
+        {
+          id: investimentGroup?.id || "",
+          athleteId: values.athleteId,
+          pairId: values.pairId,
+          description: values.description,
+          km: values.km,
+          km_racional: values.km_racional,
+          pairAmount: values.pairAmount,
+          podium: values.podium,
+          tournamentId: values.tournamentId,
+        },
+        values.investiments.map((id) => ({ id }))
+      );
+    },
+    onError: () => {
+      toast({
+        title: "Algo de Errado",
+        description:
+          "Não foi possivel atualizar o investimento. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ["group-investiments", "group-investiment-list-athlete"],
+        (old: InvestimentGroup[]) => {
+          return (old || []).map((item) => (item.id === data.id ? data : item));
+        }
+      );
+      toast({
+        title: "Investimento Atualizado",
+        description: "O investimento foi atualizado com sucesso.",
+      });
+    },
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (investimentGroup) {
+      updateInvestimentAthleteFn(values);
+      return;
+    }
     createInvestmentAthleteFn(values);
   };
 
@@ -211,6 +297,24 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
       ...(athlete ? { athleteId: athlete.id } : {}),
       investiments: [],
       total: 0,
+      ...(investimentGroup
+        ? {
+            athleteId: investimentGroup.athleteId,
+            investiments: investimentGroup.investiments.map((inv) => inv.id),
+            paid: paid,
+            pairId: investimentGroup.pairId,
+            pairAmount: investimentGroup.pairAmount ?? undefined,
+            podium: investimentGroup.podium ?? "",
+            km: investimentGroup.km ?? undefined,
+            km_racional: investimentGroup.km_racional ?? undefined,
+            description: investimentGroup.description ?? undefined,
+            tournamentId: investimentGroup.tournamentId,
+            total: investimentGroup.investiments.reduce<number>(
+              (acc, curr) => acc + curr.value,
+              0
+            ),
+          }
+        : {}),
     },
   });
 
@@ -460,20 +564,37 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
                                 {investiment.description}
                               </p>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              type="button"
-                              onClick={() => {
-                                const array = field.value?.filter(
-                                  (_, i) => i !== index
-                                );
-                                field.onChange(array);
-                                setTotal(array);
-                              }}
-                            >
-                              Remover
-                            </Button>
+                            <div className="flex flex-col gap-1">
+                              {investimentGroup && (
+                                <DialogInvestmentAthlete
+                                  investiment={investiment}
+                                  trigger={
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      type="button"
+                                    >
+                                      Editar
+                                    </Button>
+                                  }
+                                />
+                              )}
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                                className="bg-red-100 text-red-800"
+                                onClick={() => {
+                                  const array = field.value?.filter(
+                                    (_, i) => i !== index
+                                  );
+                                  field.onChange(array);
+                                  setTotal(array);
+                                }}
+                              >
+                                Remover
+                              </Button>
+                            </div>
                           </div>
                           <Separator className="my-2" />
                         </>
@@ -502,7 +623,9 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
                           (investiment) =>
                             !form
                               .getValues()
-                              .investiments.includes(investiment.id)
+                              .investiments.includes(investiment.id) &&
+                            (investiment.investimentGroupId === null ||
+                              investimentGroup)
                         )
                         .map((investiment) => ({
                           label: `${format(
@@ -542,7 +665,7 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
             name="total"
             render={({ field }) => (
               <FormItem className="pointer-events-none">
-                <FormLabel>Comprovante</FormLabel>
+                <FormLabel>Total</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -570,15 +693,44 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
               <FormItem>
                 <FormLabel>Comprovante</FormLabel>
                 <FormControl>
-                  <Input
-                    type="file"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] || null)
-                    }
-                    onBlur={field.onBlur}
-                    name={field.name}
-                    ref={field.ref}
-                  />
+                  {investimentProof && proof ? (
+                    <div className="relative ">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setInvestimentProof(null);
+                        }}
+                        className="absolute top-0 right-0 "
+                      >
+                        <CircleX className="text-red-600" />
+                      </Button>
+
+                      <Image
+                        onClick={() => {
+                          const url = `${window.location.origin}${proof}`;
+                          window.open(url, "_blank");
+                        }}
+                        src={proof}
+                        width={200}
+                        height={200}
+                        objectFit="cover"
+                        alt="proof"
+                      />
+                    </div>
+                  ) : (
+                    <Input
+                      type="file"
+                      onChange={(e) => {
+                        field.onChange(e.target.files?.[0] || null);
+                        if (form.getValues().paid === null)
+                          form.setValue("paid", new Date());
+                      }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -586,8 +738,11 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
           />
         </div>
         <div className="flex w-full justify-end mt-5">
-          <Button isLoading={isPending} onClick={form.handleSubmit(onSubmit)}>
-            Investir
+          <Button
+            isLoading={isPending || isPendingUpdate}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {investimentGroup ? "Atualizar" : "Investir"}
           </Button>
         </div>
       </form>

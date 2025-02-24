@@ -87,7 +87,17 @@ export const columns: ColumnDef<Athlete>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <DialogGroupInvestmentAthlete athlete={athlete} />
+              <DialogGroupInvestmentAthlete
+                trigger={
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                  >
+                    Declarar Grupo de Investimento
+                  </Button>
+                }
+                athlete={athlete}
+              />
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <DialogInvestmentAthlete
