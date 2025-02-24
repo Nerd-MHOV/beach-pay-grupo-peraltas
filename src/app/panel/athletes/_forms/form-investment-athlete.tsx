@@ -16,8 +16,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getInvestimentsType } from "../../investiment-types/actions";
 import DialogCreateInvestimentType from "../../investiment-types/dialog-create-investiment-type";
-import { createInvestmentAthlete, saveProof } from "../actions";
-import { Athlete } from "@prisma/client";
+import {
+  createInvestmentAthlete,
+  getAthletes,
+  saveProof,
+  updateInvestimentAthlete,
+} from "../actions";
+import { Athlete, Investiment, InvestimentType } from "@prisma/client";
 import MoneyInput from "@/components/moneyInput";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
@@ -25,6 +30,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import Image from "next/image";
+import { CircleX } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   investimentTypeId: z.string().min(2).max(255),
@@ -53,33 +61,47 @@ const formSchema = z.object({
     .transform((v) => v ?? null),
 });
 
+const getFileName = (values: z.infer<typeof formSchema>) => {
+  if (!values.proof) return "";
+  const fileExtension = values.proof.name.split(".").pop();
+  return `investments-${values.athleteId}-${values.investimentTypeId}-${format(
+    new Date(),
+    "dd-mm-yy"
+  )}.${fileExtension}`;
+};
+
 const FormInvestmentAthlete = ({
   athlete,
+  investiment,
   clean = false,
 }: {
+  investiment?: {
+    athlete: Athlete;
+  } & Investiment;
   athlete?: Athlete;
   clean?: boolean;
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [investimentProof, setInvestimentProof] = useState<string | null>(
+    investiment?.proof || null
+  );
 
   const { data: investmentTypes } = useQuery({
     queryKey: ["investiment-types"],
     queryFn: getInvestimentsType,
+  });
+
+  const { data: athletes } = useQuery({
+    queryKey: ["athletes"],
+    queryFn: getAthletes,
   });
   const { mutateAsync: createInvestmentAthleteFn, isPending } = useMutation({
     mutationKey: ["create-investment-athlete"],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       let file: string | null = null;
       if (values.proof) {
-        const fileExtension = values.proof.name.split(".").pop();
-        const filePath = await saveProof(
-          values.proof,
-          `investments-${values.athleteId}-${values.investimentTypeId}-${format(
-            new Date(),
-            "dd-mm-yy"
-          )}.${fileExtension}`
-        );
+        const filePath = await saveProof(values.proof, getFileName(values));
 
         file = filePath;
       }
@@ -123,7 +145,57 @@ const FormInvestmentAthlete = ({
     },
   });
 
+  const { mutateAsync: updateInvestmentAthleteFn, isPending: isPendingUpdate } =
+    useMutation({
+      mutationKey: ["update-investment-athlete"],
+      mutationFn: async (values: z.infer<typeof formSchema>) => {
+        let file: string | null = null;
+        if (values.proof) {
+          const filePath = await saveProof(values.proof, getFileName(values));
+
+          file = filePath;
+        }
+        return await updateInvestimentAthlete({
+          id: investiment?.id || "",
+          ...values,
+          proof: file,
+          investimentGroupId: null,
+        });
+      },
+      onError: () => {
+        toast({
+          title: "Algo de Errado",
+          description:
+            "Não foi possivel atualizar o investimento. Tente novamente.",
+          variant: "destructive",
+        });
+      },
+      onSuccess: (data) => {
+        queryClient.setQueryData(
+          ["investment-athletes", "investiments", "investiment-list-athlete"],
+          (old: ({ investimentType: InvestimentType } & Investiment)[]) =>
+            (old || []).map((invt) => {
+              if (invt?.id === data.id) {
+                return {
+                  ...data,
+                  new: true,
+                };
+              }
+              return invt;
+            })
+        );
+        toast({
+          title: "Investimento Atualizado",
+          description: "O investimento foi atualizado com sucesso.",
+        });
+      },
+    });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (investiment) {
+      updateInvestmentAthleteFn(values);
+      return;
+    }
     createInvestmentAthleteFn(values);
   };
 
@@ -131,6 +203,16 @@ const FormInvestmentAthlete = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...(athlete ? { athleteId: athlete.id } : {}),
+      ...(investiment
+        ? {
+            athleteId: investiment.athleteId,
+            investimentTypeId: investiment.investimentTypeId,
+            value: investiment.value,
+            date: investiment.date,
+            description: investiment.description,
+            paid: investiment.paid,
+          }
+        : {}),
     },
   });
 
@@ -159,7 +241,10 @@ const FormInvestmentAthlete = ({
                             value: athlete.id,
                           },
                         ]
-                      : []
+                      : athletes?.map((ath) => ({
+                          label: ath.name,
+                          value: ath.id,
+                        })) || []
                   }
                   selected={field.value}
                   onSelect={(value) => field.onChange(value)}
@@ -233,15 +318,44 @@ const FormInvestmentAthlete = ({
               <FormItem>
                 <FormLabel>Comprovante</FormLabel>
                 <FormControl>
-                  <Input
-                    type="file"
-                    onChange={(e) =>
-                      field.onChange(e.target.files?.[0] || null)
-                    }
-                    onBlur={field.onBlur}
-                    name={field.name}
-                    ref={field.ref}
-                  />
+                  {investimentProof && investiment?.proof ? (
+                    <div className="relative ">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setInvestimentProof(null);
+                        }}
+                        className="absolute top-0 right-0 "
+                      >
+                        <CircleX className="text-red-600" />
+                      </Button>
+
+                      <Image
+                        onClick={() => {
+                          const url = `${window.location.origin}${investiment?.proof}`;
+                          window.open(url, "_blank");
+                        }}
+                        src={investiment?.proof}
+                        width={200}
+                        height={200}
+                        objectFit="cover"
+                        alt="proof"
+                      />
+                    </div>
+                  ) : (
+                    <Input
+                      type="file"
+                      onChange={(e) => {
+                        field.onChange(e.target.files?.[0] || null);
+                        if (form.getValues().paid === null)
+                          form.setValue("paid", new Date());
+                      }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -250,8 +364,11 @@ const FormInvestmentAthlete = ({
         </div>
 
         <div className="flex w-full justify-end mt-5">
-          <Button isLoading={isPending} onClick={form.handleSubmit(onSubmit)}>
-            Investir
+          <Button
+            isLoading={isPending || isPendingUpdate}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {investiment ? "Atualizar" : "Investir"}
           </Button>
         </div>
       </form>

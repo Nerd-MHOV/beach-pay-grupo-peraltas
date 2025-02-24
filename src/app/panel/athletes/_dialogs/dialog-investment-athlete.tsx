@@ -7,44 +7,49 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import FormInvestmentAthlete from "../_forms/form-investment-athlete";
-import { Button } from "@/components/ui/button";
-import { Athlete } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { Athlete, Investiment } from "@prisma/client";
+import React, { JSX } from "react";
+import { format } from "date-fns";
 
 const DialogInvestmentAthlete = ({
   athlete,
-  combobox,
+  investiment,
+  trigger,
   clean = false,
 }: {
   athlete?: Athlete;
-  combobox?: boolean;
+  investiment?: {
+    athlete: Athlete;
+  } & Investiment;
+  trigger?: JSX.Element;
   clean?: boolean;
 }) => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {combobox ? (
-          <Button size="sm" variant="ghost">
-            <Plus /> Novo Investimento
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
-          >
-            Declarar Investimento
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>
-          <DialogTitle>Declarar Investimento</DialogTitle>
+          {investiment?.updatedAt && (
+            <div className="absolute top-0 right-8 p-4">
+              <span className="text-sm text-gray-400">
+                Última atualização em{" "}
+                {format(investiment.updatedAt, "dd/MM/yyyy HH:mm")}
+              </span>
+            </div>
+          )}
+          <DialogTitle>
+            {investiment ? "Editar" : "Declarar"} Investimento
+          </DialogTitle>
           <DialogDescription>
             Informe os dados do investimento.
           </DialogDescription>
         </DialogHeader>
-        <FormInvestmentAthlete athlete={athlete} clean={clean} />
+        <FormInvestmentAthlete
+          investiment={investiment}
+          athlete={athlete}
+          clean={clean}
+        />
       </DialogContent>
     </Dialog>
   );

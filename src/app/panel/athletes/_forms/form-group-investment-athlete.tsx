@@ -32,6 +32,7 @@ import { format } from "date-fns";
 import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
 import { useEffect } from "react";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   athleteId: z.string().min(2).max(255),
@@ -521,8 +522,12 @@ const FormGroupInvestmentAthlete = ({ athlete }: { athlete?: Athlete }) => {
                     }}
                     above={
                       <DialogInvestmentAthlete
-                        combobox
                         athlete={athlete}
+                        trigger={
+                          <Button size="sm" variant="ghost">
+                            <Plus /> Novo Investimento
+                          </Button>
+                        }
                         clean
                       />
                     }

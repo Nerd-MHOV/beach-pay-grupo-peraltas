@@ -54,7 +54,10 @@ export async function updateAthlete(
 ) {
   return await db.athlete.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      updatedAt: new Date(),
+    },
   });
 }
 

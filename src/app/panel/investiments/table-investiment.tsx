@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { columnsGroup } from "./columns-group";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const TableInvestiments = ({
   invetiments,
@@ -41,7 +43,14 @@ const TableInvestiments = ({
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <div className="flex gap-1 flex-wrap justify-center sm:justify-normal">
-        <DialogInvestmentAthlete combobox athlete={athlete} />
+        <DialogInvestmentAthlete
+          trigger={
+            <Button size="sm" variant="ghost">
+              <Plus /> Novo Investimento
+            </Button>
+          }
+          athlete={athlete}
+        />
         <DialogGroupInvestmentAthlete combobox athlete={athlete} />
         <div className="flex items-center space-x-2">
           <Label htmlFor="table-mode">Único</Label>
@@ -68,7 +77,7 @@ const TableInvestiments = ({
           data={data.map((investiment) => {
             return {
               ...investiment,
-              athlete: investiment.athlete.name,
+              athlete_name: investiment.athlete.name,
               investimentType: investiment.investimentType.name,
             };
           })}

@@ -30,6 +30,23 @@ export async function createInvestmentAthlete(
   });
 }
 
+export async function updateInvestimentAthlete(
+  data: Omit<Investiment, "createdAt" | "updatedAt">
+) {
+  return await db.investiment.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      ...data,
+      updatedAt: new Date(),
+    },
+    include: {
+      investimentType: true,
+    },
+  });
+}
+
 export async function createGroupInvetimentAthlete(
   data: Omit<InvestimentGroup, "id" | "createdAt" | "updatedAt">,
   investiments: { id: string }[]
