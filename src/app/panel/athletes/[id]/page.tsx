@@ -1,5 +1,4 @@
 import React from "react";
-import { getAthleteById } from "./actions";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { format } from "date-fns";
@@ -7,7 +6,8 @@ import FormCreateAthlete from "../_forms/form-create-athlete";
 import DialogDeleteAthlete from "./dialog-delete-athlete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RadarChartAthlete from "./radar-chart-athlete";
-import TableInvestiments from "../../investiments/table-investiment";
+import TableRoot from "../../investiments/table-root";
+import { getAthleteById } from "../actions";
 
 const Page = async ({
   params,
@@ -155,11 +155,7 @@ const Page = async ({
       </div>
 
       <div className="">
-        <TableInvestiments
-          invetiments={athlete.investiments}
-          groupInvestiments={athlete.investiment_group_athlete}
-          athlete={athlete}
-        />
+        <TableRoot athlete={athlete} />
       </div>
 
       <div className="bg-white p-7 rounded-xl shadow-lg">

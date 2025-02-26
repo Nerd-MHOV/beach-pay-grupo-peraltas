@@ -1,13 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
 import DialogCreateArena from "../arenas/dialog-create-arena";
 import TableArenas from "./table-arenas";
-import { getArenas } from "./actions";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import LoadingData from "@/components/LoadingData";
 
-const Page = async () => {
-  const arenas = await getArenas();
+const Page = () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
@@ -24,7 +23,9 @@ const Page = async () => {
         </Header.Content>
       </Header.Root>
 
-      <TableArenas arenas={arenas} />
+      <Suspense fallback={<LoadingData message="Buscando Arenas" />}>
+        <TableArenas />
+      </Suspense>
     </div>
   );
 };

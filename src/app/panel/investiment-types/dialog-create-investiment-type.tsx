@@ -19,19 +19,7 @@ const DialogCreateInvestimentType = ({
 }) => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {/* {combobox ? (
-          <Button size="sm" variant="ghost">
-            <Plus /> Novo Tipo de Investimento
-          </Button>
-        ) : (
-          <Button size="sm">
-            <Plus />
-            Tipo de investimento
-          </Button>
-        )} */}
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>

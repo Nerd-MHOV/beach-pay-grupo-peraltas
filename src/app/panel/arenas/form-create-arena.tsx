@@ -1,5 +1,4 @@
 "use client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { z } from "zod";
 import { createArena, updateArena } from "./actions";
@@ -37,77 +36,60 @@ const formSchema = z.object({
 
 const FormCreateArena = ({ arena }: { arena?: Arena }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const { mutateAsync: createArenaFn, isPending } = useMutation({
-    mutationKey: ["create-arena"],
-    mutationFn: createArena,
-    onError: () => {
+
+  const updateArenaFn = async (
+    data: Omit<Arena, "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const updatedArena = await updateArena(data);
+      toast({
+        title: `Arena ${updatedArena.name} Atualizada`,
+        description: "A arena foi atualizada com sucesso.",
+      });
+    } catch {
+      toast({
+        title: "Algo de Errado",
+        description: "Não foi possivel atualizar a arena. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const createArenaFn = async (
+    data: Omit<Arena, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const newArena = await createArena(data);
+      form.reset();
+      toast({
+        title: `Arena ${newArena.name} Adicionada`,
+        description: "A arena foi adicionada com sucesso.",
+      });
+    } catch {
       toast({
         title: "Algo de Errado",
         description: "Não foi possivel adicionar a arena. Tente novamente.",
         variant: "destructive",
       });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["arenas"], (old: undefined) => [
-        ...(old || []),
-        data,
-      ]);
-      form.reset({
-        city: "",
-        name: "",
-      });
-      toast({
-        title: "Arena Adicionada",
-        description: "A arena foi adicionada com sucesso.",
-      });
-    },
-  });
-
-  const { mutateAsync: updateArenaFn, isPending: isPendingUpdate } =
-    useMutation({
-      mutationKey: ["update-arena"],
-      mutationFn: updateArena,
-      onError: () => {
-        toast({
-          title: "Algo de Errado",
-          description: "Não foi possivel atualizar a arena. Tente novamente.",
-          variant: "destructive",
-        });
-      },
-      onSuccess: (data) => {
-        queryClient.setQueryData(["arenas"], (old: Arena[]) =>
-          old.map((a) => (a.id === data.id ? data : a))
-        );
-        toast({
-          title: "Arena Atualizada",
-          description: "A arena foi atualizada com sucesso.",
-        });
-      },
-    });
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (arena) {
-      updateArenaFn({ ...values, id: arena.id || "" });
-      return;
     }
-    createArenaFn(values);
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (arena) {
+      await updateArenaFn({ ...values, id: arena.id });
+    } else {
+      await createArenaFn(values);
+    }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      ...(arena
-        ? {
-            name: arena.name,
-            city: arena.city,
-          }
-        : {}),
-    },
+    defaultValues: arena ? { name: arena.name, city: arena.city } : {},
   });
+
   return (
     <Form {...form}>
-      <form className="space-y-3">
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -144,8 +126,10 @@ const FormCreateArena = ({ arena }: { arena?: Arena }) => {
         />
         <div className="flex w-full justify-end mt-5">
           <Button
-            isLoading={isPending || isPendingUpdate}
-            onClick={form.handleSubmit(onSubmit)}
+            isLoading={form.formState.isSubmitting}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
           >
             {arena ? "Atualizar" : "Adicionar"}
           </Button>

@@ -1,115 +1,104 @@
 "use server";
 
 import db from "@/core/infra/db";
-import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
-import fs from "fs";
-import path from "path";
+import { Athlete } from "@prisma/client";
+import { revalidateTag, unstable_cache } from "next/cache";
+
+export const getAthletes = unstable_cache(
+  async () => {
+    return await db.athlete.findMany({
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        investiments: {
+          include: {
+            investimentType: true,
+          },
+          orderBy: {
+            date: "desc",
+          },
+        },
+      },
+    });
+  },
+  ["athletes"],
+  {
+    tags: ["create-athlete", "update-athlete", "delete-athlete"],
+  }
+);
+
+export async function getAthleteById(id: string) {
+  return await db.athlete.findFirst({
+    where: { id },
+    include: {
+      investiments: {
+        include: {
+          athlete: true,
+          investimentGroup: {
+            include: {
+              pair: true,
+              tournament: {
+                include: {
+                  arena: true,
+                },
+              },
+              investiments: {
+                include: {
+                  investimentType: true,
+                },
+              },
+            },
+          },
+          investimentType: true,
+        },
+      },
+      investiment_group_athlete: {
+        include: {
+          athlete: true,
+          pair: true,
+          tournament: {
+            include: {
+              arena: true,
+            },
+          },
+          investiments: {
+            include: {
+              investimentType: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
 
 export async function createAthlete(
   data: Omit<Athlete, "id" | "createdAt" | "updatedAt">
 ) {
-  return await db.athlete.create({ data });
+  const athlete = await db.athlete.create({ data });
+  revalidateTag("create-athlete");
+  return athlete;
 }
 
-export async function getAthletes() {
-  return await db.athlete.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-}
-
-export async function createInvestmentAthlete(
-  data: Omit<Investiment, "id" | "createdAt" | "updatedAt">
+export async function updateAthlete(
+  data: Omit<Athlete, "createdAt" | "updatedAt">
 ) {
-  return await db.investiment.create({
-    data,
-    include: {
-      investimentType: true,
-    },
-  });
-}
-
-export async function updateInvestimentAthlete(
-  data: Omit<Investiment, "createdAt" | "updatedAt">
-) {
-  return await db.investiment.update({
-    where: {
-      id: data.id,
-    },
+  const athlete = await db.athlete.update({
+    where: { id: data.id },
     data: {
       ...data,
       updatedAt: new Date(),
     },
-    include: {
-      investimentType: true,
-    },
   });
+  revalidateTag("update-athlete");
+  return athlete;
 }
 
-export async function createGroupInvetimentAthlete(
-  data: Omit<InvestimentGroup, "id" | "createdAt" | "updatedAt">,
-  investiments: { id: string }[]
-) {
-  return await db.investimentGroup.create({
-    data: {
-      ...data,
-      investiments: {
-        connect: investiments,
-      },
-    },
+export async function deleteAthlete(id: string) {
+  const athlete = await db.athlete.delete({
+    where: { id },
   });
-}
-
-export async function updateGroupInvestimentAthlete(
-  data: Omit<InvestimentGroup, "createdAt" | "updatedAt">,
-  investiments: { id: string }[]
-) {
-  return await db.investimentGroup.update({
-    where: {
-      id: data.id,
-    },
-    data: {
-      ...data,
-      investiments: {
-        set: investiments,
-      },
-    },
-  });
-}
-
-export async function updateInvestimentProof(
-  investiments: { id: string }[],
-  proof: {
-    file: string | null;
-    date: Date | null;
-  }
-) {
-  await db.investiment.updateMany({
-    where: {
-      id: {
-        in: investiments.map((i) => i.id),
-      },
-    },
-    data: {
-      ...(proof.file && { proof: proof.file }),
-      ...(proof.date && { paid: proof.date }),
-    },
-  });
-}
-
-export async function saveProof(file: File, name: string) {
-  const uploadPath = path.join(process.cwd(), "public", "uploads", "proofs");
-  if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-  }
-
-  const filePath = path.join(uploadPath, name);
-  const fileBuffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(filePath, fileBuffer);
-  const relativeFilePath = path.relative(
-    path.join(process.cwd(), "public"),
-    filePath
-  );
-  return `/${relativeFilePath}`;
+  revalidateTag("delete-athlete");
+  return athlete;
 }

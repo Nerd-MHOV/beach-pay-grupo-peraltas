@@ -16,12 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getInvestimentsType } from "../../investiment-types/actions";
 import DialogCreateInvestimentType from "../../investiment-types/dialog-create-investiment-type";
-import {
-  createInvestmentAthlete,
-  getAthletes,
-  saveProof,
-  updateInvestimentAthlete,
-} from "../actions";
+import { getAthletes } from "../actions";
 import { Athlete, Investiment, InvestimentType } from "@prisma/client";
 import MoneyInput from "@/components/moneyInput";
 import { Button } from "@/components/ui/button";
@@ -33,6 +28,17 @@ import { format } from "date-fns";
 import Image from "next/image";
 import { CircleX, Plus } from "lucide-react";
 import { useState } from "react";
+import {
+  createInvestmentAthlete,
+  saveProof,
+  updateInvestimentAthlete,
+} from "../../investiments/actions";
+
+const QUERY_KEY_UPLOAD = [
+  "investment-athletes",
+  "investiments",
+  "investiment-list-athlete",
+];
 
 const formSchema = z.object({
   investimentTypeId: z.string().min(2).max(255),
@@ -75,9 +81,7 @@ const FormInvestmentAthlete = ({
   investiment,
   clean = false,
 }: {
-  investiment?: {
-    athlete: Athlete;
-  } & Investiment;
+  investiment?: Investiment;
   athlete?: Athlete;
   clean?: boolean;
 }) => {
@@ -121,16 +125,16 @@ const FormInvestmentAthlete = ({
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["investment-athletes", "investiments", "investiment-list-athlete"],
-        (old: undefined) => [
-          ...(old || []),
-          {
-            ...data,
-            new: true,
-          },
-        ]
-      );
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEY_UPLOAD,
+      });
+      queryClient.setQueryData(QUERY_KEY_UPLOAD, (old: undefined) => [
+        ...(old || []),
+        {
+          ...data,
+          new: true,
+        },
+      ]);
       form.reset({
         description: "",
         investimentTypeId: "",
@@ -171,8 +175,11 @@ const FormInvestmentAthlete = ({
         });
       },
       onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEY_UPLOAD,
+        });
         queryClient.setQueryData(
-          ["investment-athletes", "investiments", "investiment-list-athlete"],
+          QUERY_KEY_UPLOAD,
           (old: ({ investimentType: InvestimentType } & Investiment)[]) =>
             (old || []).map((invt) => {
               if (invt?.id === data.id) {

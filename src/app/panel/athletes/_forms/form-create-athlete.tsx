@@ -13,12 +13,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAthlete } from "../actions";
+import { createAthlete, updateAthlete } from "../actions";
 import { useToast } from "@/hooks/use-toast";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Athlete } from "@prisma/client";
-import { updateAthlete } from "../[id]/actions";
 
 const formSchema = z.object({
   name: z
@@ -55,65 +53,54 @@ const formSchema = z.object({
 
 const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const { mutateAsync: createAthleteFn } = useMutation({
-    mutationKey: ["create-athhlete"],
-    mutationFn: createAthlete,
-    onError: () => {
+  const createAthleteFn = async (
+    data: Omit<Athlete, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const { name } = await createAthlete(data);
       toast({
-        title: "Algo de Errado",
-        description: "Não foi possivel adicionar o atleta. Tente novamente.",
-        variant: "destructive",
+        title: `Atleta ${name} Adicionado`,
+        description: "O atleta foi adicionado com sucesso.",
       });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["athletes"], (old: undefined) => [
-        ...(old || []),
-        data,
-      ]);
       form.reset({
         name: "",
         phone: "",
         pixKey: "",
         responsible: "",
       });
+    } catch {
       toast({
-        title: "Atleta Adicionado",
-        description: "O atleta foi adicionado com sucesso.",
+        title: "Algo de Errado",
+        description: "Não foi possivel adicionar o atleta. Tente novamente.",
+        variant: "destructive",
       });
-    },
-  });
+    }
+  };
 
-  const { mutateAsync: updateAthleteFn } = useMutation({
-    mutationKey: ["update-athlete"],
-    mutationFn: async (values: z.infer<typeof formSchema>) => {
-      if (!athlete) throw new Error("Atleta não encontrado.");
-      return await updateAthlete(athlete?.id, values);
-    },
-    onError: () => {
+  const updateAthleteFn = async (
+    data: Omit<Athlete, "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const updatedAthlete = await updateAthlete(data);
+      toast({
+        title: `Atleta ${updatedAthlete.name} Atualizado`,
+        description: "O atleta foi atualizado com sucesso.",
+      });
+    } catch {
       toast({
         title: "Algo de Errado",
         description: "Não foi possivel atualizar o atleta. Tente novamente.",
         variant: "destructive",
       });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["athletes"], (old: Athlete[]) => [
-        ...(old || []).map((item) => (item.id === data.id ? data : item)),
-      ]);
-      toast({
-        title: "Atleta Atualizado",
-        description: "O atleta foi atualizado com sucesso.",
-      });
-    },
-  });
+    }
+  };
 
   // 1.define form.
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (athlete) {
-      updateAthleteFn(values);
+      await updateAthleteFn({ ...values, id: athlete.id });
     } else {
-      createAthleteFn(values);
+      await createAthleteFn(values);
     }
   };
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,7 +117,7 @@ const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-3">
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -197,7 +184,12 @@ const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
         />
 
         <div className="flex w-full justify-end pt-5">
-          <Button onClick={form.handleSubmit(onSubmit)}>
+          <Button
+            isLoading={form.formState.isSubmitting}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             {!athlete ? "Cadastrar" : "Atualizar"} Atleta
           </Button>
         </div>

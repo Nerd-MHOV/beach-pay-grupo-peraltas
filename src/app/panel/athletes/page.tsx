@@ -1,12 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import DialogCreateAthlete from "./_dialogs/dialog-create-athlete";
-import { getAthletes } from "./actions";
 import TableAthletes from "./_tables/table-athletes";
 import { Header } from "@/components/Header";
+import LoadingData from "@/components/LoadingData";
 
-const Page = async () => {
-  const athlete = await getAthletes();
-
+const Page = () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
@@ -16,7 +14,9 @@ const Page = async () => {
         </Header.Content>
       </Header.Root>
 
-      <TableAthletes athletes={athlete} />
+      <Suspense fallback={<LoadingData message="Buscando Atletas" />}>
+        <TableAthletes />
+      </Suspense>
     </div>
   );
 };

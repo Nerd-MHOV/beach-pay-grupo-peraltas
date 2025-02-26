@@ -18,9 +18,7 @@ const DialogInvestmentAthlete = ({
   clean = false,
 }: {
   athlete?: Athlete;
-  investiment?: {
-    athlete: Athlete;
-  } & Investiment;
+  investiment?: Investiment;
   trigger?: JSX.Element;
   clean?: boolean;
 }) => {

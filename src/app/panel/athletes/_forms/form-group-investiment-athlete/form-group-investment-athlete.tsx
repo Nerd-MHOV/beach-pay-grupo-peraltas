@@ -9,113 +9,32 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
+import {
+  Athlete,
+  Investiment,
+  InvestimentGroup,
+  InvestimentType,
+} from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Input } from "@/components/ui/input";
-import {
-  createGroupInvetimentAthlete,
-  getAthletes,
-  saveProof,
-  updateGroupInvestimentAthlete,
-  updateInvestimentProof,
-} from "../actions";
-import DialogCreateTournament from "../../tournaments/dialog-create-tournament";
-import { getTournaments } from "../../tournaments/actions";
+import DialogCreateTournament from "../../../tournaments/dialog-create-tournament";
 import { Textarea } from "@/components/ui/textarea";
-import { getInvestiments } from "../../investiment-types/actions";
 import { format } from "date-fns";
-import DialogInvestmentAthlete from "../_dialogs/dialog-investment-athlete";
+import DialogInvestmentAthlete from "../../_dialogs/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { CircleX, Plus } from "lucide-react";
 import Image from "next/image";
-
-const formSchema = z.object({
-  athleteId: z.string().min(2).max(255),
-  tournamentId: z
-    .string()
-    .min(2)
-    .max(255)
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-  pairId: z
-    .string()
-    .min(2)
-    .max(255)
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-  investiments: z.array(z.string().min(2).max(255)),
-  podium: z
-    .string()
-    .min(2)
-    .max(255)
-    .optional()
-    .nullable()
-    .transform((v) => v ?? ""),
-  description: z
-    .string()
-    .min(0)
-    .max(255)
-    .optional()
-    .nullable()
-    .transform((v) => v ?? ""),
-  pairAmount: z
-    .number()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? NaN),
-  km: z
-    .number()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? NaN),
-  km_racional: z
-    .number()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? NaN),
-  paid: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-  total: z
-    .number()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? 0),
-  proof: z
-    .instanceof(File, {
-      message: "O arquivo deve ser uma imagem ou PDF.",
-    })
-    .refine(
-      (file) =>
-        ["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(
-          file.type
-        ),
-      { message: "O arquivo deve ser uma imagem ou PDF." }
-    )
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-});
-
-const getFileName = (values: z.infer<typeof formSchema>) => {
-  if (!values.proof) return "";
-  const fileExtension = values.proof.name.split(".").pop();
-  return `investments-${values.athleteId}-group-${format(
-    new Date(),
-    "dd-mm-yy"
-  )}.${fileExtension}`;
-};
+import { formSchemaGroupInvestimentAthlete } from "./schema-group-investiment-athlete";
+import { getPaidProofInvestiment } from "./get-paid-proof-investiment";
+import useFormGroupInvestimentAthlete from "./use-form-group-investiment-athlete";
+import { useQuery } from "@tanstack/react-query";
+import { getAthletes } from "../../actions";
+import { getTournaments } from "@/app/panel/tournaments/actions";
 
 const FormGroupInvestmentAthlete = ({
   athlete,
@@ -125,174 +44,25 @@ const FormGroupInvestmentAthlete = ({
   investimentGroup?: {
     investiments: Investiment[];
   } & InvestimentGroup;
+  athletes: Awaited<ReturnType<typeof getAthletes>>;
+  tournaments: Awaited<ReturnType<typeof getTournaments>>;
 }) => {
-  const paid = investimentGroup?.investiments?.every(
-    (investiment) => investiment.paid
-  )
-    ? investimentGroup?.investiments[0]?.paid
-    : null;
-  const proof = investimentGroup?.investiments?.every(
-    (investiment) => investiment.proof
-  )
-    ? investimentGroup.investiments[0]?.proof
-    : null;
+  const { paid, proof } = getPaidProofInvestiment(
+    investimentGroup?.investiments
+  );
   const [investimentProof, setInvestimentProof] = useState<string | null>(
     proof
   );
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-
-  const { data: athletes } = useQuery({
+  const { data: athletes = [] } = useQuery({
     queryKey: ["athletes"],
     queryFn: getAthletes,
   });
-
-  const { data: tournaments } = useQuery({
+  const { data: tournaments = [] } = useQuery({
     queryKey: ["tournaments"],
     queryFn: getTournaments,
   });
-
-  const { data: investiments = [] } = useQuery({
-    queryKey: ["investment-athletes"],
-    queryFn: async () => {
-      return await getInvestiments(form.getValues().athleteId);
-    },
-  });
-
-  const { mutateAsync: createInvestmentAthleteFn, isPending } = useMutation({
-    mutationKey: ["create-group-investment-athlete"],
-    mutationFn: async (values: z.infer<typeof formSchema>) => {
-      let file: string | null = null;
-      if (values.proof) {
-        const filePath = await saveProof(values.proof, getFileName(values));
-        file = filePath;
-      }
-
-      if (values.proof || values.paid) {
-        await updateInvestimentProof(
-          values.investiments.map((id) => ({ id })),
-          {
-            file,
-            date: values.paid,
-          }
-        );
-      }
-
-      return await createGroupInvetimentAthlete(
-        {
-          athleteId: values.athleteId,
-          pairId: values.pairId,
-          description: values.description,
-          km: values.km,
-          km_racional: values.km_racional,
-          pairAmount: values.pairAmount,
-          podium: values.podium,
-          tournamentId: values.tournamentId,
-        },
-        values.investiments.map((id) => ({ id }))
-      );
-    },
-    onError: () => {
-      toast({
-        title: "Algo de Errado",
-        description:
-          "Não foi possivel adicionar o investimento. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["group-investiments", "group-investiment-list-athlete"],
-        (old: undefined) => [...(old || []), data]
-      );
-      form.reset({
-        investiments: [],
-        total: 0,
-        description: "",
-        km: 0,
-        km_racional: 0,
-        paid: null,
-        proof: null,
-        podium: "",
-        pairAmount: 0,
-        pairId: null,
-      });
-      toast({
-        title: "Investimento Adicionado",
-        description: "O investimento foi adicionado com sucesso.",
-      });
-    },
-  });
-
-  const {
-    mutateAsync: updateInvestimentAthleteFn,
-    isPending: isPendingUpdate,
-  } = useMutation({
-    mutationKey: ["update-group-investment-athlete"],
-    mutationFn: async (values: z.infer<typeof formSchema>) => {
-      let file: string | null = null;
-      if (values.proof) {
-        const filePath = await saveProof(values.proof, getFileName(values));
-        file = filePath;
-      }
-
-      if (values.proof || values.paid) {
-        await updateInvestimentProof(
-          values.investiments.map((id) => ({ id })),
-          {
-            file,
-            date: values.paid,
-          }
-        );
-      }
-
-      return await updateGroupInvestimentAthlete(
-        {
-          id: investimentGroup?.id || "",
-          athleteId: values.athleteId,
-          pairId: values.pairId,
-          description: values.description,
-          km: values.km,
-          km_racional: values.km_racional,
-          pairAmount: values.pairAmount,
-          podium: values.podium,
-          tournamentId: values.tournamentId,
-        },
-        values.investiments.map((id) => ({ id }))
-      );
-    },
-    onError: () => {
-      toast({
-        title: "Algo de Errado",
-        description:
-          "Não foi possivel atualizar o investimento. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["group-investiments", "group-investiment-list-athlete"],
-        (old: InvestimentGroup[]) => {
-          return (old || []).map((item) => (item.id === data.id ? data : item));
-        }
-      );
-      toast({
-        title: "Investimento Atualizado",
-        description: "O investimento foi atualizado com sucesso.",
-      });
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (investimentGroup) {
-      updateInvestimentAthleteFn(values);
-      return;
-    }
-    createInvestmentAthleteFn(values);
-  };
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof formSchemaGroupInvestimentAthlete>>({
+    resolver: zodResolver(formSchemaGroupInvestimentAthlete),
     defaultValues: {
       ...(athlete ? { athleteId: athlete.id } : {}),
       investiments: [],
@@ -317,6 +87,25 @@ const FormGroupInvestmentAthlete = ({
         : {}),
     },
   });
+  const { createGroupInvestmentAthleteFn, updateGroupInvestimentAthleteFn } =
+    useFormGroupInvestimentAthlete(form);
+
+  const [investiments, setInvestiments] = useState<
+    (Investiment & { investimentType: InvestimentType })[]
+  >(
+    athletes.find((at) => at.id === form.getValues().athleteId)?.investiments ||
+      []
+  );
+
+  const onSubmit = (
+    values: z.infer<typeof formSchemaGroupInvestimentAthlete>
+  ) => {
+    if (investimentGroup) {
+      updateGroupInvestimentAthleteFn(values, investimentGroup.id);
+      return;
+    }
+    createGroupInvestmentAthleteFn(values);
+  };
 
   const setTotal = (array: string[]) => {
     form.setValue(
@@ -328,6 +117,13 @@ const FormGroupInvestmentAthlete = ({
       }, 0)
     );
   };
+
+  useEffect(() => {
+    const athleteId = form.getValues().athleteId;
+    const athleteInvestiments =
+      athletes.find((at) => at.id === athleteId)?.investiments || [];
+    setInvestiments(athleteInvestiments);
+  }, [form.getValues().athleteId, athletes]);
 
   useEffect(() => {
     // add investiment on created...
@@ -350,7 +146,7 @@ const FormGroupInvestmentAthlete = ({
 
   return (
     <Form {...form}>
-      <form className="space-y-3">
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -747,8 +543,10 @@ const FormGroupInvestmentAthlete = ({
         </div>
         <div className="flex w-full justify-end mt-5">
           <Button
-            isLoading={isPending || isPendingUpdate}
-            onClick={form.handleSubmit(onSubmit)}
+            isLoading={form.formState.isSubmitting}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
           >
             {investimentGroup ? "Atualizar" : "Investir"}
           </Button>

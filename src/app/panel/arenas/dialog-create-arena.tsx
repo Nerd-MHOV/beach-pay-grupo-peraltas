@@ -19,19 +19,7 @@ const DialogCreateArena = ({
 }) => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {/* {combobox ? (
-          <Button size="sm" variant="ghost">
-            <Plus /> Nova arena
-          </Button>
-        ) : (
-          <Button size="sm">
-            <Plus />
-            Arena
-          </Button>
-        )} */}
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>

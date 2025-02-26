@@ -7,9 +7,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
-import FormGroupInvestmentAthlete from "../_forms/form-group-investment-athlete";
+import FormGroupInvestmentAthlete from "../_forms/form-group-investiment-athlete/form-group-investment-athlete";
+import LoadingData from "@/components/LoadingData";
+import { Suspense } from "react";
+import { getAthletes } from "../actions";
+import { getTournaments } from "../../tournaments/actions";
 
-const DialogGroupInvestmentAthlete = ({
+const DialogGroupInvestmentAthlete = async ({
   athlete,
   trigger,
   investimentGroup,
@@ -20,23 +24,11 @@ const DialogGroupInvestmentAthlete = ({
     investiments: Investiment[];
   } & InvestimentGroup;
 }) => {
+  const athletes = await getAthletes();
+  const tournaments = await getTournaments();
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {/* {combobox ? (
-          <Button size="sm" variant="ghost">
-            <Plus /> Novo Grupo de Investimento
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
-          >
-            Declarar Grupo de Investimento
-          </Button>
-        )} */}
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>
@@ -47,10 +39,14 @@ const DialogGroupInvestmentAthlete = ({
             Informe os dados do investimento.
           </DialogDescription>
         </DialogHeader>
-        <FormGroupInvestmentAthlete
-          investimentGroup={investimentGroup}
-          athlete={athlete}
-        />
+        <Suspense fallback={<LoadingData />}>
+          <FormGroupInvestmentAthlete
+            investimentGroup={investimentGroup}
+            athlete={athlete}
+            athletes={athletes}
+            tournaments={tournaments}
+          />
+        </Suspense>
       </DialogContent>
     </Dialog>
   );

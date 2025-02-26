@@ -12,15 +12,11 @@ import {
 import { Athlete } from "@prisma/client";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Trash2 } from "lucide-react";
-import { deleteAthlete } from "./actions";
-import { useQueryClient } from "@tanstack/react-query";
+import { deleteAthlete } from "../actions";
 
 const DialogDeleteAthlete = ({ athlete }: { athlete: Athlete }) => {
-  const queryClient = useQueryClient();
   const onDelete = async () => {
     await deleteAthlete(athlete.id);
-    queryClient.invalidateQueries({ queryKey: ["athletes"] });
-    // toast());
   };
   return (
     <Dialog>

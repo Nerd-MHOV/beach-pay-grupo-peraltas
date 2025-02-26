@@ -1,17 +1,20 @@
 "use server";
 import db from "@/core/infra/db";
 import { InvestimentType } from "@prisma/client";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function createInvestimentType(
   data: Omit<InvestimentType, "id" | "createdAt" | "updatedAt">
 ) {
-  return await db.investimentType.create({ data });
+  const investimentType = await db.investimentType.create({ data });
+  revalidateTag("create-investimentType");
+  return investimentType;
 }
 
 export async function updateInvestimentType(
   data: Omit<InvestimentType, "createdAt" | "updatedAt">
 ) {
-  return await db.investimentType.update({
+  const investimentType = await db.investimentType.update({
     where: {
       id: data.id,
     },
@@ -20,25 +23,24 @@ export async function updateInvestimentType(
       updatedAt: new Date(),
     },
   });
+  revalidateTag("update-investimentType");
+  return investimentType;
 }
 
-export async function getInvestimentsType() {
-  return await db.investimentType.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-}
-
-export async function getInvestiments(athleteId?: string) {
-  return await db.investiment.findMany({
-    ...(athleteId && { where: { athleteId } }),
-    include: {
-      investimentType: true,
-      athlete: true,
-    },
-    orderBy: {
-      date: "desc",
-    },
-  });
-}
+export const getInvestimentsType = unstable_cache(
+  async () => {
+    return await db.investimentType.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+  },
+  [`investimentType`],
+  {
+    tags: [
+      `update-investimentType`,
+      `create-investimentType`,
+      `delete-investimentType`,
+    ],
+  }
+);

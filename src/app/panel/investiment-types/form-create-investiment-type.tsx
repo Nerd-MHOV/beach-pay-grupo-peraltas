@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InvestimentType, UserRole } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createInvestimentType, updateInvestimentType } from "./actions";
@@ -31,61 +30,49 @@ const FormCreateInvestimentType = ({
   investimentType?: InvestimentType;
 }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const { mutateAsync: createInvestimentTypeFn, isPending } = useMutation({
-    mutationKey: ["create-investiment-type"],
-    mutationFn: createInvestimentType,
-    onError: (error) => {
-      console.error(error);
-      toast({
-        title: "Algo de Errado",
-        description:
-          "Não foi possivel adicionar o tipo de investimento. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["investiment-types"], (old: undefined) => [
-        ...(old || []),
-        data,
-      ]);
+
+  const createInvestimentTypeFn = async (
+    data: Omit<InvestimentType, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const created = await createInvestimentType(data);
       form.reset({
         name: "",
         description: "",
         canSee: ["admin"],
       });
       toast({
-        title: "Tipo de Investimento Adicionado",
+        title: `${created.name} Adicionado`,
         description: "O tipo de investimento foi adicionado com sucesso.",
       });
-    },
-  });
+    } catch {
+      toast({
+        title: "Algo de Errado",
+        description:
+          "Não foi possivel adicionar o tipo de investimento. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
-  const { mutateAsync: updateInvestimentTypeFn, isPending: isPendingUpdate } =
-    useMutation({
-      mutationKey: ["update-investiment-type"],
-      mutationFn: updateInvestimentType,
-      onError: (error) => {
-        console.error(error);
-        toast({
-          title: "Algo de Errado",
-          description:
-            "Não foi possivel atualizar o tipo de investimento. Tente novamente.",
-          variant: "destructive",
-        });
-      },
-      onSuccess: (data) => {
-        queryClient.setQueryData(
-          ["investiment-types"],
-          (old: InvestimentType[]) =>
-            old.map((type) => (type.id === data.id ? data : type))
-        );
-        toast({
-          title: "Tipo de Investimento Atualizado",
-          description: "O tipo de investimento foi atualizado com sucesso.",
-        });
-      },
-    });
+  const updateInvestimentTypeFn = async (
+    data: Omit<InvestimentType, "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const updated = await updateInvestimentType(data);
+      toast({
+        title: `${updated.name} Atualizado`,
+        description: "O tipo de investimento foi atualizado com sucesso.",
+      });
+    } catch {
+      toast({
+        title: "Algo de Errado",
+        description:
+          "Não foi possivel atualizar o tipo de investimento. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (investimentType) {
@@ -110,7 +97,7 @@ const FormCreateInvestimentType = ({
   });
   return (
     <Form {...form}>
-      <form className="space-y-3">
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -172,9 +159,9 @@ const FormCreateInvestimentType = ({
 
         <div className="flex w-full justify-end mt-5">
           <Button
-            isLoading={isPending || isPendingUpdate}
+            isLoading={form.formState.isSubmitting}
             type="button"
-            onClick={form.handleSubmit(onSubmit)}
+            onClick={(e) => e.stopPropagation()}
           >
             {investimentType ? "Atualizar" : "Adicionar"}
           </Button>
