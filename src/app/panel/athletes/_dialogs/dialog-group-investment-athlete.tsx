@@ -8,12 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Athlete, Investiment, InvestimentGroup } from "@prisma/client";
 import FormGroupInvestmentAthlete from "../_forms/form-group-investiment-athlete/form-group-investment-athlete";
-import LoadingData from "@/components/LoadingData";
-import { Suspense } from "react";
-import { getAthletes } from "../actions";
-import { getTournaments } from "../../tournaments/actions";
 
-const DialogGroupInvestmentAthlete = async ({
+const DialogGroupInvestmentAthlete = ({
   athlete,
   trigger,
   investimentGroup,
@@ -24,8 +20,6 @@ const DialogGroupInvestmentAthlete = async ({
     investiments: Investiment[];
   } & InvestimentGroup;
 }) => {
-  const athletes = await getAthletes();
-  const tournaments = await getTournaments();
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -39,14 +33,10 @@ const DialogGroupInvestmentAthlete = async ({
             Informe os dados do investimento.
           </DialogDescription>
         </DialogHeader>
-        <Suspense fallback={<LoadingData />}>
-          <FormGroupInvestmentAthlete
-            investimentGroup={investimentGroup}
-            athlete={athlete}
-            athletes={athletes}
-            tournaments={tournaments}
-          />
-        </Suspense>
+        <FormGroupInvestmentAthlete
+          investimentGroup={investimentGroup}
+          athlete={athlete}
+        />
       </DialogContent>
     </Dialog>
   );

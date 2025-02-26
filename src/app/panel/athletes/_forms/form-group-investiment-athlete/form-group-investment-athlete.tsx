@@ -44,8 +44,6 @@ const FormGroupInvestmentAthlete = ({
   investimentGroup?: {
     investiments: Investiment[];
   } & InvestimentGroup;
-  athletes: Awaited<ReturnType<typeof getAthletes>>;
-  tournaments: Awaited<ReturnType<typeof getTournaments>>;
 }) => {
   const { paid, proof } = getPaidProofInvestiment(
     investimentGroup?.investiments
