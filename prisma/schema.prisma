@@ -39,43 +39,43 @@ model Athlete {
   startDate   DateTime
   pixKey      String
 
-  createdAt                 DateTime           @default(now())
-  updatedAt                 DateTime           @updatedAt
-  investiments              Investiment[]
-  investiment_group_athlete InvestimentGroup[] @relation("athlete_investiment_group")
-  investiment_group_pair    InvestimentGroup[] @relation("pair_investiment_group")
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
+  investments              Investment[]
+  investment_group_athlete InvestmentGroup[] @relation("athlete_investment_group")
+  investment_group_pair    InvestmentGroup[] @relation("pair_investment_group")
 }
 
-model Investiment {
-  id                 String    @id @default(cuid())
-  investimentTypeId  String    @map("invetimentTypeId")
-  athleteId          String
-  value              Float
-  description        String
-  date               DateTime
-  paid               DateTime?
-  proof              String?
-  investimentGroupId String?
+model Investment {
+  id                String    @id @default(cuid())
+  investmentTypeId  String    @map("invetimentTypeId")
+  athleteId         String
+  value             Float
+  description       String
+  date              DateTime
+  paid              DateTime?
+  proof             String?
+  investmentGroupId String?
 
-  athlete          Athlete           @relation(fields: [athleteId], references: [id])
-  investimentType  InvestimentType   @relation(fields: [investimentTypeId], references: [id])
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  investimentGroup InvestimentGroup? @relation(fields: [investimentGroupId], references: [id])
+  athlete         Athlete          @relation(fields: [athleteId], references: [id])
+  investmentType  InvestmentType   @relation(fields: [investmentTypeId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  investmentGroup InvestmentGroup? @relation(fields: [investmentGroupId], references: [id])
 }
 
-model InvestimentType {
+model InvestmentType {
   id          String     @id @default(cuid())
   name        String     @unique
   description String
   canSee      UserRole[]
 
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  investiments Investiment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  investments Investment[]
 }
 
-model InvestimentGroup {
+model InvestmentGroup {
   id           String  @id @default(cuid())
   athleteId    String
   pairId       String?
@@ -86,12 +86,12 @@ model InvestimentGroup {
   km           Float?
   km_racional  Float?
 
-  investiments Investiment[]
-  athlete      Athlete       @relation(fields: [athleteId], references: [id], name: "athlete_investiment_group")
-  pair         Athlete?      @relation(fields: [pairId], references: [id], name: "pair_investiment_group")
-  tournament   Tournament?   @relation(fields: [tournamentId], references: [id])
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  investments Investment[]
+  athlete     Athlete      @relation(fields: [athleteId], references: [id], name: "athlete_investment_group")
+  pair        Athlete?     @relation(fields: [pairId], references: [id], name: "pair_investment_group")
+  tournament  Tournament?  @relation(fields: [tournamentId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Arena {
@@ -114,10 +114,10 @@ model Tournament {
   description String?
   arenaId     String
 
-  arena            Arena              @relation(fields: [arenaId], references: [id])
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  investimentGroup InvestimentGroup[]
+  arena           Arena             @relation(fields: [arenaId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  investmentGroup InvestmentGroup[]
 
   @@unique([name, arenaId, fromDate, toDate])
 }

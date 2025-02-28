@@ -2,11 +2,11 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { format } from "date-fns";
-import FormCreateAthlete from "../_forms/form-create-athlete";
+import FormCreateAthlete from "../form-create-athlete";
 import DialogDeleteAthlete from "./dialog-delete-athlete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RadarChartAthlete from "./radar-chart-athlete";
-import TableRoot from "../../investiments/table-root";
+import TableRoot from "../../investments/table-root";
 import { getAthleteById } from "../actions";
 
 const Page = async ({
@@ -22,15 +22,15 @@ const Page = async ({
     return notFound();
   }
 
-  const TotalInvestiments = Number(
-    athlete.investiments.reduce((acc, curr) => acc + curr.value, 0)
+  const TotalInvestments = Number(
+    athlete.investments.reduce((acc, curr) => acc + curr.value, 0)
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-  const pendingInvestments = athlete.investiments.filter(
-    (investiment) => !investiment.proof
+  const pendingInvestments = athlete.investments.filter(
+    (investment) => !investment.proof
   );
 
   const TotalToPaid = Number(
@@ -40,8 +40,8 @@ const Page = async ({
     currency: "BRL",
   });
 
-  const investmentsByType = athlete.investiments.reduce((acc, curr) => {
-    const name = curr.investimentType.name;
+  const investmentsByType = athlete.investments.reduce((acc, curr) => {
+    const name = curr.investmentType.name;
     if (!acc[name]) {
       acc[name] = 0;
     }
@@ -52,7 +52,7 @@ const Page = async ({
   const investmentsArray = Object.entries(investmentsByType).map(
     ([name, value]) => ({
       label: name,
-      investiment: value,
+      investment: value,
     })
   );
   return (
@@ -96,7 +96,7 @@ const Page = async ({
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{TotalInvestiments}</div>
+              <div className="text-2xl font-bold">{TotalInvestments}</div>
               <p className="text-xs text-muted-foreground">No Atleta</p>
             </CardContent>
           </Card>
@@ -155,7 +155,11 @@ const Page = async ({
       </div>
 
       <div className="">
-        <TableRoot athlete={athlete} />
+        <TableRoot
+          investments={athlete.investments}
+          groupInvestments={athlete.investment_group_athlete}
+          athlete={athlete}
+        />
       </div>
 
       <div className="bg-white p-7 rounded-xl shadow-lg">

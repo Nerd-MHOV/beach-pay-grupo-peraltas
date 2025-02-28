@@ -18,7 +18,7 @@ import { format } from "date-fns";
 const Panel = async () => {
   const dashboard = await getDashboard();
 
-  const TotalInvestiments = Number(
+  const TotalInvestments = Number(
     dashboard.totalInvestments.value
   ).toLocaleString("pt-BR", {
     style: "currency",
@@ -63,7 +63,7 @@ const Panel = async () => {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{TotalInvestiments}</div>
+              <div className="text-2xl font-bold">{TotalInvestments}</div>
               <p className="text-xs text-muted-foreground">
                 Todos os investimentos
               </p>
@@ -174,13 +174,13 @@ const Panel = async () => {
             <CardHeader>
               <CardTitle>Investimentos Recentes</CardTitle>
               <CardDescription>
-                Você fez {dashboard.recentInvestiments.investmentsLast30Days}{" "}
+                Você fez {dashboard.recentInvestments.investmentsLast30Days}{" "}
                 investimentos nos últimos 30 dias.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
-                {dashboard.recentInvestiments.lastFiveInvestments.map(
+                {dashboard.recentInvestments.lastFiveInvestments.map(
                   (investment) => {
                     return (
                       <div className="flex items-center" key={investment.id}>

@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { UserSeedFn } from "./seeds/users.seed";
 import { AthleteSeedFn } from "./seeds/athletes.seed";
-import { InvestimentTypeSeedFn } from "./seeds/investiment-type.seed";
-import { investimentsSeedFN } from "./seeds/investiments.seed";
+import { InvestmentTypeSeedFn } from "./seeds/investment-type.seed";
+import { investmentsSeedFN } from "./seeds/investments.seed";
 const prismaClient = new PrismaClient();
 
 async function main() {
@@ -12,8 +12,8 @@ async function main() {
   await Promise.all([
     UserSeedFn(prismaClient),
     AthleteSeedFn(prismaClient),
-    InvestimentTypeSeedFn(prismaClient),
-    investimentsSeedFN(prismaClient),
+    InvestmentTypeSeedFn(prismaClient),
+    investmentsSeedFN(prismaClient),
   ]);
 }
 

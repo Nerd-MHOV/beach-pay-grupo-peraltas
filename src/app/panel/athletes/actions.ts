@@ -11,9 +11,9 @@ export const getAthletes = unstable_cache(
         name: "asc",
       },
       include: {
-        investiments: {
+        investments: {
           include: {
-            investimentType: true,
+            investmentType: true,
           },
           orderBy: {
             date: "desc",
@@ -32,10 +32,10 @@ export async function getAthleteById(id: string) {
   return await db.athlete.findFirst({
     where: { id },
     include: {
-      investiments: {
+      investments: {
         include: {
           athlete: true,
-          investimentGroup: {
+          investmentGroup: {
             include: {
               pair: true,
               tournament: {
@@ -43,17 +43,17 @@ export async function getAthleteById(id: string) {
                   arena: true,
                 },
               },
-              investiments: {
+              investments: {
                 include: {
-                  investimentType: true,
+                  investmentType: true,
                 },
               },
             },
           },
-          investimentType: true,
+          investmentType: true,
         },
       },
-      investiment_group_athlete: {
+      investment_group_athlete: {
         include: {
           athlete: true,
           pair: true,
@@ -62,9 +62,9 @@ export async function getAthleteById(id: string) {
               arena: true,
             },
           },
-          investiments: {
+          investments: {
             include: {
-              investimentType: true,
+              investmentType: true,
             },
           },
         },

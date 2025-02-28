@@ -26,17 +26,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function RadarChartAthlete({
-  chartData,
+  chartData = [],
 }: {
-  chartData: { label: string; investiment: number }[];
+  chartData: { label: string; investment: number }[];
 }) {
-  const maxInvestmentData = chartData.reduce((prev, current) =>
-    prev.investiment > current.investiment ? prev : current
+  const maxInvestmentData = chartData.reduce(
+    (prev, current) => (prev.investment > current.investment ? prev : current),
+    { investment: 0, label: "" }
   );
-  const maxInvestment = maxInvestmentData.investiment;
+  const maxInvestment = maxInvestmentData.investment;
   const maxInvestmentLabel = maxInvestmentData.label;
   const totalInvestment = chartData.reduce(
-    (sum, data) => sum + data.investiment,
+    (sum, data) => sum + data.investment,
     0
   );
   const maxInvestmentPercentage = (
@@ -58,7 +59,7 @@ export default function RadarChartAthlete({
             <PolarAngleAxis dataKey="label" />
             <PolarGrid />
             <Radar
-              dataKey="investiment"
+              dataKey="investment"
               fill="currentColor"
               className="fill-primary"
               fillOpacity={0.6}

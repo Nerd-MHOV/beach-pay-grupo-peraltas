@@ -89,7 +89,13 @@ const FormCreateArena = ({ arena }: { arena?: Arena }) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-3"
+        onSubmit={(e) => {
+          e.stopPropagation();
+          form.handleSubmit(onSubmit)(e);
+        }}
+      >
         <FormField
           control={form.control}
           name="name"

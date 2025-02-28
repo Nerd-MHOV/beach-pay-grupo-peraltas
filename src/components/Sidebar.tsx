@@ -29,12 +29,12 @@ const links = [
     title: "Atletas",
   },
   {
-    link: "/panel/investiments",
+    link: "/panel/investments",
     icon: HandCoins,
     title: "Investimentos",
   },
   {
-    link: "/panel/investiment-types",
+    link: "/panel/investment-types",
     icon: Receipt,
     title: "Tipos",
   },

@@ -6,7 +6,7 @@ export async function getDashboard(data?: {
     to: Date;
   };
 }) {
-  const totalInvestments = await db.investiment.aggregate({
+  const totalInvestments = await db.investment.aggregate({
     _sum: {
       value: true,
     },
@@ -18,7 +18,7 @@ export async function getDashboard(data?: {
     },
   });
 
-  const pendingInvestments = await db.investiment.aggregate({
+  const pendingInvestments = await db.investment.aggregate({
     _sum: {
       value: true,
     },
@@ -31,7 +31,7 @@ export async function getDashboard(data?: {
     },
   });
 
-  const pendingInvestmentsCount = await db.investiment.count({
+  const pendingInvestmentsCount = await db.investment.count({
     where: {
       createdAt: {
         gte: data?.date.from,
@@ -50,7 +50,7 @@ export async function getDashboard(data?: {
     },
   });
 
-  const investmentsByMonth = await db.investiment
+  const investmentsByMonth = await db.investment
     .groupBy({
       by: ["date"],
       _sum: {
@@ -94,7 +94,7 @@ export async function getDashboard(data?: {
     };
   });
 
-  const lastFiveInvestments = await db.investiment.findMany({
+  const lastFiveInvestments = await db.investment.findMany({
     orderBy: {
       createdAt: "desc",
     },
@@ -104,7 +104,7 @@ export async function getDashboard(data?: {
     take: 5,
   });
 
-  const investmentsLast30Days = await db.investiment.count({
+  const investmentsLast30Days = await db.investment.count({
     where: {
       createdAt: {
         gte: new Date(new Date().setDate(new Date().getDate() - 30)),
@@ -113,7 +113,7 @@ export async function getDashboard(data?: {
   });
 
   return {
-    recentInvestiments: {
+    recentInvestments: {
       lastFiveInvestments,
       investmentsLast30Days,
     },
@@ -135,7 +135,7 @@ export async function downloadReport(data: {
     to: Date;
   };
 }) {
-  const investments = await db.investiment.findMany({
+  const investments = await db.investment.findMany({
     where: {
       createdAt: {
         gte: data.date.from,

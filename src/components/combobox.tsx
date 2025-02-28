@@ -36,7 +36,7 @@ export function Combobox({
 }) {
   const [open, setOpen] = React.useState(false);
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -61,9 +61,18 @@ export function Combobox({
               {items.map((item) => (
                 <CommandItem
                   key={item.value}
-                  value={item.value}
+                  value={item.label}
                   onSelect={(currentValue) => {
-                    onSelect(currentValue === selected ? "" : currentValue);
+                    const selectedItem = items.find(
+                      (i) => i.label === currentValue
+                    );
+                    onSelect(
+                      selectedItem
+                        ? selected === selectedItem.value
+                          ? ""
+                          : selectedItem.value
+                        : ""
+                    );
                     setOpen(false);
                   }}
                 >

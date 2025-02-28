@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import DialogCreateAthlete from "./_dialogs/dialog-create-athlete";
-import TableAthletes from "./_tables/table-athletes";
+import DialogCreateAthlete from "./dialog-create-athlete";
+import TableAthletes from "./table-athletes";
 import { Header } from "@/components/Header";
 import LoadingData from "@/components/LoadingData";
 
