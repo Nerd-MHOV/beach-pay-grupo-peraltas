@@ -13,9 +13,11 @@ import { InvestmentType } from "@prisma/client";
 const DialogCreateInvestmentType = ({
   trigger,
   investmentType,
+  onCreate,
 }: {
   trigger: React.JSX.Element;
   investmentType?: InvestmentType;
+  onCreate?: (investmentType: InvestmentType) => void;
 }) => {
   return (
     <Dialog>
@@ -30,7 +32,10 @@ const DialogCreateInvestmentType = ({
             Informe os dados do tipo de investimento.
           </DialogDescription>
         </DialogHeader>
-        <FormCreateInvestmentType investmentType={investmentType} />
+        <FormCreateInvestmentType
+          investmentType={investmentType}
+          onCreate={onCreate}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import DialogInvestmentAthlete from "./dialog-investment-athlete";
 import Link from "next/link";
-import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
+import DialogGroupInvestmentAthlete from "../(group)/dialog-group-investment-athlete";
 
 export interface InvestmentColumns {
   columns: {

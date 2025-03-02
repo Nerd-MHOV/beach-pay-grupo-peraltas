@@ -12,8 +12,8 @@ import {
 import { Athlete } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import DialogInvestmentAthlete from "../investments/dialog-investment-athlete";
-import DialogGroupInvestmentAthlete from "../investments/dialog-group-investment-athlete";
+import DialogInvestmentAthlete from "../investments/(single)/dialog-investment-athlete";
+import DialogGroupInvestmentAthlete from "../investments/(group)/dialog-group-investment-athlete";
 import Link from "next/link";
 
 export type AthleteTable = Athlete & {

@@ -7,7 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Athlete, Investment, InvestmentGroup } from "@prisma/client";
-import FormGroupInvestmentAthlete from "./form-group-investment-athlete/form-group-investment-athlete";
+import FormGroupInvestmentAthlete from "./form-group-investment-athlete";
 
 const DialogGroupInvestmentAthlete = ({
   athlete,

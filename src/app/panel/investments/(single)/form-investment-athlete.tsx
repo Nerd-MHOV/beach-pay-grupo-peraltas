@@ -13,67 +13,33 @@ import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { getInvestmentsType } from "../investment-types/actions";
-import DialogCreateInvestmentType from "../investment-types/dialog-create-investment-type";
-import { getAthletes } from "../athletes/actions";
-import { Athlete, Investment, InvestmentType } from "@prisma/client";
+import { getInvestmentsType } from "../../investment-types/actions";
+import DialogCreateInvestmentType from "../../investment-types/dialog-create-investment-type";
+import { getAthletes } from "../../athletes/actions";
+import { Athlete, Investment } from "@prisma/client";
 import MoneyInput from "@/components/moneyInput";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import Image from "next/image";
 import { CircleX, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   createInvestmentAthlete,
   saveProof,
   updateInvestmentAthlete,
-} from "./actions";
-
-const formSchema = z.object({
-  investmentTypeId: z.string().min(2).max(255),
-  athleteId: z.string().min(2).max(255),
-  value: z.number(),
-  date: z.date(),
-  description: z.string().min(5).max(255),
-  paid: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-  proof: z
-    .instanceof(File, {
-      message: "O arquivo deve ser uma imagem ou PDF.",
-    })
-    .refine(
-      (file) =>
-        ["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(
-          file.type
-        ),
-      { message: "O arquivo deve ser uma imagem ou PDF." }
-    )
-    .optional()
-    .nullable()
-    .transform((v) => v ?? null),
-});
-
-const getFileName = (values: z.infer<typeof formSchema>) => {
-  if (!values.proof) return "";
-  const fileExtension = values.proof.name.split(".").pop();
-  return `investments-${values.athleteId}-${values.investmentTypeId}-${format(
-    new Date(),
-    "dd-mm-yy"
-  )}.${fileExtension}`;
-};
+} from "../actions";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { formSchema } from "./schema";
+import { getFileName } from "./get-file-name-investiment";
 
 const FormInvestmentAthlete = ({
   athlete,
   investment,
   clean = false,
-  onCreateInvestment,
+  onCreateInvestment = () => {},
 }: {
   onCreateInvestment?: (investment: Investment) => void;
   investment?: Investment;
@@ -81,12 +47,20 @@ const FormInvestmentAthlete = ({
   clean?: boolean;
 }) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [investmentProof, setInvestmentProof] = useState<string | null>(
     investment?.proof || null
   );
 
-  const [athletes, setAtheltes] = useState<Athlete[]>([]);
-  const [investmentTypes, setInvestmentTypes] = useState<InvestmentType[]>([]);
+  const { data: athletes } = useQuery({
+    queryKey: ["athletes"],
+    queryFn: getAthletes,
+  });
+
+  const { data: investmentTypes, refetch: refetchInvestmentTypes } = useQuery({
+    queryKey: ["investmentTypes"],
+    queryFn: getInvestmentsType,
+  });
 
   const createInvestmentAthleteFn = async (
     values: z.infer<typeof formSchema>
@@ -104,7 +78,22 @@ const FormInvestmentAthlete = ({
         investmentGroupId: null,
         ...(athlete ? { athleteId: athlete.id } : {}),
       });
-      onCreateInvestment?.(created);
+
+      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.setQueryData(
+        ["athletes"],
+        (old: Awaited<ReturnType<typeof getAthletes>>) => [
+          ...old.map((ath) =>
+            ath.id === created.athleteId
+              ? {
+                  ...ath,
+                  investments: [...ath?.investments, created],
+                }
+              : ath
+          ),
+        ]
+      );
+      onCreateInvestment(created);
       form.reset({
         description: "",
         investmentTypeId: "",
@@ -147,6 +136,20 @@ const FormInvestmentAthlete = ({
         title: "Investimento Atualizado",
         description: "O investimento foi atualizado com sucesso.",
       });
+      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.setQueryData(
+        ["athletes"],
+        (old: Awaited<ReturnType<typeof getAthletes>>) => [
+          ...old.map((ath) =>
+            ath.id === updated.athleteId
+              ? {
+                  ...ath,
+                  investments: [...ath?.investments, updated],
+                }
+              : ath
+          ),
+        ]
+      );
       return updated;
     } catch {
       toast({
@@ -182,17 +185,6 @@ const FormInvestmentAthlete = ({
         : {}),
     },
   });
-
-  useEffect(() => {
-    async function fetch() {
-      const fetchAthletes = await getAthletes();
-      const fetchInvestmentTypes = await getInvestmentsType();
-      setAtheltes(fetchAthletes);
-      setInvestmentTypes(fetchInvestmentTypes);
-    }
-
-    fetch();
-  }, []);
 
   return (
     <Form {...form}>
@@ -256,6 +248,10 @@ const FormInvestmentAthlete = ({
                           <Plus /> Novo Tipo de Investimento
                         </Button>
                       }
+                      onCreate={(newInvestmentType) => {
+                        refetchInvestmentTypes();
+                        field.onChange(newInvestmentType.id);
+                      }}
                     />
                   }
                 />

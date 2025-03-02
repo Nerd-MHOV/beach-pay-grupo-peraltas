@@ -1,5 +1,5 @@
 import React from "react";
-import { getInvestments } from "./actions";
+import { getInvestments } from "../actions";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 

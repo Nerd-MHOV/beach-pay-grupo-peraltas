@@ -1,7 +1,7 @@
 import React from "react";
-import { getGroupInvestments } from "./actions";
+import { getGroupInvestments } from "../actions";
 import { DataTable } from "@/components/ui/data-table";
-import { columnsGroup } from "./columns-group";
+import { columnsGroup } from "./columns";
 
 const TableGroupInvestments = ({
   groupInvestments,

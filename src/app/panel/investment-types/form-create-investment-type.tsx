@@ -17,6 +17,7 @@ import { z } from "zod";
 import { createInvestmentType, updateInvestmentType } from "./actions";
 import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/multiSelect";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
@@ -26,16 +27,24 @@ const formSchema = z.object({
 
 const FormCreateInvestmentType = ({
   investmentType,
+  onCreate,
 }: {
   investmentType?: InvestmentType;
+  onCreate?: (investmentType: InvestmentType) => void;
 }) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const createInvestmentTypeFn = async (
     data: Omit<InvestmentType, "id" | "createdAt" | "updatedAt">
   ) => {
     try {
       const created = await createInvestmentType(data);
+      queryClient.invalidateQueries({ queryKey: ["investmentTypes"] });
+      queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
+        ...old,
+        created,
+      ]);
       form.reset({
         name: "",
         description: "",
@@ -45,6 +54,7 @@ const FormCreateInvestmentType = ({
         title: `${created.name} Adicionado`,
         description: "O tipo de investimento foi adicionado com sucesso.",
       });
+      onCreate?.(created);
     } catch {
       toast({
         title: "Algo de Errado",
@@ -60,6 +70,9 @@ const FormCreateInvestmentType = ({
   ) => {
     try {
       const updated = await updateInvestmentType(data);
+      queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
+        ...old.map((type) => (type.id === updated.id ? updated : type)),
+      ]);
       toast({
         title: `${updated.name} Atualizado`,
         description: "O tipo de investimento foi atualizado com sucesso.",

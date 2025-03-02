@@ -60,7 +60,13 @@ const formSchema = z.object({
     .transform((v) => v || ""),
 });
 
-const FormCreateTournament = ({ tournament }: { tournament?: Tournament }) => {
+const FormCreateTournament = ({
+  tournament,
+  onCreateTournament = () => {},
+}: {
+  tournament?: Tournament;
+  onCreateTournament?: (tournament: Tournament) => void;
+}) => {
   const { toast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -84,6 +90,7 @@ const FormCreateTournament = ({ tournament }: { tournament?: Tournament }) => {
         ...(old || []),
         data,
       ]);
+      onCreateTournament(data);
       form.reset({
         description: "",
         name: "",

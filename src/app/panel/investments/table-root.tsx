@@ -1,15 +1,15 @@
 "use client";
 import { Athlete } from "@prisma/client";
-import DialogInvestmentAthlete from "./dialog-investment-athlete";
-import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
+import DialogInvestmentAthlete from "./(single)/dialog-investment-athlete";
+import DialogGroupInvestmentAthlete from "./(group)/dialog-group-investment-athlete";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import TableGroupInvestments from "./table-group-investments";
+import TableGroupInvestments from "./(group)/table-group-investments";
 import { getGroupInvestments, getInvestments } from "./actions";
-import TableInvestments from "./table-investments";
+import TableInvestments from "./(single)/table-investments";
 
 const TableRoot = ({
   athlete,

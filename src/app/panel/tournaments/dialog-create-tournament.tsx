@@ -13,9 +13,11 @@ import { Tournament } from "@prisma/client";
 const DialogCreateTournament = ({
   trigger,
   tournament,
+  onCreateTournament,
 }: {
   trigger: React.JSX.Element;
   tournament?: Tournament;
+  onCreateTournament?: (tournament: Tournament) => void;
 }) => {
   return (
     <Dialog>
@@ -38,7 +40,10 @@ const DialogCreateTournament = ({
           <DialogTitle>Adicionar Torneio</DialogTitle>
           <DialogDescription>Informe os dados do torneio.</DialogDescription>
         </DialogHeader>
-        <FormCreateTournament tournament={tournament} />
+        <FormCreateTournament
+          tournament={tournament}
+          onCreateTournament={onCreateTournament}
+        />
       </DialogContent>
     </Dialog>
   );

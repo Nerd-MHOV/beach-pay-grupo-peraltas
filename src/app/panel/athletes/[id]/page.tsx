@@ -2,7 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { format } from "date-fns";
-import FormCreateAthlete from "../form-create-athlete";
+import FormCreateAthlete from "../form/form-create-athlete";
 import DialogDeleteAthlete from "./dialog-delete-athlete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RadarChartAthlete from "./radar-chart-athlete";

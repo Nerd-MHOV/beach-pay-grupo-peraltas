@@ -13,94 +13,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { createAthlete, updateAthlete } from "./actions";
-import { useToast } from "@/hooks/use-toast";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Athlete } from "@prisma/client";
-
-const formSchema = z.object({
-  name: z
-    .string({
-      message: "O nome é obrigatório e deve ter no mínimo 2 caracteres.",
-    })
-    .min(2)
-    .max(255),
-  phone: z
-    .string({
-      message: "O telefone é obrigatório (ddd) 99999-9999.",
-    })
-    .min(13, {
-      message: "Número invalido (ddd) 99999-9999.",
-    })
-    .max(14, {
-      message: "Número invalido (ddd) 99999-9999.",
-    }),
-  responsible: z
-    .string()
-    .max(255)
-    .optional()
-    .nullable()
-    .transform((v) => v ?? ""),
-  birthday: z.date(),
-  startDate: z.date(),
-  pixKey: z
-    .string({
-      message: "Informe a chave PIX",
-    })
-    .min(2)
-    .max(255),
-});
+import useCreateAthlete from "./use-create-athlete";
+import useUpdateAthlete from "./use-update-athlete";
+import { formSchema } from "./schema";
 
 const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
-  const { toast } = useToast();
-  const createAthleteFn = async (
-    data: Omit<Athlete, "id" | "createdAt" | "updatedAt">
-  ) => {
-    try {
-      const { name } = await createAthlete(data);
-      toast({
-        title: `Atleta ${name} Adicionado`,
-        description: "O atleta foi adicionado com sucesso.",
-      });
-      form.reset({
-        name: "",
-        phone: "",
-        pixKey: "",
-        responsible: "",
-      });
-    } catch {
-      toast({
-        title: "Algo de Errado",
-        description: "Não foi possivel adicionar o atleta. Tente novamente.",
-        variant: "destructive",
-      });
-    }
-  };
+  const { createAthlete } = useCreateAthlete();
+  const { updateAthlete } = useUpdateAthlete();
 
-  const updateAthleteFn = async (
-    data: Omit<Athlete, "createdAt" | "updatedAt">
-  ) => {
-    try {
-      const updatedAthlete = await updateAthlete(data);
-      toast({
-        title: `Atleta ${updatedAthlete.name} Atualizado`,
-        description: "O atleta foi atualizado com sucesso.",
-      });
-    } catch {
-      toast({
-        title: "Algo de Errado",
-        description: "Não foi possivel atualizar o atleta. Tente novamente.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // 1.define form.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (athlete) {
-      await updateAthleteFn({ ...values, id: athlete.id });
+      await updateAthlete({ ...values, id: athlete.id });
     } else {
-      await createAthleteFn(values);
+      const created = await createAthlete(values);
+      if (created) {
+        form.reset({
+          name: "",
+          phone: "",
+          pixKey: "",
+          responsible: "",
+        });
+      }
     }
   };
   const form = useForm<z.infer<typeof formSchema>>({

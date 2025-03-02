@@ -11,21 +11,16 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Athlete,
-  Investment,
-  InvestmentGroup,
-  InvestmentType,
-} from "@prisma/client";
+import { Athlete, Investment, InvestmentGroup } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Input } from "@/components/ui/input";
 import DialogCreateTournament from "../../tournaments/dialog-create-tournament";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-import DialogInvestmentAthlete from "../dialog-investment-athlete";
+import DialogInvestmentAthlete from "../(single)/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CircleX, Plus } from "lucide-react";
 import Image from "next/image";
 import { formSchemaGroupInvestmentAthlete } from "./schema-group-investment-athlete";
@@ -33,6 +28,8 @@ import { getPaidProofInvestment } from "./get-paid-proof-investment";
 import useFormGroupInvestmentAthlete from "./use-form-group-investment-athlete";
 import { getAthletes } from "../../athletes/actions";
 import { getTournaments } from "../../tournaments/actions";
+import { useQuery } from "@tanstack/react-query";
+import LoadingData from "@/components/LoadingData";
 
 const FormGroupInvestmentAthlete = ({
   athlete,
@@ -45,12 +42,24 @@ const FormGroupInvestmentAthlete = ({
 }) => {
   const { paid, proof } = getPaidProofInvestment(investmentGroup?.investments);
   const [investmentProof, setInvestmentProof] = useState<string | null>(proof);
-  const [athletes, setAthletes] = useState<
-    Awaited<ReturnType<typeof getAthletes>>
-  >([]);
-  const [tournaments, setTournaments] = useState<
-    Awaited<ReturnType<typeof getTournaments>>
-  >([]);
+  const {
+    data: athletes = [],
+    isPending: isPendingAthletes,
+    refetch: refetchAthletes,
+  } = useQuery({
+    queryKey: ["athletes"],
+    queryFn: getAthletes,
+  });
+
+  const {
+    data: tournaments,
+    isPending: isPendingTournaments,
+    refetch: refetchTournaments,
+  } = useQuery({
+    queryKey: ["tournaments"],
+    queryFn: getTournaments,
+  });
+
   const form = useForm<z.infer<typeof formSchemaGroupInvestmentAthlete>>({
     resolver: zodResolver(formSchemaGroupInvestmentAthlete),
     defaultValues: {
@@ -77,19 +86,9 @@ const FormGroupInvestmentAthlete = ({
         : {}),
     },
   });
+
   const { createGroupInvestmentAthleteFn, updateGroupInvestmentAthleteFn } =
     useFormGroupInvestmentAthlete(form);
-
-  const [investments, setInvestments] = useState<
-    (Investment & { investmentType: InvestmentType })[]
-  >([]);
-
-  const onCreateInvestment = (investment: Investment) => {
-    form.setValue("investments", [
-      ...form.getValues().investments,
-      investment.id,
-    ]);
-  };
 
   const onSubmit = (
     values: z.infer<typeof formSchemaGroupInvestmentAthlete>
@@ -102,6 +101,11 @@ const FormGroupInvestmentAthlete = ({
   };
 
   const setTotal = (array: string[]) => {
+    const investments = athletes.find(
+      (find) => find.id === form.getValues().athleteId
+    )?.investments;
+
+    if (!investments) return;
     form.setValue(
       "total",
       array.reduce<number>((acc, id) => {
@@ -112,26 +116,9 @@ const FormGroupInvestmentAthlete = ({
     );
   };
 
-  useEffect(() => {
-    const athleteId = form.getValues().athleteId;
-    const athleteInvestments =
-      athletes.find((at) => at.id === athleteId)?.investments || [];
-    setInvestments(athleteInvestments);
-  }, [form.getValues().athleteId, athletes]);
-
-  useEffect(() => {
-    async function fetch() {
-      const fetchAthlete = await getAthletes();
-      const fetchTournaments = await getTournaments();
-      setAthletes(fetchAthlete);
-      setTournaments(fetchTournaments);
-      setInvestments(
-        fetchAthlete.find((at) => at.id === form.getValues().athleteId)
-          ?.investments || []
-      );
-    }
-    fetch();
-  }, []);
+  if (isPendingAthletes || isPendingTournaments) {
+    return <LoadingData />;
+  }
 
   return (
     <Form {...form}>
@@ -167,7 +154,11 @@ const FormGroupInvestmentAthlete = ({
                           })) || []
                     }
                     selected={field.value}
-                    onSelect={(value) => field.onChange(value)}
+                    onSelect={(value) => {
+                      form.resetField("investments");
+                      form.setValue("total", 0);
+                      field.onChange(value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -227,6 +218,10 @@ const FormGroupInvestmentAthlete = ({
                             <Plus /> Novo Torneio
                           </Button>
                         }
+                        onCreateTournament={(tournament) => {
+                          refetchTournaments();
+                          form.setValue("tournamentId", tournament.id);
+                        }}
                       />
                     }
                   />
@@ -335,16 +330,13 @@ const FormGroupInvestmentAthlete = ({
                 <div className="h-32 rounded-md border overflow-auto py-1">
                   <div className="p-4">
                     {field.value?.map((id, index) => {
-                      const investment = investments?.find(
-                        (find) => find.id === id
-                      );
+                      const investment = athletes
+                        .find((find) => find.id === form.getValues().athleteId)
+                        ?.investments.find((find) => find.id === id);
                       if (!investment) return null;
                       return (
-                        <>
-                          <div
-                            key={index}
-                            className="text-sm flex justify-between gap-2 items-center"
-                          >
+                        <div key={index}>
+                          <div className="text-sm flex justify-between gap-2 items-center">
                             <div className="relative flex flex-col flex-1">
                               <p className="text-xs absolute top-2 right-2">
                                 {format(investment.date, "dd/MM/yy")}
@@ -396,7 +388,7 @@ const FormGroupInvestmentAthlete = ({
                             </div>
                           </div>
                           <Separator className="my-2" />
-                        </>
+                        </div>
                       );
                     })}
                   </div>
@@ -417,16 +409,15 @@ const FormGroupInvestmentAthlete = ({
                   <Combobox
                     placeholder="Selecione o Investimento"
                     items={
-                      investments
-                        ?.filter(
+                      athletes
+                        .find((find) => find.id === form.getValues().athleteId)
+                        ?.investments.filter(
                           (investment) =>
-                            !form
-                              .getValues()
-                              .investments.includes(investment.id) &&
+                            !field.value.includes(investment.id) &&
                             investment.investmentGroupId === null
                         )
                         .map((investment) => ({
-                          label: `${investment.investmentGroupId}${format(
+                          label: `${format(
                             investment.date,
                             "dd/MM/yy"
                           )} - ${investment.value.toLocaleString("pt-BR", {
@@ -443,8 +434,17 @@ const FormGroupInvestmentAthlete = ({
                     }}
                     above={
                       <DialogInvestmentAthlete
-                        onCreateInvestment={onCreateInvestment}
-                        athlete={athlete}
+                        onCreateInvestment={(investment: Investment) => {
+                          console.log("created", investment);
+                          refetchAthletes();
+                          form.setValue("investments", [
+                            ...form.getValues().investments,
+                            investment.id,
+                          ]);
+                        }}
+                        athlete={athletes.find(
+                          (find) => find.id === form.getValues().athleteId
+                        )}
                         trigger={
                           <Button size="sm" variant="ghost">
                             <Plus /> Novo Investimento
