@@ -40,12 +40,6 @@ const FormDownloadReport = () => {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      date: {
-        from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
-        to: new Date(),
-      },
-    },
   });
   return (
     <Form {...form}>

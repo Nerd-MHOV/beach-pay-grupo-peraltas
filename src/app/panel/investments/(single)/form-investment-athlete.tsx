@@ -31,7 +31,7 @@ import {
   saveProof,
   updateInvestmentAthlete,
 } from "../actions";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formSchema } from "./schema";
 import { getFileName } from "./get-file-name-investiment";
 
@@ -47,7 +47,6 @@ const FormInvestmentAthlete = ({
   clean?: boolean;
 }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [investmentProof, setInvestmentProof] = useState<string | null>(
     investment?.proof || null
   );
@@ -78,21 +77,6 @@ const FormInvestmentAthlete = ({
         investmentGroupId: null,
         ...(athlete ? { athleteId: athlete.id } : {}),
       });
-
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.setQueryData(
-        ["athletes"],
-        (old: Awaited<ReturnType<typeof getAthletes>>) => [
-          ...old.map((ath) =>
-            ath.id === created.athleteId
-              ? {
-                  ...ath,
-                  investments: [...ath?.investments, created],
-                }
-              : ath
-          ),
-        ]
-      );
       onCreateInvestment(created);
       form.reset({
         description: "",
@@ -136,20 +120,6 @@ const FormInvestmentAthlete = ({
         title: "Investimento Atualizado",
         description: "O investimento foi atualizado com sucesso.",
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.setQueryData(
-        ["athletes"],
-        (old: Awaited<ReturnType<typeof getAthletes>>) => [
-          ...old.map((ath) =>
-            ath.id === updated.athleteId
-              ? {
-                  ...ath,
-                  investments: [...ath?.investments, updated],
-                }
-              : ath
-          ),
-        ]
-      );
       return updated;
     } catch {
       toast({
