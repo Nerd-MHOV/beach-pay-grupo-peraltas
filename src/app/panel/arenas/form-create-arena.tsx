@@ -34,7 +34,13 @@ const formSchema = z.object({
     .max(255),
 });
 
-const FormCreateArena = ({ arena }: { arena?: Arena }) => {
+const FormCreateArena = ({
+  arena,
+  onCreate = () => {},
+}: {
+  arena?: Arena;
+  onCreate?: (arena: Arena) => void;
+}) => {
   const { toast } = useToast();
 
   const updateArenaFn = async (
@@ -61,6 +67,7 @@ const FormCreateArena = ({ arena }: { arena?: Arena }) => {
     try {
       const newArena = await createArena(data);
       form.reset();
+      onCreate(newArena);
       toast({
         title: `Arena ${newArena.name} Adicionada`,
         description: "A arena foi adicionada com sucesso.",

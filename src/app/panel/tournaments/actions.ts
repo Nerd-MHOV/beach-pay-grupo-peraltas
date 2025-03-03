@@ -2,17 +2,23 @@
 
 import db from "@/core/infra/db";
 import { Tournament } from "@prisma/client";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function createTournament(
   data: Omit<Tournament, "id" | "createdAt" | "updatedAt">
 ) {
-  return await db.tournament.create({ data, include: { arena: true } });
+  const tournament = await db.tournament.create({
+    data,
+    include: { arena: true },
+  });
+  revalidateTag("create-tournament");
+  return tournament;
 }
 
 export async function updateTournament(
   data: Omit<Tournament, "createdAt" | "updatedAt">
 ) {
-  return await db.tournament.update({
+  const tournament = await db.tournament.update({
     where: {
       id: data.id,
     },
@@ -24,12 +30,20 @@ export async function updateTournament(
       arena: true,
     },
   });
+  revalidateTag("update-tournament");
+  return tournament;
 }
 
-export async function getTournaments() {
-  return await db.tournament.findMany({
-    include: {
-      arena: true,
-    },
-  });
-}
+export const getTournaments = unstable_cache(
+  async () => {
+    return await db.tournament.findMany({
+      include: {
+        arena: true,
+      },
+    });
+  },
+  ["tournaments"],
+  {
+    tags: ["create-tournament", "update-tournament"],
+  }
+);

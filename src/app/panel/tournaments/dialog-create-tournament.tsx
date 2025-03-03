@@ -21,19 +21,7 @@ const DialogCreateTournament = ({
 }) => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {/* {combobox ? (
-          <Button size="sm" variant="ghost">
-            <Plus /> Novo Torneio
-          </Button>
-        ) : (
-          <Button size="sm">
-            <Plus />
-            Torneio
-          </Button>
-        )} */}
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>

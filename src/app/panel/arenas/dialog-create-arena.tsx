@@ -13,9 +13,11 @@ import { Arena } from "@prisma/client";
 const DialogCreateArena = ({
   trigger,
   arena,
+  onCreate,
 }: {
   trigger: React.JSX.Element;
   arena?: Arena;
+  onCreate?: (arena: Arena) => void;
 }) => {
   return (
     <Dialog>
@@ -26,7 +28,7 @@ const DialogCreateArena = ({
           <DialogTitle>{arena ? "Editar" : "Adicionar"} Arena</DialogTitle>
           <DialogDescription>Informe os dados da Arena.</DialogDescription>
         </DialogHeader>
-        <FormCreateArena arena={arena} />
+        <FormCreateArena arena={arena} onCreate={onCreate} />
       </DialogContent>
     </Dialog>
   );

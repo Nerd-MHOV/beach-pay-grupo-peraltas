@@ -56,7 +56,7 @@ export function Combobox({
           <CommandInput placeholder={placeholder} className="h-9" />
           {above}
           <CommandList>
-            <CommandEmpty>No item found.</CommandEmpty>
+            <CommandEmpty>Nenhum Item Encontrado.</CommandEmpty>
             <CommandGroup>
               {items.map((item) => (
                 <CommandItem

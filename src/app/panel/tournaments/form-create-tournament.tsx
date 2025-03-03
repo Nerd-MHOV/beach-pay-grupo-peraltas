@@ -1,5 +1,5 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { z } from "zod";
 import {
@@ -70,27 +70,17 @@ const FormCreateTournament = ({
   const { toast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const queryClient = useQueryClient();
-  const { data: arenas } = useQuery({
+  const { data: arenas, refetch: refetchArenas } = useQuery({
     queryKey: ["arenas"],
     queryFn: getArenas,
   });
-  const { mutateAsync: createTournamentFn, isPending } = useMutation({
-    mutationKey: ["create-tournament"],
-    mutationFn: createTournament,
-    onError: () => {
-      toast({
-        title: "Algo de Errado",
-        description: "Não foi possivel adicionar o torneio. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["tournaments"], (old: undefined) => [
-        ...(old || []),
-        data,
-      ]);
-      onCreateTournament(data);
+
+  const createTournamentFn = async (
+    values: Omit<Tournament, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const created = await createTournament(values);
+      onCreateTournament(created);
       form.reset({
         description: "",
         name: "",
@@ -99,30 +89,32 @@ const FormCreateTournament = ({
         title: "Torneio Adicionado",
         description: "O torneio foi adicionada com sucesso.",
       });
-    },
-  });
+    } catch {
+      toast({
+        title: "Algo de Errado",
+        description: "Não foi possivel adicionar o torneio. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
-  const { mutateAsync: updateTournamentFn, isPending: isPendingUpdate } =
-    useMutation({
-      mutationKey: ["update-tournament"],
-      mutationFn: updateTournament,
-      onError: () => {
-        toast({
-          title: "Algo de Errado",
-          description: "Não foi possivel atualizar o torneio. Tente novamente.",
-          variant: "destructive",
-        });
-      },
-      onSuccess: (data) => {
-        queryClient.setQueryData(["tournaments"], (old: Tournament[]) =>
-          old.map((torn) => (torn.id === data.id ? data : torn))
-        );
-        toast({
-          title: "Torneio Atualizado",
-          description: "O torneio foi atualizado com sucesso.",
-        });
-      },
-    });
+  const updateTournamentFn = async (
+    values: Omit<Tournament, "createdAt" | "updatedAt">
+  ) => {
+    try {
+      await updateTournament(values);
+      toast({
+        title: "Torneio Atualizado",
+        description: "O torneio foi atualizado com sucesso.",
+      });
+    } catch {
+      toast({
+        title: "Algo de Errado",
+        description: "Não foi possivel atualizar o torneio. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { date, ...rest } = values;
@@ -160,7 +152,13 @@ const FormCreateTournament = ({
   });
   return (
     <Form {...form}>
-      <form className="space-y-3">
+      <form
+        className="space-y-3"
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit(onSubmit)(e);
+        }}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -184,7 +182,7 @@ const FormCreateTournament = ({
                 <Combobox
                   placeholder="Selecione a Arena"
                   items={(arenas || []).map((arena) => ({
-                    label: arena.name,
+                    label: arena.name + " - " + arena.city,
                     value: arena.id,
                   }))}
                   selected={field.value}
@@ -196,6 +194,10 @@ const FormCreateTournament = ({
                           <Plus /> Nova arena
                         </Button>
                       }
+                      onCreate={(newArena) => {
+                        refetchArenas();
+                        field.onChange(newArena.id);
+                      }}
                     />
                   }
                 />
@@ -276,8 +278,10 @@ const FormCreateTournament = ({
 
         <div className="flex w-full justify-end mt-5">
           <Button
-            isLoading={isPending || isPendingUpdate}
-            onClick={form.handleSubmit(onSubmit)}
+            isLoading={form.formState.isSubmitting}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             {tournament ? "Atualizar" : "Adicionar"}
           </Button>
