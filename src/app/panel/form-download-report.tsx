@@ -1,9 +1,7 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { downloadReport } from "./actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +21,8 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
+import { useSearchParams, useRouter } from "next/navigation";
+import DownloadMenu from "./tournaments/download-menu";
 
 const formSchema = z.object({
   date: z.object({
@@ -31,19 +31,38 @@ const formSchema = z.object({
   }),
 });
 const FormDownloadReport = () => {
-  const { mutateAsync: donwloadFn, isPending } = useMutation({
-    mutationKey: ["download-report"],
-    mutationFn: downloadReport,
-  });
+  const searchParams = useSearchParams();
+  const params = {
+    from: searchParams.get("from"),
+    to: searchParams.get("to"),
+  };
+  const router = useRouter();
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    donwloadFn(values);
+    router.push(
+      `/panel/dashboard?from=${format(
+        values.date.from,
+        "MM-dd-yyyy"
+      )}&to=${format(values.date.to, "MM-dd-yyyy")}`
+    );
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues:
+      params.from && params.to
+        ? {
+            date: {
+              from: new Date(params.from),
+              to: new Date(params.to),
+            },
+          }
+        : undefined,
   });
   return (
     <Form {...form}>
-      <form className="flex gap-4 flex-col sm:flex-row">
+      <form
+        className="flex gap-4 flex-col sm:flex-row"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="date"
@@ -101,13 +120,12 @@ const FormDownloadReport = () => {
             </FormItem>
           )}
         />
-        <Button
-          isLoading={isPending}
-          variant="default"
-          onClick={form.handleSubmit(onSubmit)}
-        >
-          Download
+        <Button isLoading={form.formState.isSubmitting} variant="default">
+          Buscar
         </Button>
+        <DownloadMenu
+        // disabled={!form.getValues().date}
+        />
       </form>
     </Form>
   );

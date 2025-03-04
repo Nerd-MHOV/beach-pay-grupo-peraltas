@@ -88,7 +88,8 @@ const Sidebar = () => {
               className={cn(
                 "list-none rounded-l-full w-full text-white relative ",
                 pathname === link.link ||
-                  (pathname?.includes(link.link) && link.link !== "/panel")
+                  (pathname?.includes(link.link) && link.link !== "/panel") ||
+                  (pathname === "/panel/dashboard" && link.link === "/panel")
                   ? `bg-background text-slate-900 
                                 before:content-[" "] before:absolute before:right-0 
                                 before:w-12 before:h-12 before:rounded-full before:pointer-events-none

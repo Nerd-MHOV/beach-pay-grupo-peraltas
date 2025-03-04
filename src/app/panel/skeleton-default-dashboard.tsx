@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function SkeletonDedaultDashboard() {
+export function SkeletonDefaultDashboard() {
   return (
     <div className=" space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

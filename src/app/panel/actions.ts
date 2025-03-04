@@ -1,7 +1,8 @@
+"use server";
 import db from "@/core/infra/db";
 
 export async function getDashboard(data?: {
-  date: {
+  date?: {
     from: Date;
     to: Date;
   };
@@ -10,10 +11,11 @@ export async function getDashboard(data?: {
     _sum: {
       value: true,
     },
+    _count: true,
     where: {
-      createdAt: {
-        gte: data?.date.from,
-        lte: data?.date.to,
+      date: {
+        gte: data?.date?.from,
+        lte: data?.date?.to,
       },
     },
   });
@@ -23,9 +25,9 @@ export async function getDashboard(data?: {
       value: true,
     },
     where: {
-      createdAt: {
-        gte: data?.date.from,
-        lte: data?.date.to,
+      date: {
+        gte: data?.date?.from,
+        lte: data?.date?.to,
       },
       paid: null,
     },
@@ -33,9 +35,9 @@ export async function getDashboard(data?: {
 
   const pendingInvestmentsCount = await db.investment.count({
     where: {
-      createdAt: {
-        gte: data?.date.from,
-        lte: data?.date.to,
+      date: {
+        gte: data?.date?.from,
+        lte: data?.date?.to,
       },
       paid: null,
     },
@@ -44,8 +46,8 @@ export async function getDashboard(data?: {
   const totalSubscriptions = await db.athlete.count({
     where: {
       createdAt: {
-        gte: data?.date.from,
-        lte: data?.date.to,
+        gte: data?.date?.from,
+        lte: data?.date?.to,
       },
     },
   });
@@ -112,7 +114,41 @@ export async function getDashboard(data?: {
     },
   });
 
+  const investmentByType = await db.investment
+    .groupBy({
+      by: ["investmentTypeId"],
+      _sum: {
+        value: true,
+      },
+      _count: true,
+      where: {
+        date: {
+          gte: data?.date?.from,
+          lte: data?.date?.to,
+        },
+      },
+    })
+    .then((results) =>
+      Promise.all(
+        results.map(async (results) => {
+          return {
+            type:
+              (
+                await db.investmentType.findUnique({
+                  where: { id: results.investmentTypeId },
+                })
+              )?.name || "",
+            value: results._sum.value || 0,
+            count: results._count,
+          };
+        })
+      )
+    );
+
+  console.log(investmentByType);
+
   return {
+    investmentByType,
     recentInvestments: {
       lastFiveInvestments,
       investmentsLast30Days,
@@ -121,6 +157,7 @@ export async function getDashboard(data?: {
     totalSubscriptions: totalSubscriptions,
     totalInvestments: {
       value: totalInvestments._sum.value ?? 0,
+      count: totalInvestments._count,
     },
     pendingInvestments: {
       value: pendingInvestments._sum.value ?? 0,

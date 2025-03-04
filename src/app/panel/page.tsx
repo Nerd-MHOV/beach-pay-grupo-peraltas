@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import React, { Suspense } from "react";
 import FormDownloadReport from "./form-download-report";
 import DefaultDashboard from "./default-dashboard";
-import { SkeletonDedaultDashboard } from "./skeleton-default-dashboard";
+import { SkeletonDefaultDashboard } from "./skeleton-default-dashboard";
 
 const Panel = () => {
   return (
@@ -14,7 +14,7 @@ const Panel = () => {
         </Header.Content>
       </Header.Root>
 
-      <Suspense fallback={<SkeletonDedaultDashboard />}>
+      <Suspense fallback={<SkeletonDefaultDashboard />}>
         <DefaultDashboard />
       </Suspense>
     </div>
