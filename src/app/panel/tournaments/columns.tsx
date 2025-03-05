@@ -39,7 +39,7 @@ export const columns: ColumnDef<
       return (
         <span>
           {format(tournament.fromDate, "dd LLL")} -{" "}
-          {format(tournament.toDate, "dd LLL, Y")}
+          {format(tournament.toDate, "dd LLL, y")}
         </span>
       );
     },

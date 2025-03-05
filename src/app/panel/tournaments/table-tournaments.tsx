@@ -13,7 +13,7 @@ const TableTournaments = async () => {
         data={tournaments.map((tournament) => {
           return {
             ...tournament,
-            arena_name: tournament.arena.name,
+            arena_name: `${tournament.arena.name} - ${tournament.arena.city}`,
           };
         })}
       />

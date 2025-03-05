@@ -145,9 +145,49 @@ export async function getDashboard(data?: {
       )
     );
 
+  const investimentByAthlete = await db.investment
+    .groupBy({
+      by: ["athleteId"],
+      _sum: {
+        value: true,
+      },
+      where: {
+        date: {
+          gte: data?.date?.from,
+          lte: data?.date?.to,
+        },
+      },
+    })
+    .then((results) =>
+      Promise.all(
+        results.map(async (result) => {
+          return {
+            athlete: await db.athlete.findUnique({
+              where: { id: result.athleteId },
+              include: {
+                investments: {
+                  include: {
+                    investmentType: true,
+                  },
+                  where: {
+                    date: {
+                      gte: data?.date?.from,
+                      lte: data?.date?.to,
+                    },
+                  },
+                },
+              },
+            }),
+            value: result._sum.value,
+          };
+        })
+      )
+    );
+
   console.log(investmentByType);
 
   return {
+    investimentByAthlete,
     investmentByType,
     recentInvestments: {
       lastFiveInvestments,

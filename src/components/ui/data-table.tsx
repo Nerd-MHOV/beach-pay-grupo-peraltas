@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import {
   Table,
   TableBody,
@@ -12,13 +12,15 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  Row,
   useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "./input";
 import { Button } from "./button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,26 +28,55 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { useState } from "react";
-
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  renderDetails?: (data: TData) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  renderDetails,
 }: DataTableProps<TData, TValue>) {
+  const exportPdf = (rows: Row<TData>[]) => {
+    const doc = new jsPDF();
+    const tableData = rows.map((row) =>
+      row.getVisibleCells().map((cell) => cell.getValue() as string)
+    );
+    const tableHeaders = columns.map((c) =>
+      typeof c.header === "function" ? " " : c.header || " "
+    );
+
+    autoTable(doc, {
+      head: [tableHeaders],
+      body: tableData,
+    });
+
+    doc.save("pdf.pdf");
+  };
+
+  const exportCsv = (rows: Row<TData>[]) => {
+    console.log(rows);
+  };
+
   const [filter, setFilter] = useState("");
+  const [expanded, setExpanded] = useState<true | Record<string, boolean>>({});
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: () => !!renderDetails,
     state: {
       globalFilter: filter,
+      expanded: expanded,
     },
+    onExpandedChange: setExpanded,
     onGlobalFilterChange: setFilter,
   });
 
@@ -58,6 +89,34 @@ export function DataTable<TData, TValue>({
           onChange={(event) => setFilter(event.target.value)}
           className="max-w-sm"
         />
+        <Button
+          disabled={table.getPrePaginationRowModel().rows.length === 0}
+          //export all rows, including from the next page, (still respects filtering and sorting)
+          onClick={() =>
+            exportPdf(
+              table.getIsSomeRowsSelected()
+                ? table.getSelectedRowModel().rows
+                : table.getPrePaginationRowModel().rows
+            )
+          }
+          variant={"ghost"}
+        >
+          <Download /> PDF
+        </Button>
+        <Button
+          disabled={table.getPrePaginationRowModel().rows.length === 0}
+          //export all rows, including from the next page, (still respects filtering and sorting)
+          onClick={() =>
+            exportCsv(
+              table.getIsSomeRowsSelected()
+                ? table.getSelectedRowModel().rows
+                : table.getPrePaginationRowModel().rows
+            )
+          }
+          variant={"ghost"}
+        >
+          <Download /> CSV
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -106,19 +165,28 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <React.Fragment key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {row.getIsExpanded() && (
+                    <TableRow>
+                      <TableCell colSpan={columns.length}>
+                        {renderDetails?.(row.original)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               ))
             ) : (
               <TableRow>

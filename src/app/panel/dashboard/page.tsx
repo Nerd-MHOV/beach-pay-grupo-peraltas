@@ -9,6 +9,7 @@ import { SkeletonDefaultDashboard } from "../skeleton-default-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ChartPerTypeInvestment from "@/components/charts/chart-per-type-investment";
+import TableDashboard from "./table-dashboard";
 
 const Dashboard = () => {
   const searchParams = useSearchParams();
@@ -125,6 +126,8 @@ const Dashboard = () => {
             }
             data={dashboard?.investmentByType || []}
           />
+
+          <TableDashboard data={dashboard?.investimentByAthlete} />
         </>
       )}
     </div>
