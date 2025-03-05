@@ -41,27 +41,6 @@ export function DataTable<TData, TValue>({
   data,
   renderDetails,
 }: DataTableProps<TData, TValue>) {
-  const exportPdf = (rows: Row<TData>[]) => {
-    const doc = new jsPDF();
-    const tableData = rows.map((row) =>
-      row.getVisibleCells().map((cell) => cell.getValue() as string)
-    );
-    const tableHeaders = columns.map((c) =>
-      typeof c.header === "function" ? " " : c.header || " "
-    );
-
-    autoTable(doc, {
-      head: [tableHeaders],
-      body: tableData,
-    });
-
-    doc.save("pdf.pdf");
-  };
-
-  const exportCsv = (rows: Row<TData>[]) => {
-    console.log(rows);
-  };
-
   const [filter, setFilter] = useState("");
   const [expanded, setExpanded] = useState<true | Record<string, boolean>>({});
   const table = useReactTable({
@@ -79,6 +58,66 @@ export function DataTable<TData, TValue>({
     onExpandedChange: setExpanded,
     onGlobalFilterChange: setFilter,
   });
+
+  const exportPdf = (rows: Row<TData>[]) => {
+    const doc = new jsPDF();
+    const tableData = rows.map((row) =>
+      row.getVisibleCells().map((cell) => cell.getValue() || " ")
+    );
+    const tableHeaders = table
+      .getAllColumns()
+      .map((column) =>
+        column.getIsVisible()
+          ? typeof column.columnDef.header !== "function"
+            ? column.columnDef.header?.toString() || " "
+            : " "
+          : " "
+      );
+    autoTable(doc, {
+      head: [tableHeaders],
+      body: tableData,
+    });
+
+    doc.save("pdf.pdf");
+  };
+
+  const exportCsv = (rows: Row<TData>[]) => {
+    // Get headers from visible columns
+    const tableHeaders = table
+      .getAllColumns()
+      .filter((column) => column.getIsVisible())
+      .map((column) =>
+        typeof column.columnDef.header !== "function"
+          ? column.columnDef.header?.toString() || ""
+          : ""
+      );
+
+    // Create CSV rows data from visible cells of each row
+    const csvRows = rows.map((row) =>
+      row
+        .getVisibleCells()
+        .map((cell) => {
+          // Escape double quotes by doubling them
+          const cellValue = cell.getValue()?.toString() || "";
+          return `"${cellValue.replace(/"/g, '""')}"`;
+        })
+        .join(",")
+    );
+
+    // Combine headers and row data
+    const csvContent = [tableHeaders.join(","), ...csvRows].join("\n");
+
+    // Create a blob and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "data.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
