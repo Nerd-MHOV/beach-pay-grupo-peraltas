@@ -3,12 +3,15 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
 import { Investment, InvestmentType } from "@prisma/client";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
-export const columns: ColumnDef<{
+type dashboardColumnsDef = ColumnDef<{
   athlete: string;
   total: string;
   subRows: (Investment & { investmentType: InvestmentType })[] | undefined;
-}>[] = [
+}>;
+export const columns: dashboardColumnsDef[] = [
+  SelectComponentColumn as dashboardColumnsDef,
   {
     id: "collapse",
     header: "",

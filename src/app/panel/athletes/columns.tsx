@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,34 +14,14 @@ import { MoreHorizontal } from "lucide-react";
 import DialogInvestmentAthlete from "../investments/(single)/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../investments/(group)/dialog-group-investment-athlete";
 import Link from "next/link";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
 export type AthleteTable = Athlete & {
   age: number;
 };
 
 export const columns: ColumnDef<Athlete>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  SelectComponentColumn as ColumnDef<Athlete>,
   {
     accessorKey: "name",
     header: "Nome",

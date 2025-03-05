@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
 export interface InvestmentColumns {
   columns: {
@@ -22,6 +23,7 @@ export interface InvestmentColumns {
   } & InvestmentGroup;
 }
 export const columnsGroup: ColumnDef<InvestmentColumns["columns"]>[] = [
+  SelectComponentColumn as ColumnDef<InvestmentColumns["columns"]>,
   {
     header: "Status",
     accessorKey: "paid",

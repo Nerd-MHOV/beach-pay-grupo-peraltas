@@ -28,6 +28,7 @@ import {
 import DialogInvestmentAthlete from "./dialog-investment-athlete";
 import Link from "next/link";
 import DialogGroupInvestmentAthlete from "../(group)/dialog-group-investment-athlete";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
 export interface InvestmentColumns {
   columns: {
@@ -50,6 +51,7 @@ export interface InvestmentColumns {
   } & Investment;
 }
 export const columns: ColumnDef<InvestmentColumns["columns"]>[] = [
+  SelectComponentColumn as ColumnDef<InvestmentColumns["columns"]>,
   {
     header: "Status",
     accessorKey: "paid",

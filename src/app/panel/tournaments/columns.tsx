@@ -12,13 +12,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateTournament from "./dialog-create-tournament";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
-export const columns: ColumnDef<
+type tournamentsColumnsDef = ColumnDef<
   Tournament & {
     arena: Arena;
     arena_name: string;
   }
->[] = [
+>;
+export const columns: tournamentsColumnsDef[] = [
+  SelectComponentColumn as tournamentsColumnsDef,
   {
     accessorKey: "name",
     header: "Nome",

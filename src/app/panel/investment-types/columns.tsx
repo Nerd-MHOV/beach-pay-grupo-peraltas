@@ -11,8 +11,10 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateInvestmentType from "./dialog-create-investment-type";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
 
 export const columns: ColumnDef<InvestmentType>[] = [
+  SelectComponentColumn as ColumnDef<InvestmentType>,
   {
     accessorKey: "name",
     header: "Nome",

@@ -11,7 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateArena from "./dialog-create-arena";
+import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+
 export const columns: ColumnDef<Arena>[] = [
+  SelectComponentColumn as ColumnDef<Arena>,
   {
     header: "Nome",
     accessorKey: "name",
