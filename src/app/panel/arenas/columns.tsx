@@ -1,6 +1,5 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
 import { Arena } from "@prisma/client";
 import {
   DropdownMenu,
@@ -11,20 +10,29 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateArena from "./dialog-create-arena";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
 
-export const columns: ColumnDef<Arena>[] = [
-  SelectComponentColumn as ColumnDef<Arena>,
+export const columns: ExtendedColumnDef<Arena, undefined>[] = [
+  SelectComponentColumn as ExtendedColumnDef<Arena, undefined>,
   {
-    header: "Nome",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nome" />
+    ),
     accessorKey: "name",
+    label: "Nome",
   },
   {
-    header: "Cidade",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Cidade" />
+    ),
     accessorKey: "city",
+    label: "Cidade",
   },
   {
     id: "actions",
+    label: " ",
     enableHiding: false,
     cell: ({ row }) => {
       return (

@@ -1,27 +1,27 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
 import { Investment, InvestmentType } from "@prisma/client";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
-type dashboardColumnsDef = ColumnDef<{
-  athlete: string;
-  total: string;
-  subRows: (Investment & { investmentType: InvestmentType })[] | undefined;
-}>;
+type dashboardColumnsDef = ExtendedColumnDef<
+  {
+    athlete: string;
+    total: string;
+    subRows: (Investment & { investmentType: InvestmentType })[] | undefined;
+  },
+  undefined
+>;
 export const columns: dashboardColumnsDef[] = [
   SelectComponentColumn as dashboardColumnsDef,
   {
-    id: "collapse",
-    header: "",
-
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "athlete",
-    header: "Atleta",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Atleta" />
+    ),
+    label: "Atleta",
   },
   {
     accessorKey: "total",
@@ -31,6 +31,9 @@ export const columns: dashboardColumnsDef[] = [
         <span className="">{row.original.total}</span>
       </Button>
     ),
-    header: "Total",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total" />
+    ),
+    label: "Total",
   },
 ];

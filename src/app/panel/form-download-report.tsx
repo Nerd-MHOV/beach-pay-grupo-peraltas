@@ -22,7 +22,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { useSearchParams, useRouter } from "next/navigation";
-import DownloadMenu from "./tournaments/download-menu";
+// import DownloadMenu from "./tournaments/download-menu";
 
 const formSchema = z.object({
   date: z.object({
@@ -123,9 +123,9 @@ const FormDownloadReport = () => {
         <Button isLoading={form.formState.isSubmitting} variant="default">
           Buscar
         </Button>
-        <DownloadMenu
+        {/* <DownloadMenu
         // disabled={!form.getValues().date}
-        />
+        /> */}
       </form>
     </Form>
   );

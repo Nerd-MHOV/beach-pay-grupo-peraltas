@@ -15,34 +15,40 @@ import {
   getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   Row,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "./input";
 import { Button } from "./button";
-import { ChevronDown, Download } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { DataTableViewOptions } from "../tables/columns/toggleColumn";
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ExtendedColumnDef<TData, TValue>[];
   data: TData[];
   renderDetails?: (data: TData) => React.ReactNode;
+  pdfDescription?: string;
+  pdfTitle?: string;
 }
+
+export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  label: string;
+};
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   renderDetails,
+  pdfDescription,
+  pdfTitle,
 }: DataTableProps<TData, TValue>) {
   const [filter, setFilter] = useState("");
   const [expanded, setExpanded] = useState<true | Record<string, boolean>>({});
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
@@ -51,31 +57,46 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => !!renderDetails,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       globalFilter: filter,
       expanded: expanded,
+      sorting: sorting,
     },
     onExpandedChange: setExpanded,
     onGlobalFilterChange: setFilter,
+    onSortingChange: setSorting,
   });
 
   const exportPdf = (rows: Row<TData>[]) => {
     const doc = new jsPDF();
+    doc.setFontSize(16);
+    if (pdfTitle)
+      doc.text(pdfTitle, doc.internal.pageSize.getWidth() / 2, 15, {
+        align: "center",
+      });
+    doc.setFontSize(12);
+    if (pdfDescription)
+      doc.text(pdfDescription, 10, 25, {
+        align: "center",
+      });
+
     const tableData = rows.map((row) =>
       row.getVisibleCells().map((cell) => cell.getValue() || " ")
     );
     const tableHeaders = table
       .getAllColumns()
-      .map((column) =>
-        column.getIsVisible()
-          ? typeof column.columnDef.header !== "function"
-            ? column.columnDef.header?.toString() || " "
-            : " "
-          : " "
+      .filter((column) => column.getIsVisible())
+      .map(
+        (column) =>
+          (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
+          column.id
       );
+
     autoTable(doc, {
       head: [tableHeaders],
       body: tableData,
+      startY: 35,
     });
 
     doc.save("pdf.pdf");
@@ -86,10 +107,10 @@ export function DataTable<TData, TValue>({
     const tableHeaders = table
       .getAllColumns()
       .filter((column) => column.getIsVisible())
-      .map((column) =>
-        typeof column.columnDef.header !== "function"
-          ? column.columnDef.header?.toString() || ""
-          : ""
+      .map(
+        (column) =>
+          (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
+          column.id
       );
 
     // Create CSV rows data from visible cells of each row
@@ -156,32 +177,7 @@ export function DataTable<TData, TValue>({
         >
           <Download /> CSV
         </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Colunas <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.columnDef.header?.toString()}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DataTableViewOptions table={table} />
       </div>
       <div className="rounded-md border">
         <Table>

@@ -7,7 +7,7 @@ const TableArenas = async () => {
   const arenas = await getArenas();
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg">
-      <DataTable columns={columns} data={arenas} />
+      <DataTable columns={columns} data={arenas} pdfTitle="Arenas" />
     </div>
   );
 };

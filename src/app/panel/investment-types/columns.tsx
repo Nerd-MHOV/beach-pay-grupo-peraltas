@@ -8,32 +8,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { InvestmentType } from "@prisma/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateInvestmentType from "./dialog-create-investment-type";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
-export const columns: ColumnDef<InvestmentType>[] = [
-  SelectComponentColumn as ColumnDef<InvestmentType>,
+export const columns: ExtendedColumnDef<InvestmentType, undefined>[] = [
+  SelectComponentColumn as ExtendedColumnDef<InvestmentType, undefined>,
   {
     accessorKey: "name",
-    header: "Nome",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nome" />
+    ),
+    label: "Nome",
   },
   {
     accessorKey: "description",
-    header: "Descrição",
-    // cell: ({ row }) => {
-    //   const description = row.original.description;
-    //   const truncatedDescription =
-    //     description.length > 40
-    //       ? `${description.substring(0, 40)}...`
-    //       : description;
-    //   return <span>{truncatedDescription}</span>;
-    // },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Descrição" />
+    ),
+    label: "Descrição",
   },
   {
     accessorKey: "canSee",
-    header: "Visível para",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Permissões" />
+    ),
+    label: "Permissões",
     cell: ({ row }) => {
       const canSee = row.original.canSee;
       return <span>{canSee.join(", ")}</span>;
@@ -41,6 +43,7 @@ export const columns: ColumnDef<InvestmentType>[] = [
   },
   {
     id: "actions",
+    label: " ",
     enableHiding: false,
     cell: ({ row }) => {
       return (

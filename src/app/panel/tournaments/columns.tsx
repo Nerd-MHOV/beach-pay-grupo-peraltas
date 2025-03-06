@@ -8,48 +8,54 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Arena, Tournament } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateTournament from "./dialog-create-tournament";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
-type tournamentsColumnsDef = ColumnDef<
+type tournamentsColumnsDef = ExtendedColumnDef<
   Tournament & {
     arena: Arena;
     arena_name: string;
-  }
+    date: string;
+  },
+  undefined
 >;
 export const columns: tournamentsColumnsDef[] = [
   SelectComponentColumn as tournamentsColumnsDef,
   {
     accessorKey: "name",
-    header: "Nome",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nome" />
+    ),
+    label: "Nome",
   },
   {
-    id: "arena_name",
-    header: "Arena",
+    accessorKey: "arena_name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Arena" />
+    ),
+    label: "Arena",
   },
   {
     accessorKey: "description",
-    header: "Descrição",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Descrição" />
+    ),
+    label: "Descrição",
   },
   {
-    id: "date",
-    header: "Data",
-    cell: ({ row }) => {
-      const tournament = row.original;
-      return (
-        <span>
-          {format(tournament.fromDate, "dd LLL")} -{" "}
-          {format(tournament.toDate, "dd LLL, y")}
-        </span>
-      );
-    },
+    accessorKey: "date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Data" />
+    ),
+    label: "Data",
   },
   {
     id: "actions",
     enableHiding: false,
+    label: " ",
     cell: ({ row }) => {
       return (
         <DropdownMenu>

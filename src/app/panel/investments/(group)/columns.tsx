@@ -9,23 +9,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Investment, InvestmentGroup } from "@prisma/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
-export interface InvestmentColumns {
-  columns: {
+type InvestmentColumns = ExtendedColumnDef<
+  {
     athlete: string;
     investments: Investment[];
-  } & InvestmentGroup;
-}
-export const columnsGroup: ColumnDef<InvestmentColumns["columns"]>[] = [
-  SelectComponentColumn as ColumnDef<InvestmentColumns["columns"]>,
+  } & InvestmentGroup,
+  undefined
+>;
+export const columnsGroup: InvestmentColumns[] = [
+  SelectComponentColumn as InvestmentColumns,
   {
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Status"} />
+    ),
+    label: "Status",
     accessorKey: "paid",
     cell: ({ row }) => {
       let paid = true;
@@ -49,11 +54,17 @@ export const columnsGroup: ColumnDef<InvestmentColumns["columns"]>[] = [
   },
   {
     accessorKey: "athlete",
-    header: "Atleta",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Atleta"} />
+    ),
+    label: "Atleta",
   },
   {
     accessorKey: "value",
-    header: "Valor",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Valor"} />
+    ),
+    label: "Valor",
     cell: ({ row }) => {
       const totalValue = row.original.investments.reduce(
         (acc, curr) => acc + curr.value,
@@ -71,17 +82,24 @@ export const columnsGroup: ColumnDef<InvestmentColumns["columns"]>[] = [
   },
   {
     accessorKey: "description",
-    header: "Descrição",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Descrição"} />
+    ),
+    label: "Descrição",
   },
   {
     accessorKey: "createdAt",
-    header: "Criado Em:",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Criado Em:"} />
+    ),
+    label: "Criado Em:",
     cell: ({ row }) => {
       return <span>{format(row.original.createdAt, "dd/MM/yy")}</span>;
     },
   },
   {
     id: "actions",
+    label: " ",
     enableHiding: false,
     cell: ({ row }) => {
       return (

@@ -9,44 +9,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Athlete } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import DialogInvestmentAthlete from "../investments/(single)/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../investments/(group)/dialog-group-investment-athlete";
 import Link from "next/link";
-import SelectComponentColumn from "@/components/tables/columns/selectComponetColumn";
+import SelectComponentColumn from "@/components/tables/columns/selectColumn";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
 export type AthleteTable = Athlete & {
   age: number;
 };
 
-export const columns: ColumnDef<Athlete>[] = [
-  SelectComponentColumn as ColumnDef<Athlete>,
+export const columns: ExtendedColumnDef<Athlete, undefined>[] = [
+  SelectComponentColumn as ExtendedColumnDef<Athlete, undefined>,
   {
     accessorKey: "name",
-    header: "Nome",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nome" />
+    ),
+    label: "Nome",
   },
   {
     accessorKey: "responsible",
-    header: "Responsável",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Responsável" />
+    ),
+    label: "Responsável",
   },
   {
-    id: "age",
-    header: "Idade",
-    cell: ({ row }) => {
-      const calculateAge = (birthday: Date) => {
-        const ageDifMs = Date.now() - new Date(birthday).getTime();
-        const ageDate = new Date(ageDifMs);
-        return Math.abs(ageDate.getUTCFullYear() - 1970);
-      };
-
-      const athlete = row.original as AthleteTable;
-      return <span>{calculateAge(athlete.birthday)}</span>;
-    },
+    accessorKey: "age",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Idade" />
+    ),
+    label: "Idade",
   },
   {
     id: "actions",
     enableHiding: false,
+    label: " ",
     cell: ({ row }) => {
       const athlete = row.original;
 

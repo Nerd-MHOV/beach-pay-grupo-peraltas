@@ -1,8 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
+import { ExtendedColumnDef } from "@/components/ui/data-table";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SelectComponentColumn: ColumnDef<any> = {
+const SelectComponentColumn: ExtendedColumnDef<any, undefined> = {
   id: "select",
+  label: " ",
   header: ({ table }) => (
     <Checkbox
       checked={
