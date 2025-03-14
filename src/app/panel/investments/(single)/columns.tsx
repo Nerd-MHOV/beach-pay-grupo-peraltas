@@ -115,9 +115,9 @@ export const columns: InvestmentColumns[] = [
   {
     accessorKey: "investmentGroup",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Grupo de Investimento"} />
+      <DataTableColumnHeader column={column} title={"Grupo"} />
     ),
-    label: "Grupo de Investimento",
+    label: "Grupo",
     cell: ({ row }) => {
       const investmentGroup = row.original.investmentGroup;
       if (!investmentGroup)

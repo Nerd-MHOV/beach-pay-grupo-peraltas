@@ -7,7 +7,11 @@ const TableInvestmentTypes = async () => {
 
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg">
-      <DataTable columns={columns} data={investments} />
+      <DataTable
+        columns={columns}
+        data={investments}
+        pdfTitle="Tipos de Investimentos"
+      />
     </div>
   );
 };

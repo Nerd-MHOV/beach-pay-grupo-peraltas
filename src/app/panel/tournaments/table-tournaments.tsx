@@ -9,9 +9,10 @@ const TableTournaments = async () => {
   const tournaments = await getTournaments();
 
   return (
-    <div className="bg-white p-7 rounded-xl shadow-lg">
+    <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable
         columns={columns}
+        pdfTitle="Torneios"
         data={tournaments.map((tournament) => {
           return {
             ...tournament,

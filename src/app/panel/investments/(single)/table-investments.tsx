@@ -5,12 +5,16 @@ import { columns } from "./columns";
 
 const TableInvestments = ({
   investments,
+  pdfDescription,
 }: {
+  pdfDescription?: string;
   investments: Awaited<ReturnType<typeof getInvestments>>;
 }) => {
   return (
     <DataTable
       columns={columns}
+      pdfTitle="Relatório de investimentos"
+      pdfDescription={pdfDescription}
       data={investments.map((investment) => {
         return {
           ...investment,

@@ -6,7 +6,7 @@ import { getArenas } from "./actions";
 const TableArenas = async () => {
   const arenas = await getArenas();
   return (
-    <div className="bg-white p-7 rounded-xl shadow-lg">
+    <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable columns={columns} data={arenas} pdfTitle="Arenas" />
     </div>
   );

@@ -23,37 +23,40 @@ const Page = async ({
   }
 
   const TotalInvestments = Number(
-    athlete.investments.reduce((acc, curr) => acc + curr.value, 0)
+    athlete.investments.reduce((acc, curr) => acc + curr.value, 0),
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
   const pendingInvestments = athlete.investments.filter(
-    (investment) => !investment.proof
+    (investment) => !investment.proof,
   );
 
   const TotalToPaid = Number(
-    pendingInvestments.reduce((acc, curr) => acc + curr.value, 0)
+    pendingInvestments.reduce((acc, curr) => acc + curr.value, 0),
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-  const investmentsByType = athlete.investments.reduce((acc, curr) => {
-    const name = curr.investmentType.name;
-    if (!acc[name]) {
-      acc[name] = 0;
-    }
-    acc[name] += curr.value;
-    return acc;
-  }, {} as Record<string, number>);
+  const investmentsByType = athlete.investments.reduce(
+    (acc, curr) => {
+      const name = curr.investmentType.name;
+      if (!acc[name]) {
+        acc[name] = 0;
+      }
+      acc[name] += curr.value;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   const investmentsArray = Object.entries(investmentsByType).map(
     ([name, value]) => ({
       label: name,
       investment: value,
-    })
+    }),
   );
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">

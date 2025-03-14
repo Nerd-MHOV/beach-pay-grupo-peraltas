@@ -20,7 +20,7 @@ export interface ActionResponse {
 
 export async function submitLogin(
   prevState: ActionResponse | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   // 1. validate fields
   const validateFormData = LoginSchema.safeParse({

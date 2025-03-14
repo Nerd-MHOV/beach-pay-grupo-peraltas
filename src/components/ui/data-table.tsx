@@ -25,12 +25,14 @@ import { Button } from "./button";
 import { Download } from "lucide-react";
 import { useState } from "react";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import autoTable, { RowInput } from "jspdf-autotable";
 import { DataTableViewOptions } from "../tables/columns/toggleColumn";
 interface DataTableProps<TData, TValue> {
   columns: ExtendedColumnDef<TData, TValue>[];
   data: TData[];
   renderDetails?: (data: TData) => React.ReactNode;
+  pdfDetails?: (data: Row<TData>) => RowInput[];
+  csvDetails?: (data: Row<TData>) => string[];
   pdfDescription?: string;
   pdfTitle?: string;
 }
@@ -44,6 +46,8 @@ export function DataTable<TData, TValue>({
   data,
   renderDetails,
   pdfDescription,
+  pdfDetails,
+  csvDetails,
   pdfTitle,
 }: DataTableProps<TData, TValue>) {
   const [filter, setFilter] = useState("");
@@ -72,68 +76,89 @@ export function DataTable<TData, TValue>({
     const doc = new jsPDF();
     doc.setFontSize(16);
     if (pdfTitle)
-      doc.text(pdfTitle, doc.internal.pageSize.getWidth() / 2, 15, {
+      doc.text(pdfTitle, doc.internal.pageSize.getWidth() / 2, 10, {
+        align: "center",
+      });
+    doc.setFontSize(10);
+    if (pdfDescription)
+      doc.text(pdfDescription, doc.internal.pageSize.getWidth() / 2, 15, {
         align: "center",
       });
     doc.setFontSize(12);
-    if (pdfDescription)
-      doc.text(pdfDescription, 10, 25, {
-        align: "center",
-      });
 
-    const tableData = rows.map((row) =>
-      row.getVisibleCells().map((cell) => cell.getValue() || " ")
-    );
     const tableHeaders = table
       .getAllColumns()
       .filter((column) => column.getIsVisible())
       .map(
         (column) =>
           (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
-          column.id
+          column.id,
       );
+    const gatherTableData = (rows: Row<TData>[]) => {
+      return rows.flatMap((row) => {
+        const rowData: RowInput[] = pdfDetails
+          ? pdfDetails(row)
+          : [
+              row
+                .getVisibleCells()
+                .map((cell) => cell.getValue()?.toString() || ""),
+            ];
+
+        return rowData;
+      });
+    };
+
+    const tableData = gatherTableData(rows);
 
     autoTable(doc, {
       head: [tableHeaders],
       body: tableData,
-      startY: 35,
+      startY: 25,
+      headStyles: {
+        fillColor: [34, 47, 62],
+        textColor: [255, 255, 255],
+      },
     });
 
-    doc.save("pdf.pdf");
+    doc.output("dataurlnewwindow");
+    // doc.save(`${pdfTitle} - ${pdfDescription}.pdf`);
   };
 
   const exportCsv = (rows: Row<TData>[]) => {
-    // Get headers from visible columns
+    const gatherCsvData = (rows: Row<TData>[]) => {
+      return rows.flatMap((row) => {
+        const rowData = csvDetails
+          ? csvDetails(row)
+          : [
+              row
+                .getVisibleCells()
+                .map((cell) => {
+                  const cellValue = cell.getValue()?.toString() || "";
+                  return `"${cellValue.replace(/"/g, '""')}"`;
+                })
+                .join(","),
+            ];
+        return rowData;
+      });
+    };
+
     const tableHeaders = table
       .getAllColumns()
       .filter((column) => column.getIsVisible())
       .map(
         (column) =>
           (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
-          column.id
+          column.id,
       );
 
-    // Create CSV rows data from visible cells of each row
-    const csvRows = rows.map((row) =>
-      row
-        .getVisibleCells()
-        .map((cell) => {
-          // Escape double quotes by doubling them
-          const cellValue = cell.getValue()?.toString() || "";
-          return `"${cellValue.replace(/"/g, '""')}"`;
-        })
-        .join(",")
-    );
-
-    // Combine headers and row data
+    const csvRows = gatherCsvData(rows);
     const csvContent = [tableHeaders.join(","), ...csvRows].join("\n");
 
-    // Create a blob and trigger download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "data.csv");
+    link.setAttribute("download", `${pdfTitle} - ${pdfDescription}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -156,7 +181,7 @@ export function DataTable<TData, TValue>({
             exportPdf(
               table.getIsSomeRowsSelected()
                 ? table.getSelectedRowModel().rows
-                : table.getPrePaginationRowModel().rows
+                : table.getPrePaginationRowModel().rows,
             )
           }
           variant={"ghost"}
@@ -170,7 +195,7 @@ export function DataTable<TData, TValue>({
             exportCsv(
               table.getIsSomeRowsSelected()
                 ? table.getSelectedRowModel().rows
-                : table.getPrePaginationRowModel().rows
+                : table.getPrePaginationRowModel().rows,
             )
           }
           variant={"ghost"}
@@ -190,7 +215,7 @@ export function DataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -209,7 +234,7 @@ export function DataTable<TData, TValue>({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}

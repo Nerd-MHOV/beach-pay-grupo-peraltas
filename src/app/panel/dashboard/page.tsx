@@ -127,7 +127,17 @@ const Dashboard = () => {
             data={dashboard?.investmentByType || []}
           />
 
-          <TableDashboard data={dashboard?.investimentByAthlete} />
+          <TableDashboard
+            data={dashboard?.investimentByAthlete}
+            pdfDescription={
+              date?.from &&
+              date.to &&
+              `${format(date?.from, "dd / MMM")} à ${format(
+                date?.to,
+                "dd / MMM"
+              )}`
+            }
+          />
         </>
       )}
     </div>

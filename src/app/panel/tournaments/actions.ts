@@ -5,7 +5,7 @@ import { Tournament } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function createTournament(
-  data: Omit<Tournament, "id" | "createdAt" | "updatedAt">
+  data: Omit<Tournament, "id" | "createdAt" | "updatedAt">,
 ) {
   const tournament = await db.tournament.create({
     data,
@@ -16,7 +16,7 @@ export async function createTournament(
 }
 
 export async function updateTournament(
-  data: Omit<Tournament, "createdAt" | "updatedAt">
+  data: Omit<Tournament, "createdAt" | "updatedAt">,
 ) {
   const tournament = await db.tournament.update({
     where: {
@@ -45,5 +45,32 @@ export const getTournaments = unstable_cache(
   ["tournaments"],
   {
     tags: ["create-tournament", "update-tournament"],
-  }
+  },
+);
+
+export const getTournamentById = unstable_cache(
+  async (id: string) => {
+    return await db.tournament.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        arena: true,
+        investmentGroup: {
+          include: {
+            investments: {
+              include: {
+                investmentType: true,
+              },
+            },
+            athlete: true,
+          },
+        },
+      },
+    });
+  },
+  ["tournaments"],
+  {
+    tags: ["create-tournament", "update-tournament"],
+  },
 );

@@ -21,6 +21,7 @@ const TableRoot = ({
   investments: Awaited<ReturnType<typeof getInvestments>>;
 }) => {
   const [showGroup, setShowGroup] = useState<boolean>(false);
+  const description = athlete ? `Investimentos em ${athlete.name}` : undefined;
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <div className="flex gap-1 flex-wrap justify-center sm:justify-normal">
@@ -52,9 +53,15 @@ const TableRoot = ({
       </div>
 
       {showGroup ? (
-        <TableGroupInvestments groupInvestments={groupInvestments} />
+        <TableGroupInvestments
+          pdfDescription={description}
+          groupInvestments={groupInvestments}
+        />
       ) : (
-        <TableInvestments investments={investments} />
+        <TableInvestments
+          pdfDescription={description}
+          investments={investments}
+        />
       )}
     </div>
   );

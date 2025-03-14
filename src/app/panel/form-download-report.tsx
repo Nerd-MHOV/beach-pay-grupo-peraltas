@@ -22,7 +22,6 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { useSearchParams, useRouter } from "next/navigation";
-// import DownloadMenu from "./tournaments/download-menu";
 
 const formSchema = z.object({
   date: z.object({
