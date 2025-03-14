@@ -117,7 +117,7 @@ const TableDashboard = ({
     </div>
   );
   return (
-    <div className="bg-white p-7 rounded-xl shadow-lg">
+    <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable
         columns={columns}
         pdfTitle="Relatório de investimentos por atleta"

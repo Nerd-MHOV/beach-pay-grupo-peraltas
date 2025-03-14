@@ -6,7 +6,7 @@ const TableInvestmentTypes = async () => {
   const investments = await getInvestmentsType();
 
   return (
-    <div className="bg-white p-7 rounded-xl shadow-lg">
+    <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable
         columns={columns}
         data={investments}
