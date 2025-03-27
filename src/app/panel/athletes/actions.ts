@@ -29,6 +29,7 @@ export const getAthletes = unstable_cache(
       "update-athlete",
       "delete-athlete",
       "create-investment",
+      "update-investment",
     ],
   }
 );

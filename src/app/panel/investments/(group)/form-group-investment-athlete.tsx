@@ -20,9 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
 import DialogInvestmentAthlete from "../(single)/dialog-investment-athlete";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
-import { CircleX, Plus } from "lucide-react";
-import Image from "next/image";
+import { Plus } from "lucide-react";
 import { formSchemaGroupInvestmentAthlete } from "./schema-group-investment-athlete";
 import { getPaidProofInvestment } from "./get-paid-proof-investment";
 import useFormGroupInvestmentAthlete from "./use-form-group-investment-athlete";
@@ -30,6 +28,9 @@ import { getAthletes } from "../../athletes/actions";
 import { getTournaments } from "../../tournaments/actions";
 import { useQuery } from "@tanstack/react-query";
 import LoadingData from "@/components/LoadingData";
+import ProofFormField from "./fields/proof";
+import { createInvestmentAthlete, updateInvestmentAthlete } from "../actions";
+import { getInvestmentsType } from "../../investment-types/actions";
 
 const FormGroupInvestmentAthlete = ({
   athlete,
@@ -41,7 +42,7 @@ const FormGroupInvestmentAthlete = ({
   } & InvestmentGroup;
 }) => {
   const { paid, proof } = getPaidProofInvestment(investmentGroup?.investments);
-  const [investmentProof, setInvestmentProof] = useState<string | null>(proof);
+
   const {
     data: athletes = [],
     isPending: isPendingAthletes,
@@ -86,6 +87,59 @@ const FormGroupInvestmentAthlete = ({
         : {}),
     },
   });
+
+  const upsertFuel = async () => {
+    const km = form.getValues().km;
+    const km_racional = form.getValues().km_racional;
+    const fuelTypeID = (await getInvestmentsType()).find(
+      (type) => type.name === "Combustível"
+    )?.id;
+    const athleteId = form.getValues().athleteId;
+    if (!km || !km_racional || !fuelTypeID || !athleteId) return;
+    const newValue = km * km_racional;
+    const investments = athletes.find(
+      (find) => find.id === form.getValues().athleteId
+    )?.investments;
+
+    const hasFuelInvestment = investments
+      ?.filter((investment) =>
+        form.getValues().investments.includes(investment.id)
+      )
+      .find((inv) => inv.investmentTypeId === fuelTypeID);
+    if (hasFuelInvestment) {
+      // update
+      await updateInvestmentAthlete({
+        id: hasFuelInvestment.id,
+        athleteId: hasFuelInvestment.athleteId,
+        investmentTypeId: hasFuelInvestment.investmentTypeId,
+        date: hasFuelInvestment.date,
+        description: hasFuelInvestment.description,
+        paid: hasFuelInvestment.paid,
+        proof: hasFuelInvestment.proof,
+        investmentGroupId: hasFuelInvestment.investmentGroupId,
+        value: newValue,
+      });
+      refetchAthletes();
+    } else {
+      //create
+
+      const created = await createInvestmentAthlete({
+        athleteId: athleteId,
+        investmentTypeId: fuelTypeID,
+        value: newValue,
+        date: new Date(),
+        description: "Combustível - Gerado por km/km-racional",
+        paid: null,
+        proof: null,
+        investmentGroupId: null,
+      });
+      await refetchAthletes();
+      form.setValue("investments", [
+        ...form.getValues().investments,
+        created.id,
+      ]);
+    }
+  };
 
   const { createGroupInvestmentAthleteFn, updateGroupInvestmentAthleteFn } =
     useFormGroupInvestmentAthlete(form);
@@ -276,7 +330,10 @@ const FormGroupInvestmentAthlete = ({
                     type="number"
                     placeholder="Quantos KM?"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => {
+                      field.onChange(Number(e.target.value));
+                      upsertFuel();
+                    }}
                     value={Number(field.value) ?? 0}
                   />
                 </FormControl>
@@ -296,7 +353,10 @@ const FormGroupInvestmentAthlete = ({
                     type="number"
                     placeholder="Qual o racional?"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => {
+                      field.onChange(Number(e.target.value));
+                      upsertFuel();
+                    }}
                     value={Number(field.value) ?? 0}
                   />
                 </FormControl>
@@ -485,56 +545,7 @@ const FormGroupInvestmentAthlete = ({
         <div className="grid grid-cols-2 gap-4">
           <CalendarPickerInput form={form} name="paid" label="Pago em:" />
 
-          <FormField
-            control={form.control}
-            name="proof"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Comprovante</FormLabel>
-                <FormControl>
-                  {investmentProof && proof ? (
-                    <div className="relative ">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => {
-                          setInvestmentProof(null);
-                        }}
-                        className="absolute top-0 right-0 "
-                      >
-                        <CircleX className="text-red-600" />
-                      </Button>
-
-                      <Image
-                        onClick={() => {
-                          const url = `${window.location.origin}${proof}`;
-                          window.open(url, "_blank");
-                        }}
-                        src={proof}
-                        width={200}
-                        height={200}
-                        objectFit="cover"
-                        alt="proof"
-                      />
-                    </div>
-                  ) : (
-                    <Input
-                      type="file"
-                      onChange={(e) => {
-                        field.onChange(e.target.files?.[0] || null);
-                        if (form.getValues().paid === null)
-                          form.setValue("paid", new Date());
-                      }}
-                      onBlur={field.onBlur}
-                      name={field.name}
-                      ref={field.ref}
-                    />
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <ProofFormField form={form} proof={proof} />
         </div>
         <div className="flex w-full justify-end mt-5">
           <Button
