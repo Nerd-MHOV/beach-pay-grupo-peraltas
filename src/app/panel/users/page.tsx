@@ -1,12 +1,13 @@
 import React, { Suspense } from "react";
-import DialogCreateInvestmentType from "./dialog-create-investment-type";
-import TableInvestmentTypes from "./table-investment-types";
 import { Header } from "@/components/Header";
-import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import LoadingData from "@/components/LoadingData";
+import TableUsers from "./table-users";
+import DialogCreateUser from "./dialog-user";
 import { verifySession } from "@/lib/session";
-import { getUserById } from "../users/actions";
+import db from "@/core/infra/db";
+import { getUserById } from "./actions";
 import NotPermission from "@/components/notPermission";
 
 const Page = async () => {
@@ -20,21 +21,21 @@ const Page = async () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
-        <Header.Title>Tipos de Investimentos</Header.Title>
+        <Header.Title>Usuarios</Header.Title>
         <Header.Content>
-          <DialogCreateInvestmentType
+          <DialogCreateUser
             trigger={
               <Button size="sm">
                 <Plus />
-                Tipo de investimento
+                Usuário
               </Button>
             }
           />
         </Header.Content>
       </Header.Root>
 
-      <Suspense fallback={<LoadingData message="Buscando Investimentos" />}>
-        <TableInvestmentTypes />
+      <Suspense fallback={<LoadingData message="Buscando Usuarios" />}>
+        <TableUsers />
       </Suspense>
     </div>
   );

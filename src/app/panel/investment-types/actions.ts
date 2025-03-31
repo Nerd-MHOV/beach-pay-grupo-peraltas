@@ -1,5 +1,6 @@
 "use server";
 import db from "@/core/infra/db";
+import { verifySession } from "@/lib/session";
 import { InvestmentType } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
@@ -27,12 +28,27 @@ export async function updateInvestmentType(
   return investmentType;
 }
 
-export const getInvestmentsType = unstable_cache(
-  async () => {
+export const getInvestmentsType = async () => {
+  const session = await verifySession();
+  return cachedInvestmentType(session.userId);
+}
+
+export const cachedInvestmentType = unstable_cache(
+  async (userId: string) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return [];
+    }
+
     return await db.investmentType.findMany({
       orderBy: {
         name: "asc",
       },
+      where: {
+        canSee: {
+          has: user.role,
+        },
+      }
     });
   },
   [`investmentType`],

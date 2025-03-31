@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/core/infra/db";
+import { verifySession } from "@/lib/session";
 import { Tournament } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
@@ -48,8 +49,17 @@ export const getTournaments = unstable_cache(
   },
 );
 
-export const getTournamentById = unstable_cache(
-  async (id: string) => {
+export const getTournamentById = async (id: string) => {
+  const session = await verifySession();
+  return await cachedTournamentById(session.userId, id);
+}
+
+const cachedTournamentById = unstable_cache(
+  async (userId: string, id: string) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return null;
+    }
     return await db.tournament.findUnique({
       where: {
         id,
@@ -59,6 +69,13 @@ export const getTournamentById = unstable_cache(
         investmentGroup: {
           include: {
             investments: {
+              where: {
+                investmentType: {
+                  canSee: {
+                    has: user.role,
+                  },
+                },
+              },
               include: {
                 investmentType: true,
               },

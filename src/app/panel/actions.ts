@@ -1,5 +1,6 @@
 "use server";
 import db from "@/core/infra/db";
+import { verifySession } from "@/lib/session";
 
 export async function getDashboard(data?: {
   date?: {
@@ -7,12 +8,23 @@ export async function getDashboard(data?: {
     to: Date;
   };
 }) {
+
+  const session = await verifySession();
+  const user = await db.user.findFirst({ where: { id: session.userId } });
+  if (!user) {
+    return null;
+  }
   const totalInvestments = await db.investment.aggregate({
     _sum: {
       value: true,
     },
     _count: true,
     where: {
+      investmentType: {
+        canSee: {
+          has: user.role,
+        },
+      },
       date: {
         gte: data?.date?.from,
         lte: data?.date?.to,
@@ -25,6 +37,11 @@ export async function getDashboard(data?: {
       value: true,
     },
     where: {
+      investmentType: {
+        canSee: {
+          has: user.role,
+        },
+      },
       date: {
         gte: data?.date?.from,
         lte: data?.date?.to,
@@ -35,6 +52,11 @@ export async function getDashboard(data?: {
 
   const pendingInvestmentsCount = await db.investment.count({
     where: {
+      investmentType: {
+        canSee: {
+          has: user.role,
+        },
+      },
       date: {
         gte: data?.date?.from,
         lte: data?.date?.to,
@@ -59,6 +81,11 @@ export async function getDashboard(data?: {
         value: true,
       },
       where: {
+        investmentType: {
+          canSee: {
+            has: user.role,
+          },
+        },
         date: {
           gte: new Date(new Date().setMonth(new Date().getMonth() - 8)),
         },
@@ -100,6 +127,13 @@ export async function getDashboard(data?: {
     orderBy: {
       createdAt: "desc",
     },
+    where: {
+      investmentType: {
+        canSee: {
+          has: user.role,
+        },
+      },
+    },
     include: {
       athlete: true,
     },
@@ -108,6 +142,11 @@ export async function getDashboard(data?: {
 
   const investmentsLast30Days = await db.investment.count({
     where: {
+      investmentType: {
+        canSee: {
+          has: user.role,
+        },
+      },
       createdAt: {
         gte: new Date(new Date().setDate(new Date().getDate() - 30)),
       },
@@ -122,6 +161,11 @@ export async function getDashboard(data?: {
       },
       _count: true,
       where: {
+        investmentType: {
+          canSee: {
+            has: user.role,
+          },
+        },
         date: {
           gte: data?.date?.from,
           lte: data?.date?.to,
@@ -152,6 +196,11 @@ export async function getDashboard(data?: {
         value: true,
       },
       where: {
+        investmentType: {
+          canSee: {
+            has: user.role,
+          },
+        },
         date: {
           gte: data?.date?.from,
           lte: data?.date?.to,
@@ -170,6 +219,11 @@ export async function getDashboard(data?: {
                     investmentType: true,
                   },
                   where: {
+                    investmentType: {
+                      canSee: {
+                        has: user.role,
+                      },
+                    },
                     date: {
                       gte: data?.date?.from,
                       lte: data?.date?.to,
@@ -183,8 +237,6 @@ export async function getDashboard(data?: {
         })
       )
     );
-
-  console.log(investmentByType);
 
   return {
     investimentByAthlete,

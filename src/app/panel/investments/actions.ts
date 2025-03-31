@@ -1,12 +1,22 @@
 "use server";
 import db from "@/core/infra/db";
+import { verifySession } from "@/lib/session";
 import { Investment, InvestmentGroup } from "@prisma/client";
 import fs from "fs";
 import { revalidateTag, unstable_cache } from "next/cache";
 import path from "path";
 
-export const getInvestments = unstable_cache(
-  async (athelteId?: string) => {
+export const getInvestments = async (athelteId?: string) => {
+  const session = await verifySession();
+  return await cachedInvestments(session.userId, athelteId);
+}
+
+const cachedInvestments = unstable_cache(
+  async (userId: string, athelteId?: string,) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return [];
+    }
     return db.investment.findMany({
       where: athelteId ? { athleteId: athelteId } : {},
       include: {
@@ -19,6 +29,13 @@ export const getInvestments = unstable_cache(
               },
             },
             investments: {
+              where: {
+                investmentType: {
+                  canSee: {
+                    has: user.role,
+                  },
+                }
+              },
               include: {
                 investmentType: true,
               },
@@ -39,8 +56,17 @@ export const getInvestments = unstable_cache(
   }
 );
 
-export const getGroupInvestments = unstable_cache(
-  async (athleteId?: string) => {
+export const getGroupInvestments = async () => {
+  const session = await verifySession();
+  return await cachedGroupInvestments(session.userId);
+}
+
+const cachedGroupInvestments = unstable_cache(
+  async (userId: string, athleteId?: string) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return [];
+    }
     return db.investmentGroup.findMany({
       where: athleteId ? { athleteId } : {},
       include: {
@@ -52,6 +78,13 @@ export const getGroupInvestments = unstable_cache(
           },
         },
         investments: {
+          where: {
+            investmentType: {
+              canSee: {
+                has: user.role,
+              },
+            },
+          },
           include: {
             investmentType: true,
           },
@@ -68,10 +101,25 @@ export const getGroupInvestments = unstable_cache(
   }
 );
 
-export const getInvestmentById = unstable_cache(
-  async (id: string) => {
+export const getInvestmentById = async (id: string) => {
+  const session = await verifySession();
+  return await cachedInvestmentById(session.userId, id);
+}
+const cachedInvestmentById = unstable_cache(
+  async (userId: string, id: string) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return null;
+    }
     return db.investment.findUnique({
-      where: { id },
+      where: {
+        id,
+        investmentType: {
+          canSee: {
+            has: user.role,
+          },
+        },
+      },
       include: {
         investmentGroup: {
           include: {
@@ -82,6 +130,13 @@ export const getInvestmentById = unstable_cache(
               },
             },
             investments: {
+              where: {
+                investmentType: {
+                  canSee: {
+                    has: user.role,
+                  },
+                },
+              },
               include: {
                 investmentType: true,
               },

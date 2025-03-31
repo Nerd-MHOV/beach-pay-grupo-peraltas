@@ -1,17 +1,32 @@
 "use server";
 
 import db from "@/core/infra/db";
-import { Athlete } from "@prisma/client";
+import { verifySession } from "@/lib/session";
+import { Athlete, UserRole } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
+import { cookies } from "next/headers";
 
-export const getAthletes = unstable_cache(
-  async () => {
+
+
+const cachedAthletes = unstable_cache(
+  async (userId: string) => {
+    const user = await db.user.findFirst({ where: { id: userId } });
+    if (!user) {
+      return [];
+    }
     return await db.athlete.findMany({
       orderBy: {
         name: "asc",
       },
       include: {
         investments: {
+          where: {
+            investmentType: {
+              canSee: {
+                has: user.role,
+              },
+            },
+          },
           include: {
             investmentType: true,
           },
@@ -34,11 +49,28 @@ export const getAthletes = unstable_cache(
   }
 );
 
+export async function getAthletes() {
+  const session = await verifySession();
+  return await cachedAthletes(session.userId);
+}
+
 export async function getAthleteById(id: string) {
+  const session = await verifySession();
+  const user = await db.user.findFirst({ where: { id: session.userId } });
+  if (!user) {
+    return null;
+  }
   return await db.athlete.findFirst({
     where: { id },
     include: {
       investments: {
+        where: {
+          investmentType: {
+            canSee: {
+              has: user.role,
+            },
+          },
+        },
         include: {
           athlete: true,
           investmentGroup: {

@@ -13,6 +13,7 @@ import {
   Menu,
   Receipt,
   Trophy,
+  User,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { deleteSession } from "@/lib/session";
@@ -47,6 +48,11 @@ const links = [
     link: "/panel/arenas",
     icon: MapPinned,
     title: "Arenas",
+  },
+  {
+    link: "/panel/users",
+    icon: User,
+    title: "Usuarios",
   },
 ];
 

@@ -495,7 +495,6 @@ const FormGroupInvestmentAthlete = ({
                     above={
                       <DialogInvestmentAthlete
                         onCreateInvestment={(investment: Investment) => {
-                          console.log("created", investment);
                           refetchAthletes();
                           form.setValue("investments", [
                             ...form.getValues().investments,
