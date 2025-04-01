@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import ChartPerTypeInvestment from "@/components/charts/chart-per-type-investment";
 import TableDashboard from "./table-dashboard";
 
+export const dynamic = "force-dynamic";
 const Dashboard = () => {
   const searchParams = useSearchParams();
   const from = searchParams.get("from")
