@@ -189,7 +189,7 @@ export async function getDashboard(data?: {
       )
     );
 
-  const investimentByAthlete = await db.investment
+  const investmentByAthlete = await db.investment
     .groupBy({
       by: ["athleteId"],
       _sum: {
@@ -239,7 +239,7 @@ export async function getDashboard(data?: {
     );
 
   return {
-    investimentByAthlete,
+    investmentByAthlete,
     investmentByType,
     recentInvestments: {
       lastFiveInvestments,

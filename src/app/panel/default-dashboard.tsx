@@ -16,6 +16,10 @@ import { format } from "date-fns";
 const DefaultDashboard = async () => {
   const dashboard = await getDashboard();
 
+  if (!dashboard) {
+    return null;
+  }
+
   const TotalInvestments = Number(
     dashboard.totalInvestments.value
   ).toLocaleString("pt-BR", {

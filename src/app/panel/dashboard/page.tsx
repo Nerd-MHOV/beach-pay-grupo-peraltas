@@ -128,7 +128,7 @@ const Dashboard = () => {
           />
 
           <TableDashboard
-            data={dashboard?.investimentByAthlete}
+            data={dashboard?.investmentByAthlete}
             pdfDescription={
               date?.from &&
               date.to &&

@@ -18,7 +18,9 @@ const TableDashboard = ({
   pdfDescription,
 }: {
   pdfDescription?: string;
-  data?: Awaited<ReturnType<typeof getDashboard>>["investimentByAthlete"];
+  data?: NonNullable<
+    Awaited<ReturnType<typeof getDashboard>>
+  >["investmentByAthlete"];
 }) => {
   if (!data) return null;
 
@@ -35,7 +37,7 @@ const TableDashboard = ({
   }));
 
   const pdfDetails: (row: Row<(typeof datamap)[number]>) => RowInput[] = (
-    row,
+    row
   ) => {
     const rowData: RowInput[] = [
       row.getVisibleCells().map((cell) => ({
@@ -62,7 +64,7 @@ const TableDashboard = ({
   };
 
   const csvDetails: (row: Row<(typeof datamap)[number]>) => string[] = (
-    row,
+    row
   ) => {
     const rowData = [
       row
@@ -86,7 +88,7 @@ const TableDashboard = ({
       rowData[0]
         .split(",")
         .map(() => "")
-        .join(","),
+        .join(",")
     );
     return rowData;
   };
