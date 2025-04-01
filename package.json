@@ -2,6 +2,9 @@
   "name": "beach-pay",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20.18.1"
+  },
   "scripts": {
     "dev": "pnpm services:up && pnpm wait-for-postgres && pnpx prisma db push && NODE_OPTIONS='--inspect' next dev --turbopack",
     "services:up": "docker compose -f src/core/infra/compose.yaml up -d",
