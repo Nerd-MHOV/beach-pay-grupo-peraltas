@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import LoadingData from "@/components/LoadingData";
 
+export const dynamic = "force-dynamic";
 const Page = () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
