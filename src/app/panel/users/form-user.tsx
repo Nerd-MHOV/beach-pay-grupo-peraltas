@@ -205,7 +205,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
                   defaultValue={field.value}
                   value={field.value}
                   onValueChange={field.onChange}
-                  disabled={true}
+                  // disabled={true}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o nível de acesso" />
