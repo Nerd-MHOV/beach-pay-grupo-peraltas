@@ -1,6 +1,12 @@
 "use server";
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 import { Investment, InvestmentGroup } from "@prisma/client";
 import fs from "fs";
 import { revalidateTag, unstable_cache } from "next/cache";
@@ -276,17 +282,24 @@ export async function updateInvestmentProof(
 }
 
 export async function saveProof(file: File, name: string) {
-  const uploadPath = path.join(process.cwd(), "public", "uploads", "proofs");
-  if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-  }
 
-  const filePath = path.join(uploadPath, name);
   const fileBuffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(filePath, fileBuffer);
-  const relativeFilePath = path.relative(
-    path.join(process.cwd(), "public"),
-    filePath
-  );
-  return `/${relativeFilePath}`;
+  const base64Image = fileBuffer.toString("base64");
+  const dataUri = `data:${file.type};base64,${base64Image}`;
+  const uploadResponse = await cloudinary.uploader.upload(dataUri, {
+    folder: "uploads/proofs",
+  });
+  return uploadResponse.secure_url;
+  // const uploadPath = path.join(process.cwd(), "public", "uploads", "proofs");
+  // if (!fs.existsSync(uploadPath)) {
+  //   fs.mkdirSync(uploadPath, { recursive: true });
+  // }
+  // const filePath = path.join(uploadPath, name);
+  // const fileBuffer = Buffer.from(await file.arrayBuffer());
+  // fs.writeFileSync(filePath, fileBuffer);
+  // const relativeFilePath = path.relative(
+  //   path.join(process.cwd(), "public"),
+  //   filePath
+  // );
+  // return `/${relativeFilePath}`;
 }

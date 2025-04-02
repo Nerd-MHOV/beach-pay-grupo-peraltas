@@ -288,7 +288,7 @@ const FormInvestmentAthlete = ({
 
                       <Image
                         onClick={() => {
-                          const url = `${window.location.origin}${investment?.proof}`;
+                          const url = `${investment?.proof}`;
                           window.open(url, "_blank");
                         }}
                         src={investment?.proof}

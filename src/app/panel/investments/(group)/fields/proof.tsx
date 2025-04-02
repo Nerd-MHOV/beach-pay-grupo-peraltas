@@ -44,7 +44,7 @@ const ProofFormField = ({
 
                 <Image
                   onClick={() => {
-                    const url = `${window.location.origin}${proof}`;
+                    const url = `${proof}`;
                     window.open(url, "_blank");
                   }}
                   src={proof}
