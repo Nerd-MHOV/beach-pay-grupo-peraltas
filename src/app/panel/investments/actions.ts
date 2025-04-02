@@ -1,16 +1,8 @@
 "use server";
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { v2 as cloudinary } from "cloudinary";
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 import { Investment, InvestmentGroup } from "@prisma/client";
-import fs from "fs";
 import { revalidateTag, unstable_cache } from "next/cache";
-import path from "path";
 
 export const getInvestments = async (athelteId?: string) => {
   const session = await verifySession();
@@ -282,7 +274,12 @@ export async function updateInvestmentProof(
 }
 
 export async function saveProof(file: File, name: string) {
-
+  const { v2: cloudinary } = await import("cloudinary");
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
   const fileBuffer = Buffer.from(await file.arrayBuffer());
   const base64Image = fileBuffer.toString("base64");
   const dataUri = `data:${file.type};base64,${base64Image}`;

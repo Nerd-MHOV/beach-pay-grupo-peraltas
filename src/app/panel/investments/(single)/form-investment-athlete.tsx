@@ -149,9 +149,9 @@ const FormInvestmentAthlete = ({
             athleteId: investment.athleteId,
             investmentTypeId: investment.investmentTypeId,
             value: investment.value,
-            date: investment.date,
+            date: new Date(investment.date),
             description: investment.description,
-            paid: investment.paid,
+            paid: investment.paid ? new Date(investment.paid) : null,
           }
         : {}),
     },
