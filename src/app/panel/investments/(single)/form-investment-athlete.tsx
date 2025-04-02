@@ -24,7 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { CircleX, Plus } from "lucide-react";
+import { CircleX, Plus, Trash } from "lucide-react";
 import { useState } from "react";
 import {
   createInvestmentAthlete,
@@ -34,6 +34,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { formSchema } from "./schema";
 import { getFileName } from "./get-file-name-investiment";
+import DialogDeleteInvestment from "./dialog-delete-investment";
 
 const FormInvestmentAthlete = ({
   athlete,
@@ -317,7 +318,8 @@ const FormInvestmentAthlete = ({
           />
         </div>
 
-        <div className="flex w-full justify-end mt-5">
+        <div className="flex w-full gap-4 justify-end mt-5">
+          {investment && <DialogDeleteInvestment investment={investment} />}
           <Button isLoading={form.formState.isSubmitting}>
             {investment ? "Atualizar" : "Investir"}
           </Button>

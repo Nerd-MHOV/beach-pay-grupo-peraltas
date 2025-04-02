@@ -52,7 +52,7 @@ const cachedInvestments = unstable_cache(
   },
   [`investment`],
   {
-    tags: ["create-investment", "update-investment"],
+    tags: ["create-investment", "update-investment", "delete-investment", "update-group-investment"],
   }
 );
 
@@ -97,7 +97,7 @@ const cachedGroupInvestments = unstable_cache(
   },
   [`group-investment`],
   {
-    tags: ["create-group-investment", "update-group-investment"],
+    tags: ["create-group-investment", "update-group-investment", "delete-investment", "update-investment"],
   }
 );
 
@@ -150,7 +150,7 @@ const cachedInvestmentById = unstable_cache(
   },
   [`investmentById`],
   {
-    tags: ["update-investment"],
+    tags: ["update-investment", "delete-investment"],
   }
 );
 
@@ -184,6 +184,16 @@ export async function updateInvestmentAthlete(
   });
   revalidateTag("update-investment");
   return investment;
+}
+
+export async function deleteInvestmentAthlete(investment: Investment) {
+  const deleted = await db.investment.delete({
+    where: {
+      id: investment.id,
+    },
+  });
+  revalidateTag("delete-investment");
+  return deleted;
 }
 
 export async function createGroupInvetimentAthlete(
