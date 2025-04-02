@@ -31,6 +31,8 @@ import LoadingData from "@/components/LoadingData";
 import ProofFormField from "./fields/proof";
 import { createInvestmentAthlete, updateInvestmentAthlete } from "../actions";
 import { getInvestmentsType } from "../../investment-types/actions";
+import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
+import DialogDeleteInvestmentGroup from "./dialog-delete-investment-group";
 
 const FormGroupInvestmentAthlete = ({
   athlete,
@@ -546,7 +548,10 @@ const FormGroupInvestmentAthlete = ({
 
           <ProofFormField form={form} proof={proof} />
         </div>
-        <div className="flex w-full justify-end mt-5">
+        <div className="flex w-full gap-4 justify-end mt-5">
+          {investmentGroup && (
+            <DialogDeleteInvestmentGroup group={investmentGroup} />
+          )}
           <Button
             isLoading={form.formState.isSubmitting}
             onClick={(event) => {
