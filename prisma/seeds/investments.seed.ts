@@ -158,7 +158,7 @@ export const investmentsSeed: Omit<Investment, "createdAt" | "updatedAt">[] = [
     athleteId: "athleteseed1",
     investmentTypeId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
     value: 1000,
-    date: new Date("2024-08-10"),
+    date: new Date("2025-03-10"),
     description: "Investimento inicial",
     paid: null,
     proof: null,
@@ -169,7 +169,7 @@ export const investmentsSeed: Omit<Investment, "createdAt" | "updatedAt">[] = [
     athleteId: "athleteseed2",
     investmentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
     value: 2000,
-    date: new Date("2024-10-20"),
+    date: new Date("2025-02-20"),
     description: "Investimento secundário",
     paid: null,
     proof: null,
@@ -180,7 +180,7 @@ export const investmentsSeed: Omit<Investment, "createdAt" | "updatedAt">[] = [
     athleteId: "athleteseed3",
     investmentTypeId: "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", // Pedágio
     value: 1500,
-    date: new Date("2024-11-15"),
+    date: new Date("2025-1-15"),
     description: "Investimento terciário",
     paid: null,
     proof: null,
@@ -191,7 +191,7 @@ export const investmentsSeed: Omit<Investment, "createdAt" | "updatedAt">[] = [
     athleteId: "athleteseed1",
     investmentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
     value: 2500,
-    date: new Date("2023-12-05"),
+    date: new Date("2024-12-05"),
     description: "Investimento adicional",
     paid: null,
     proof: null,
@@ -214,40 +214,40 @@ export const investmentGroupSeed: Omit<
   InvestmentGroup,
   "createdAt" | "updatedAt"
 >[] = [
-  {
-    id: "investmentGroupSeed1",
-    description:
-      "Grupo de investimentos para o primeiro conjunto de investimentos",
-    athleteId: "athleteseed1",
-    pairId: null,
-    tournamentId: "tournamentSeed1",
-    podium: null,
-    pairAmount: null,
-    km: null,
-    km_racional: null,
-  },
-  {
-    id: "investmentGroupSeed2",
-    description:
-      "Grupo de investimentos para o segundo conjunto de investimentos",
-    athleteId: "athleteseed2",
-    pairId: null,
-    tournamentId: "tournamentSeed2",
-    podium: null,
-    pairAmount: null,
-    km: null,
-    km_racional: null,
-  },
-  {
-    id: "investmentGroupSeed3",
-    description:
-      "Grupo de investimentos para o terceiro conjunto de investimentos",
-    athleteId: "athleteseed3",
-    pairId: null,
-    tournamentId: "tournamentSeed3",
-    podium: null,
-    pairAmount: null,
-    km: null,
-    km_racional: null,
-  },
-];
+    {
+      id: "investmentGroupSeed1",
+      description:
+        "Grupo de investimentos para o primeiro conjunto de investimentos",
+      athleteId: "athleteseed1",
+      pairId: null,
+      tournamentId: "tournamentSeed1",
+      podium: null,
+      pairAmount: null,
+      km: null,
+      km_racional: null,
+    },
+    {
+      id: "investmentGroupSeed2",
+      description:
+        "Grupo de investimentos para o segundo conjunto de investimentos",
+      athleteId: "athleteseed2",
+      pairId: null,
+      tournamentId: "tournamentSeed2",
+      podium: null,
+      pairAmount: null,
+      km: null,
+      km_racional: null,
+    },
+    {
+      id: "investmentGroupSeed3",
+      description:
+        "Grupo de investimentos para o terceiro conjunto de investimentos",
+      athleteId: "athleteseed3",
+      pairId: null,
+      tournamentId: "tournamentSeed3",
+      podium: null,
+      pairAmount: null,
+      km: null,
+      km_racional: null,
+    },
+  ];
