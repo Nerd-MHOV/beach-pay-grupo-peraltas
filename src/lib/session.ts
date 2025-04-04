@@ -13,7 +13,7 @@ const cookie = {
     sameSite: "lax" as const,
     path: "/",
   },
-  duration: 24 * 60 * 60 * 1000,
+  duration: 30 * 24 * 60 * 60 * 1000,
 };
 
 export async function encrypt(payload: JWTPayload) {
