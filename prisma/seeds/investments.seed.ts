@@ -10,9 +10,9 @@ export const investmentsSeedFN = async (prismaClient: PrismaClient) => {
     ArenaSeed.map(async (data) => {
       await prismaClient.arena.upsert({
         where: {
-          name_city: {
+          name_address_id: {
             name: data.name,
-            city: data.city,
+            address_id: data.address.create.id,
           },
         },
         create: {
@@ -72,9 +72,9 @@ export const InvestmentsFn = (prismaClient: PrismaClient) => {
     await prismaClient.arena
       .upsert({
         where: {
-          name_city: {
+          name_address_id: {
             name: data.name,
-            city: data.city,
+            address_id: data.address.create.id,
           },
         },
         create: {
@@ -91,138 +91,186 @@ export const InvestmentsFn = (prismaClient: PrismaClient) => {
   });
 };
 
-export const ArenaSeed: Omit<Arena, "createdAt" | "updatedAt">[] = [
+
+type ArenaSeedType = Omit<Arena, "created_at" | "updated_at" | "address_id"> & {
+  address: {
+    create: {
+      id: string;
+      city: string;
+      neighborhood: string;
+      street: string;
+      number: string;
+      complement: string;
+      state: string;
+      zip_code: string;
+    }
+  }
+}
+export const ArenaSeed: ArenaSeedType[] = [
   {
     id: "arenaSeed1",
     name: "Arena 1",
-    city: "São Carlos",
+    address: {
+      create: {
+        id: "address1",
+        city: "São Carlos",
+        neighborhood: "Centro",
+        street: "Rua da Liberdade",
+        number: "100",
+        complement: "Apto 101",
+        state: "SP",
+        zip_code: "13500-000",
+      },
+    },
   },
   {
     id: "arenaSeed2",
     name: "Arena 2",
-    city: "Brotas",
+    address: {
+      create: {
+        id: "address2",
+        city: "Brotas",
+        neighborhood: "Zona Rural",
+        street: "Estrada dos Bandeirantes",
+        number: "200",
+        complement: "Casa",
+        state: "SP",
+        zip_code: "13510-000",
+      },
+    },
   },
   {
     id: "arenaSeed3",
     name: "Arena 3",
-    city: "Dois Corregos",
+    address: {
+      create: {
+        id: "address3",
+        city: "Dois Corregos",
+        neighborhood: "Industrial",
+        street: "Av. Principal",
+        number: "300",
+        complement: "Sala 5",
+        state: "SP",
+        zip_code: "13520-000",
+      },
+    },
   },
 ];
 
-export const TournamentSeed: Omit<Tournament, "createdAt" | "updatedAt">[] = [
+export const TournamentSeed: Omit<Tournament, "created_at" | "updated_at">[] = [
   {
     id: "tournamentSeed1",
     name: "Torneio 1",
     description: "Primeiro torneio da temporada",
-    arenaId: "arenaSeed1",
-    fromDate: new Date("2023-11-01"),
-    toDate: new Date("2023-11-05"),
+    arena_id: "arenaSeed1",
+    date_from: new Date("2023-11-01"),
+    date_to: new Date("2023-11-05"),
   },
   {
     id: "tournamentSeed2",
     name: "Torneio 2",
     description: "Segundo torneio da temporada",
-    arenaId: "arenaSeed2",
-    fromDate: new Date("2023-12-01"),
-    toDate: new Date("2023-12-05"),
+    arena_id: "arenaSeed2",
+    date_from: new Date("2023-12-01"),
+    date_to: new Date("2023-12-05"),
   },
   {
     id: "tournamentSeed3",
     name: "Torneio 3",
     description: "Terceiro torneio da temporada",
-    arenaId: "arenaSeed3",
-    fromDate: new Date("2024-01-01"),
-    toDate: new Date("2024-01-05"),
+    arena_id: "arenaSeed3",
+    date_from: new Date("2024-01-01"),
+    date_to: new Date("2024-01-05"),
   },
   {
     id: "tournamentSeed4",
     name: "Torneio 4",
     description: "Quarto torneio da temporada",
-    arenaId: "arenaSeed1",
-    fromDate: new Date("2024-02-01"),
-    toDate: new Date("2024-02-05"),
+    arena_id: "arenaSeed1",
+    date_from: new Date("2024-02-01"),
+    date_to: new Date("2024-02-05"),
   },
   {
     id: "tournamentSeed5",
     name: "Torneio 5",
     description: "Quinto torneio da temporada",
-    arenaId: "arenaSeed2",
-    fromDate: new Date("2024-03-01"),
-    toDate: new Date("2024-03-05"),
+    arena_id: "arenaSeed2",
+    date_from: new Date("2024-03-01"),
+    date_to: new Date("2024-03-05"),
   },
 ];
 
-export const investmentsSeed: Omit<Investment, "createdAt" | "updatedAt">[] = [
+export const investmentsSeed: Omit<Investment, "created_at" | "updated_at">[] = [
   {
     id: "investmentSeed1",
-    athleteId: "athleteseed1",
-    investmentTypeId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
+    athlete_id: "athleteseed1",
+    investment_type_id: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
     value: 1000,
     date: new Date("2025-03-10"),
     description: "Investimento inicial",
     paid: null,
     proof: null,
-    investmentGroupId: "investmentGroupSeed1",
+    investment_group_id: "investmentGroupSeed1",
   },
   {
     id: "investmentSeed2",
-    athleteId: "athleteseed2",
-    investmentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
+    athlete_id: "athleteseed2",
+    investment_type_id: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
     value: 2000,
     date: new Date("2025-02-20"),
     description: "Investimento secundário",
     paid: null,
     proof: null,
-    investmentGroupId: "investmentGroupSeed2",
+    investment_group_id: "investmentGroupSeed2",
   },
   {
     id: "investmentSeed3",
-    athleteId: "athleteseed3",
-    investmentTypeId: "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", // Pedágio
+    athlete_id: "athleteseed3",
+    investment_type_id: "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", // Pedágio
     value: 1500,
     date: new Date("2025-1-15"),
     description: "Investimento terciário",
     paid: null,
     proof: null,
-    investmentGroupId: "investmentGroupSeed3",
+    investment_group_id: "investmentGroupSeed3",
   },
   {
     id: "investmentSeed4",
-    athleteId: "athleteseed1",
-    investmentTypeId: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
+    athlete_id: "athleteseed1",
+    investment_type_id: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", // Gasolina
     value: 2500,
     date: new Date("2024-12-05"),
     description: "Investimento adicional",
     paid: null,
     proof: null,
-    investmentGroupId: "investmentGroupSeed1",
+    investment_group_id: "investmentGroupSeed1",
   },
   {
     id: "investmentSeed5",
-    athleteId: "athleteseed2",
-    investmentTypeId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
+    athlete_id: "athleteseed2",
+    investment_type_id: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", // Incrições
     value: 3000,
     date: new Date("2025-01-01"),
     description: "Investimento final",
     paid: null,
     proof: null,
-    investmentGroupId: "investmentGroupSeed2",
+    investment_group_id: "investmentGroupSeed2",
   },
 ];
 
 export const investmentGroupSeed: Omit<
   InvestmentGroup,
-  "createdAt" | "updatedAt"
+  "created_at" | "updated_at"
 >[] = [
     {
       id: "investmentGroupSeed1",
       description:
         "Grupo de investimentos para o primeiro conjunto de investimentos",
-      athleteId: "athleteseed1",
-      pairId: null,
-      tournamentId: "tournamentSeed1",
+      athlete_id: "athleteseed1",
+      pair_id: null,
+      tournament_id: "tournamentSeed1",
       podium: null,
-      pairAmount: null,
+      pair_amount: null,
       km: null,
       km_racional: null,
     },
@@ -230,11 +278,11 @@ export const investmentGroupSeed: Omit<
       id: "investmentGroupSeed2",
       description:
         "Grupo de investimentos para o segundo conjunto de investimentos",
-      athleteId: "athleteseed2",
-      pairId: null,
-      tournamentId: "tournamentSeed2",
+      athlete_id: "athleteseed2",
+      pair_id: null,
+      tournament_id: "tournamentSeed2",
       podium: null,
-      pairAmount: null,
+      pair_amount: null,
       km: null,
       km_racional: null,
     },
@@ -242,11 +290,11 @@ export const investmentGroupSeed: Omit<
       id: "investmentGroupSeed3",
       description:
         "Grupo de investimentos para o terceiro conjunto de investimentos",
-      athleteId: "athleteseed3",
-      pairId: null,
-      tournamentId: "tournamentSeed3",
+      athlete_id: "athleteseed3",
+      pair_id: null,
+      tournament_id: "tournamentSeed3",
       podium: null,
-      pairAmount: null,
+      pair_amount: null,
       km: null,
       km_racional: null,
     },

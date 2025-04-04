@@ -61,7 +61,7 @@ export const columns: ExtendedColumnDef<Athlete, undefined>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(athlete.pixKey)}
+              onClick={() => navigator.clipboard.writeText(athlete.pix_key)}
             >
               Copy Chave PIX
             </DropdownMenuItem>

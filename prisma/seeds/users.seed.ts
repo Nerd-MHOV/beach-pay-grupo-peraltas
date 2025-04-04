@@ -24,12 +24,13 @@ export const UserSeedFn = (prismaClient: PrismaClient) => {
   });
 };
 
-export const UserSeed: Omit<User, "id" | "createdAt" | "updatedAt">[] = [
+export const UserSeed: Omit<User, "id" | "created_at" | "updated_at">[] = [
   {
     name: "Matheus Henrique",
     user: "admin",
     passwd: hashSync("admin", 10),
     email: "matheus.henrique4245@gmail.com",
     role: "admin",
+    teacher_id: null,
   },
 ];

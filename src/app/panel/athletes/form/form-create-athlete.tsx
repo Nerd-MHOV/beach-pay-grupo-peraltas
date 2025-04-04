@@ -46,7 +46,7 @@ const FormCreateAthlete = ({ athlete }: { athlete?: Athlete }) => {
       responsible: athlete?.responsible ?? "",
       birthday: athlete?.birthday ?? new Date(),
       startDate: athlete?.startDate ?? new Date(),
-      pixKey: athlete?.pixKey ?? "",
+      pixKey: athlete?.pix_key ?? "",
     },
   });
 

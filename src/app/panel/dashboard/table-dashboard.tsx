@@ -33,7 +33,7 @@ const TableDashboard = ({
         currency: "BRL",
       }) || "",
     subRows: item?.athlete?.investments,
-    pix_key: item?.athlete?.pixKey || "",
+    pix_key: item?.athlete?.pix_key || "",
   }));
 
   const pdfDetails: (row: Row<(typeof datamap)[number]>) => RowInput[] = (
