@@ -21,14 +21,14 @@ const cachedAthletes = unstable_cache(
       include: {
         investments: {
           where: {
-            investmentType: {
-              canSee: {
+            investment_type: {
+              can_see: {
                 has: user.role,
               },
             },
           },
           include: {
-            investmentType: true,
+            investment_type: true,
           },
           orderBy: {
             date: "desc",
@@ -65,15 +65,15 @@ export async function getAthleteById(id: string) {
     include: {
       investments: {
         where: {
-          investmentType: {
-            canSee: {
+          investment_type: {
+            can_see: {
               has: user.role,
             },
           },
         },
         include: {
           athlete: true,
-          investmentGroup: {
+          investment_group: {
             include: {
               pair: true,
               tournament: {
@@ -83,12 +83,12 @@ export async function getAthleteById(id: string) {
               },
               investments: {
                 include: {
-                  investmentType: true,
+                  investment_type: true,
                 },
               },
             },
           },
-          investmentType: true,
+          investment_type: true,
         },
       },
       investment_group_athlete: {
@@ -102,7 +102,7 @@ export async function getAthleteById(id: string) {
           },
           investments: {
             include: {
-              investmentType: true,
+              investment_type: true,
             },
           },
         },
@@ -112,7 +112,7 @@ export async function getAthleteById(id: string) {
 }
 
 export async function createAthlete(
-  data: Omit<Athlete, "id" | "createdAt" | "updatedAt">
+  data: Omit<Athlete, "id" | "created_at" | "updated_at">
 ) {
   const athlete = await db.athlete.create({ data });
   revalidateTag("create-athlete");
@@ -120,13 +120,13 @@ export async function createAthlete(
 }
 
 export async function updateAthlete(
-  data: Omit<Athlete, "createdAt" | "updatedAt">
+  data: Omit<Athlete, "created_at" | "updated_at">
 ) {
   const athlete = await db.athlete.update({
     where: { id: data.id },
     data: {
       ...data,
-      updatedAt: new Date(),
+      updated_at: new Date(),
     },
   });
   revalidateTag("update-athlete");

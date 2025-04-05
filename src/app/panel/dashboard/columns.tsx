@@ -12,7 +12,7 @@ type dashboardColumnsDef = ExtendedColumnDef<
     athlete_id: string;
     athlete: string;
     total: string;
-    subRows: (Investment & { investmentType: InvestmentType })[] | undefined;
+    subRows: (Investment & { investment_type: InvestmentType })[] | undefined;
     pix_key: string;
   },
   undefined

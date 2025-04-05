@@ -23,40 +23,37 @@ const Page = async ({
   }
 
   const TotalInvestments = Number(
-    athlete.investments.reduce((acc, curr) => acc + curr.value, 0),
+    athlete.investments.reduce((acc, curr) => acc + curr.value, 0)
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
   const pendingInvestments = athlete.investments.filter(
-    (investment) => !investment.proof,
+    (investment) => !investment.proof
   );
 
   const TotalToPaid = Number(
-    pendingInvestments.reduce((acc, curr) => acc + curr.value, 0),
+    pendingInvestments.reduce((acc, curr) => acc + curr.value, 0)
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-  const investmentsByType = athlete.investments.reduce(
-    (acc, curr) => {
-      const name = curr.investmentType.name;
-      if (!acc[name]) {
-        acc[name] = 0;
-      }
-      acc[name] += curr.value;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
+  const investmentsByType = athlete.investments.reduce((acc, curr) => {
+    const name = curr.investment_type.name;
+    if (!acc[name]) {
+      acc[name] = 0;
+    }
+    acc[name] += curr.value;
+    return acc;
+  }, {} as Record<string, number>);
 
   const investmentsArray = Object.entries(investmentsByType).map(
     ([name, value]) => ({
       label: name,
       investment: value,
-    }),
+    })
   );
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
@@ -67,11 +64,11 @@ const Page = async ({
         <Header.Content>
           <div className="flex flex-col justify-end items-end space-x-2">
             <span className="text-sm text-gray-400">
-              criado em: {format(athlete.createdAt, "dd/MM/yyyy HH:ii")}
+              criado em: {format(athlete.created_at, "dd/MM/yyyy HH:ii")}
             </span>
             <span className="text-sm text-gray-400">
               última atualização:{" "}
-              {format(athlete.updatedAt, "dd/MM/yyyy HH:ii")}
+              {format(athlete.updated_at, "dd/MM/yyyy HH:ii")}
             </span>
           </div>
         </Header.Content>
@@ -160,7 +157,7 @@ const Page = async ({
       <div className="">
         <TableRoot
           investments={athlete.investments}
-          groupInvestments={athlete.investment_group_athlete}
+          investmentGroup={athlete.investment_group_athlete}
           athlete={athlete}
         />
       </div>

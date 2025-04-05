@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 export const formSchemaGroupInvestmentAthlete = z.object({
-  athleteId: z.string().min(2).max(255),
-  tournamentId: z
+  athlete_id: z.string().min(2).max(255),
+  tournament_id: z
     .string()
     .min(2)
     .max(255)
     .optional()
     .nullable()
     .transform((v) => v ?? null),
-  pairId: z
+  pair_id: z
     .string()
     .min(2)
     .max(255)
@@ -31,7 +31,7 @@ export const formSchemaGroupInvestmentAthlete = z.object({
     .optional()
     .nullable()
     .transform((v) => v ?? ""),
-  pairAmount: z
+  pair_amount: z
     .number()
     .optional()
     .nullable()

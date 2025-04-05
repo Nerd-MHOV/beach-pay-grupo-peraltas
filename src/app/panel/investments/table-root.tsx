@@ -8,16 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import TableGroupInvestments from "./(group)/table-group-investments";
-import { getGroupInvestments, getInvestments } from "./actions";
+import { getInvestmentGroups, getInvestments } from "./actions";
 import TableInvestments from "./(single)/table-investments";
 
 const TableRoot = ({
   athlete,
-  groupInvestments,
+  investmentGroup,
   investments,
 }: {
   athlete?: Athlete;
-  groupInvestments: Awaited<ReturnType<typeof getGroupInvestments>>;
+  investmentGroup: Awaited<ReturnType<typeof getInvestmentGroups>>;
   investments: Awaited<ReturnType<typeof getInvestments>>;
 }) => {
   const [showGroup, setShowGroup] = useState<boolean>(false);
@@ -55,7 +55,7 @@ const TableRoot = ({
       {showGroup ? (
         <TableGroupInvestments
           pdfDescription={description}
-          groupInvestments={groupInvestments}
+          groupInvestments={investmentGroup}
         />
       ) : (
         <TableInvestments

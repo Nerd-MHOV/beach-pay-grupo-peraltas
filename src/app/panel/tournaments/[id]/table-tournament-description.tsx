@@ -22,29 +22,29 @@ const TableTournamentDescription = ({
 }: {
   tournament: NonNullable<Awaited<ReturnType<typeof getTournamentById>>>;
 }) => {
-  const datamap = tournament.investmentGroup
+  const datamap = tournament.investment_group
     .reduce(
       (acc, curr) => {
         const newacc = acc;
-        if (newacc.some((e) => e.athlete_id === curr.athleteId)) {
+        if (newacc.some((e) => e.athlete_id === curr.athlete_id)) {
           const index = newacc.findIndex(
-            (e) => e.athlete_id === curr.athleteId,
+            (e) => e.athlete_id === curr.athlete_id
           );
           newacc[index].total += curr.investments.reduce(
             (acci, curri) => acci + curri.value,
-            0,
+            0
           );
           newacc[index].subRows?.push(...curr.investments);
         } else {
           newacc.push({
-            athlete_id: curr.athleteId,
+            athlete_id: curr.athlete_id,
             athlete: curr.athlete.name,
             total: curr.investments.reduce(
               (acci, curri) => acci + curri.value,
-              0,
+              0
             ),
             subRows: curr.investments,
-            pix_key: curr.athlete.pixKey,
+            pix_key: curr.athlete.pix_key,
           });
         }
 
@@ -56,11 +56,11 @@ const TableTournamentDescription = ({
         total: number;
         subRows:
           | (Investment & {
-              investmentType: InvestmentType;
+              investment_type: InvestmentType;
             })[]
           | undefined;
         pix_key: string;
-      }[],
+      }[]
     )
     .map((tr) => ({
       ...tr,
@@ -71,7 +71,7 @@ const TableTournamentDescription = ({
     }));
 
   const pdfDetails: (row: Row<(typeof datamap)[number]>) => RowInput[] = (
-    row,
+    row
   ) => {
     const rowData: RowInput[] = [
       row.getVisibleCells().map((cell) => ({
@@ -80,7 +80,7 @@ const TableTournamentDescription = ({
       })),
     ];
     row.original.subRows?.forEach((subRow) => {
-      const name = subRow.investmentType.name;
+      const name = subRow.investment_type.name;
       const value = (subRow.value || "").toLocaleString("pt-BR", {
         currency: "BRL",
         style: "currency",
@@ -109,7 +109,7 @@ const TableTournamentDescription = ({
         <TableBody>
           {row.subRows?.map((subRow) => (
             <TableRow key={subRow.id}>
-              <TableCell>{subRow.investmentType.name}</TableCell>
+              <TableCell>{subRow.investment_type.name}</TableCell>
               <TableCell>
                 {subRow.value.toLocaleString("pt-BR", {
                   currency: "BRL",
@@ -124,7 +124,7 @@ const TableTournamentDescription = ({
   );
 
   const csvDetails: (row: Row<(typeof datamap)[number]>) => string[] = (
-    row,
+    row
   ) => {
     const rowData = [
       row
@@ -136,7 +136,7 @@ const TableTournamentDescription = ({
         .join(","),
     ];
     row.original.subRows?.forEach((subRow) => {
-      const name = subRow.investmentType.name;
+      const name = subRow.investment_type.name;
       const value = (subRow.value || "").toLocaleString("pt-BR", {
         currency: "BRL",
         style: "currency",
@@ -148,7 +148,7 @@ const TableTournamentDescription = ({
       rowData[0]
         .split(",")
         .map(() => "")
-        .join(","),
+        .join(",")
     );
     return rowData;
   };
@@ -158,7 +158,11 @@ const TableTournamentDescription = ({
       <DataTable
         columns={columns}
         pdfTitle={`Relatório do Torneio ${tournament.name}`}
-        pdfDescription={`${tournament.arena.name} - ${tournament.arena.city} - ${format(tournament.fromDate, "dd MMM", { locale: ptBR })} à ${format(tournament.toDate, "dd MMM yyyy", { locale: ptBR })}`}
+        pdfDescription={`${tournament.arena.name} - ${
+          tournament.arena.address.city
+        } - ${format(tournament.date_from, "dd MMM", {
+          locale: ptBR,
+        })} à ${format(tournament.date_to, "dd MMM yyyy", { locale: ptBR })}`}
         data={datamap}
         pdfDetails={pdfDetails}
         csvDetails={csvDetails}

@@ -14,8 +14,8 @@ export const getUserById = async (id: string) => {
       email: true,
       user: true,
       role: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     }
   });
   return user;
@@ -30,8 +30,9 @@ export const getUsers = unstable_cache(
         email: true,
         user: true,
         role: true,
-        createdAt: true,
-        updatedAt: true,
+        teacher_id: true,
+        created_at: true,
+        updated_at: true,
       }
     });
 
@@ -43,7 +44,7 @@ export const getUsers = unstable_cache(
   }
 )
 
-export const createUser = async (data: Omit<User, "id" | "createdAt" | "updatedAt">) => {
+export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at">) => {
   const { passwd, ...rest } = data;
 
   const user = await db.user.create({
@@ -56,7 +57,7 @@ export const createUser = async (data: Omit<User, "id" | "createdAt" | "updatedA
   return user;
 }
 
-export const updateUser = async (data: Omit<User, "createdAt" | "updatedAt">) => {
+export const updateUser = async (data: Omit<User, "created_at" | "updated_at">) => {
 
   const { passwd, ...rest } = data;
   const user = await db.user.update({
@@ -64,7 +65,7 @@ export const updateUser = async (data: Omit<User, "createdAt" | "updatedAt">) =>
     data: {
       ...rest,
       ...(passwd.length > 2 ? { passwd: hashSync(passwd, 10) } : {}),
-      updatedAt: new Date(),
+      updated_at: new Date(),
     },
   });
   revalidateTag("update-user");

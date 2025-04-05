@@ -47,7 +47,7 @@ const formSchema = z.object({
       message: "A data final é obrigatória.",
     }),
   }),
-  arenaId: z.string({
+  arena_id: z.string({
     message: "A arena é obrigatória.",
   }),
   description: z
@@ -76,7 +76,7 @@ const FormCreateTournament = ({
   });
 
   const createTournamentFn = async (
-    values: Omit<Tournament, "id" | "createdAt" | "updatedAt">
+    values: Omit<Tournament, "id" | "created_at" | "updated_at">
   ) => {
     try {
       const created = await createTournament(values);
@@ -99,7 +99,7 @@ const FormCreateTournament = ({
   };
 
   const updateTournamentFn = async (
-    values: Omit<Tournament, "createdAt" | "updatedAt">
+    values: Omit<Tournament, "created_at" | "updated_at">
   ) => {
     try {
       await updateTournament(values);
@@ -121,16 +121,16 @@ const FormCreateTournament = ({
     if (tournament) {
       updateTournamentFn({
         ...rest,
-        fromDate: date.from,
-        toDate: date.to,
+        date_from: date.from,
+        date_to: date.to,
         id: tournament.id || "",
       });
       return;
     }
     createTournamentFn({
       ...rest,
-      fromDate: date.from,
-      toDate: date.to,
+      date_from: date.from,
+      date_to: date.to,
     });
   };
 
@@ -140,10 +140,10 @@ const FormCreateTournament = ({
       ...(tournament
         ? {
             name: tournament.name,
-            arenaId: tournament.arenaId,
+            arena_id: tournament.arena_id,
             date: {
-              from: tournament.fromDate,
-              to: tournament.toDate,
+              from: tournament.date_from,
+              to: tournament.date_to,
             },
             description: tournament.description || "",
           }
@@ -174,7 +174,7 @@ const FormCreateTournament = ({
         />
         <FormField
           control={form.control}
-          name="arenaId"
+          name="arena_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Arena*</FormLabel>
@@ -182,7 +182,7 @@ const FormCreateTournament = ({
                 <Combobox
                   placeholder="Selecione a Arena"
                   items={(arenas || []).map((arena) => ({
-                    label: arena.name + " - " + arena.city,
+                    label: arena.name + " - " + arena.address.city,
                     value: arena.id,
                   }))}
                   selected={field.value}

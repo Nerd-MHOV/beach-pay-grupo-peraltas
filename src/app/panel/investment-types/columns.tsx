@@ -31,14 +31,14 @@ export const columns: ExtendedColumnDef<InvestmentType, undefined>[] = [
     label: "Descrição",
   },
   {
-    accessorKey: "canSee",
+    accessorKey: "can_see",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Permissões" />
     ),
     label: "Permissões",
     cell: ({ row }) => {
-      const canSee = row.original.canSee;
-      return <span>{canSee.join(", ")}</span>;
+      const can_see = row.original.can_see;
+      return <span>{can_see.join(", ")}</span>;
     },
   },
   {

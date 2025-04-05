@@ -16,48 +16,48 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   const TotalInvestments = Number(
-    tournament.investmentGroup.reduce(
+    tournament.investment_group.reduce(
       (acc, curr) =>
         acc + curr.investments.reduce((acci, curri) => acci + curri.value, 0),
-      0,
-    ),
+      0
+    )
   ).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-  const participants: string[] = tournament.investmentGroup.reduce(
+  const participants: string[] = tournament.investment_group.reduce(
     (acc: string[], curr) => {
-      if (!acc.includes(curr.athleteId)) {
-        return [...acc, curr.athleteId];
+      if (!acc.includes(curr.athlete_id)) {
+        return [...acc, curr.athlete_id];
       }
       return acc;
     },
-    [],
+    []
   );
 
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
         <Header.Title
-          subtitle={`${tournament.arena.name} - ${tournament.arena.city}`}
+          subtitle={`${tournament.arena.name} - ${tournament.arena.address.city}`}
         >
           <div>
             {tournament.name}
             <p className="text-gray-400 text-sm">
-              {format(tournament.fromDate, "dd MMM", { locale: ptBR })} à{" "}
-              {format(tournament.toDate, "dd MMM yy", { locale: ptBR })}
+              {format(tournament.date_from, "dd MMM", { locale: ptBR })} à{" "}
+              {format(tournament.date_to, "dd MMM yy", { locale: ptBR })}
             </p>
           </div>
         </Header.Title>
         <Header.Content>
           <div className="flex flex-col justify-end items-end space-x-2">
             <span className="text-sm text-gray-400">
-              criado em: {format(tournament.createdAt, "dd/MM/yyyy HH:ii")}
+              criado em: {format(tournament.created_at, "dd/MM/yyyy HH:ii")}
             </span>
             <span className="text-sm text-gray-400">
               última atualização:{" "}
-              {format(tournament.updatedAt, "dd/MM/yyyy HH:ii")}
+              {format(tournament.updated_at, "dd/MM/yyyy HH:ii")}
             </span>
           </div>
         </Header.Content>

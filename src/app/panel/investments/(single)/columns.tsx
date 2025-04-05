@@ -35,8 +35,8 @@ type InvestmentColumns = ExtendedColumnDef<
   {
     athlete_name: string;
     athlete: Athlete;
-    investmentType: string;
-    investmentGroup:
+    investment_type: string;
+    investment_group:
       | ({
           pair: Athlete | null;
           tournament:
@@ -45,7 +45,7 @@ type InvestmentColumns = ExtendedColumnDef<
               } & Tournament)
             | null;
           investments: ({
-            investmentType: InvestmentType;
+            investment_type: InvestmentType;
           } & Investment)[];
         } & InvestmentGroup)
       | null;
@@ -119,7 +119,7 @@ export const columns: InvestmentColumns[] = [
     ),
     label: "Grupo",
     cell: ({ row }) => {
-      const investmentGroup = row.original.investmentGroup;
+      const investmentGroup = row.original.investment_group;
       if (!investmentGroup)
         return (
           <span>
@@ -152,7 +152,7 @@ export const columns: InvestmentColumns[] = [
                     <b>KM:</b> {investmentGroup.km}
                   </li>
                   <li>
-                    <b>Duplas:</b> {investmentGroup.pairAmount}
+                    <b>Duplas:</b> {investmentGroup.pair_amount}
                   </li>
                   <li>
                     <b>Colocação:</b> {investmentGroup.podium}
@@ -165,7 +165,7 @@ export const columns: InvestmentColumns[] = [
                   <ol>
                     {investmentGroup.investments.map((investment) => (
                       <li key={investment.id}>
-                        {investment.investmentType.name} -{" "}
+                        {investment.investment_type.name} -{" "}
                         {Number(investment.value).toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
@@ -192,13 +192,13 @@ export const columns: InvestmentColumns[] = [
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Criado Em"} />
     ),
     label: "Criado Em",
     cell: ({ row }) => {
-      return <span>{format(row.original.createdAt, "dd/MM/yy")}</span>;
+      return <span>{format(row.original.created_at, "dd/MM/yy")}</span>;
     },
   },
   {
@@ -216,15 +216,15 @@ export const columns: InvestmentColumns[] = [
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <Link href={`/panel/athletes/${row.original.athleteId}`}>
+            <Link href={`/panel/athletes/${row.original.athlete_id}`}>
               <DropdownMenuItem>Atleta</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
 
-            {row.original.investmentGroup && (
+            {row.original.investment_group && (
               <DropdownMenuItem asChild>
                 <DialogGroupInvestmentAthlete
-                  investmentGroup={row.original.investmentGroup}
+                  investmentGroup={row.original.investment_group}
                   trigger={
                     <Button
                       variant="ghost"

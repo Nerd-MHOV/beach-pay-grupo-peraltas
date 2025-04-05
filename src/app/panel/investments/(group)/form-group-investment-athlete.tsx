@@ -31,7 +31,6 @@ import LoadingData from "@/components/LoadingData";
 import ProofFormField from "./fields/proof";
 import { createInvestmentAthlete, updateInvestmentAthlete } from "../actions";
 import { getInvestmentsType } from "../../investment-types/actions";
-import DialogGroupInvestmentAthlete from "./dialog-group-investment-athlete";
 import DialogDeleteInvestmentGroup from "./dialog-delete-investment-group";
 
 const FormGroupInvestmentAthlete = ({
@@ -66,21 +65,21 @@ const FormGroupInvestmentAthlete = ({
   const form = useForm<z.infer<typeof formSchemaGroupInvestmentAthlete>>({
     resolver: zodResolver(formSchemaGroupInvestmentAthlete),
     defaultValues: {
-      ...(athlete ? { athleteId: athlete.id } : {}),
+      ...(athlete ? { athlete_id: athlete.id } : {}),
       investments: [],
       total: 0,
       ...(investmentGroup
         ? {
-            athleteId: investmentGroup.athleteId,
+            athlete_id: investmentGroup.athlete_id,
             investments: investmentGroup.investments.map((inv) => inv.id),
             paid: paid,
-            pairId: investmentGroup.pairId,
-            pairAmount: investmentGroup.pairAmount ?? undefined,
+            pair_id: investmentGroup.pair_id,
+            pair_amount: investmentGroup.pair_amount ?? undefined,
             podium: investmentGroup.podium ?? "",
             km: investmentGroup.km ?? undefined,
             km_racional: investmentGroup.km_racional ?? undefined,
             description: investmentGroup.description ?? undefined,
-            tournamentId: investmentGroup.tournamentId,
+            tournament_id: investmentGroup.tournament_id,
             total: investmentGroup.investments.reduce<number>(
               (acc, curr) => acc + curr.value,
               0
@@ -96,29 +95,29 @@ const FormGroupInvestmentAthlete = ({
     const fuelTypeID = (await getInvestmentsType()).find(
       (type) => type.name === "Combustível"
     )?.id;
-    const athleteId = form.getValues().athleteId;
-    if (!km || !km_racional || !fuelTypeID || !athleteId) return;
+    const athlete_id = form.getValues().athlete_id;
+    if (!km || !km_racional || !fuelTypeID || !athlete_id) return;
     const newValue = km * km_racional;
     const investments = athletes.find(
-      (find) => find.id === form.getValues().athleteId
+      (find) => find.id === form.getValues().athlete_id
     )?.investments;
 
     const hasFuelInvestment = investments
       ?.filter((investment) =>
         form.getValues().investments.includes(investment.id)
       )
-      .find((inv) => inv.investmentTypeId === fuelTypeID);
+      .find((inv) => inv.investment_type_id === fuelTypeID);
     if (hasFuelInvestment) {
       // update
       await updateInvestmentAthlete({
         id: hasFuelInvestment.id,
-        athleteId: hasFuelInvestment.athleteId,
-        investmentTypeId: hasFuelInvestment.investmentTypeId,
+        athlete_id: hasFuelInvestment.athlete_id,
+        investment_type_id: hasFuelInvestment.investment_type_id,
         date: new Date(hasFuelInvestment.date),
         description: hasFuelInvestment.description,
         paid: hasFuelInvestment.paid ? new Date(hasFuelInvestment.paid) : null,
         proof: hasFuelInvestment.proof,
-        investmentGroupId: hasFuelInvestment.investmentGroupId,
+        investment_group_id: hasFuelInvestment.investment_group_id,
         value: newValue,
       });
       refetchAthletes();
@@ -126,14 +125,14 @@ const FormGroupInvestmentAthlete = ({
       //create
 
       const created = await createInvestmentAthlete({
-        athleteId: athleteId,
-        investmentTypeId: fuelTypeID,
+        athlete_id: athlete_id,
+        investment_type_id: fuelTypeID,
         value: newValue,
         date: new Date(),
         description: "Combustível - Gerado por km/km-racional",
         paid: null,
         proof: null,
-        investmentGroupId: null,
+        investment_group_id: null,
       });
       await refetchAthletes();
       form.setValue("investments", [
@@ -158,7 +157,7 @@ const FormGroupInvestmentAthlete = ({
 
   const setTotal = (array: string[]) => {
     const investments = athletes.find(
-      (find) => find.id === form.getValues().athleteId
+      (find) => find.id === form.getValues().athlete_id
     )?.investments;
 
     if (!investments) return;
@@ -188,7 +187,7 @@ const FormGroupInvestmentAthlete = ({
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="athleteId"
+            name="athlete_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Atleta*</FormLabel>
@@ -223,7 +222,7 @@ const FormGroupInvestmentAthlete = ({
           />
           <FormField
             control={form.control}
-            name="pairId"
+            name="pair_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Dupla</FormLabel>
@@ -233,7 +232,8 @@ const FormGroupInvestmentAthlete = ({
                     items={
                       athletes
                         ?.filter(
-                          (athlete) => athlete.id !== form.getValues().athleteId
+                          (athlete) =>
+                            athlete.id !== form.getValues().athlete_id
                         )
                         .map((athlete) => ({
                           label: athlete.name,
@@ -252,7 +252,7 @@ const FormGroupInvestmentAthlete = ({
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="tournamentId"
+            name="tournament_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Torneio</FormLabel>
@@ -276,7 +276,7 @@ const FormGroupInvestmentAthlete = ({
                         }
                         onCreateTournament={(tournament) => {
                           refetchTournaments();
-                          form.setValue("tournamentId", tournament.id);
+                          form.setValue("tournament_id", tournament.id);
                         }}
                       />
                     }
@@ -289,7 +289,7 @@ const FormGroupInvestmentAthlete = ({
 
           <FormField
             control={form.control}
-            name="pairAmount"
+            name="pair_amount"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Qnt. Duplas</FormLabel>
@@ -393,7 +393,7 @@ const FormGroupInvestmentAthlete = ({
                   <div className="p-4">
                     {field.value?.map((id, index) => {
                       const investment = athletes
-                        .find((find) => find.id === form.getValues().athleteId)
+                        .find((find) => find.id === form.getValues().athlete_id)
                         ?.investments.find((find) => find.id === id);
                       if (!investment) return null;
                       return (
@@ -404,7 +404,7 @@ const FormGroupInvestmentAthlete = ({
                                 {format(investment.date, "dd/MM/yy")}
                               </p>
                               <h1 className="font-bold">
-                                {investment?.investmentType.name}
+                                {investment?.investment_type.name}
                               </h1>
                               <h2 className="text-xs font-semibold">
                                 +
@@ -472,11 +472,11 @@ const FormGroupInvestmentAthlete = ({
                     placeholder="Selecione o Investimento"
                     items={
                       athletes
-                        .find((find) => find.id === form.getValues().athleteId)
+                        .find((find) => find.id === form.getValues().athlete_id)
                         ?.investments.filter(
                           (investment) =>
                             !field.value.includes(investment.id) &&
-                            investment.investmentGroupId === null
+                            investment.investment_group_id === null
                         )
                         .map((investment) => ({
                           label: `${format(
@@ -485,7 +485,7 @@ const FormGroupInvestmentAthlete = ({
                           )} - ${investment.value.toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
-                          })} - ${investment.investmentType.name}`,
+                          })} - ${investment.investment_type.name}`,
                           value: investment.id,
                         })) || []
                     }
@@ -504,7 +504,7 @@ const FormGroupInvestmentAthlete = ({
                           ]);
                         }}
                         athlete={athletes.find(
-                          (find) => find.id === form.getValues().athleteId
+                          (find) => find.id === form.getValues().athlete_id
                         )}
                         trigger={
                           <Button size="sm" variant="ghost">

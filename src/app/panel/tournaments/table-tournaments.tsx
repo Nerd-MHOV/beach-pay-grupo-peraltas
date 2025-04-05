@@ -16,10 +16,10 @@ const TableTournaments = async () => {
         data={tournaments.map((tournament) => {
           return {
             ...tournament,
-            arena_name: `${tournament.arena.name} - ${tournament.arena.city}`,
-            date: `${format(tournament.fromDate, "dd LLL", {
+            arena_name: `${tournament.arena.name} - ${tournament.arena.address.city}`,
+            date: `${format(tournament.date_from, "dd LLL", {
               locale: ptBR,
-            })} - ${format(tournament.toDate, "dd LLL, y", {
+            })} - ${format(tournament.date_to, "dd LLL, y", {
               locale: ptBR,
             })}`,
           };

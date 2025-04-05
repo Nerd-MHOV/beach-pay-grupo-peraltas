@@ -38,14 +38,14 @@ const useFormGroupInvestmentAthlete = (
 
       const createdGroupInvestment = await createGroupInvetimentAthlete(
         {
-          athleteId: values.athleteId,
-          pairId: values.pairId,
+          athlete_id: values.athlete_id,
+          pair_id: values.pair_id,
           description: values.description,
           km: values.km,
           km_racional: values.km_racional,
-          pairAmount: values.pairAmount,
+          pair_amount: values.pair_amount,
           podium: values.podium,
-          tournamentId: values.tournamentId,
+          tournament_id: values.tournament_id,
         },
         values.investments.map((id) => ({ id }))
       );
@@ -59,8 +59,8 @@ const useFormGroupInvestmentAthlete = (
         paid: null,
         proof: null,
         podium: "",
-        pairAmount: 0,
-        pairId: null,
+        pair_amount: 0,
+        pair_id: null,
       });
       toast({
         title: "Grupo Criado",
@@ -100,14 +100,14 @@ const useFormGroupInvestmentAthlete = (
       const updatedGroupInvestment = await updateGroupInvestmentAthlete(
         {
           id: id || "",
-          athleteId: values.athleteId,
-          pairId: values.pairId,
+          athlete_id: values.athlete_id,
+          pair_id: values.pair_id,
           description: values.description,
           km: values.km,
           km_racional: values.km_racional,
-          pairAmount: values.pairAmount,
+          pair_amount: values.pair_amount,
           podium: values.podium,
-          tournamentId: values.tournamentId,
+          tournament_id: values.tournament_id,
         },
         values.investments.map((id) => ({ id }))
       );

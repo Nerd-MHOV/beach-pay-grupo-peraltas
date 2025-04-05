@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const formSchema = z.object({
-  investmentTypeId: z.string().min(2).max(255),
-  athleteId: z.string().min(2).max(255),
+  investment_type_id: z.string().min(2).max(255),
+  athlete_id: z.string().min(2).max(255),
   value: z.number(),
   date: z.date(),
   description: z.string().min(5).max(255),

@@ -1,5 +1,5 @@
 import React from "react";
-import { getGroupInvestments } from "../actions";
+import { getInvestmentGroups } from "../actions";
 import { DataTable } from "@/components/ui/data-table";
 import { columnsGroup } from "./columns";
 
@@ -8,7 +8,7 @@ const TableGroupInvestments = ({
   pdfDescription,
 }: {
   pdfDescription?: string;
-  groupInvestments: Awaited<ReturnType<typeof getGroupInvestments>>;
+  groupInvestments: Awaited<ReturnType<typeof getInvestmentGroups>>;
 }) => {
   return (
     <DataTable

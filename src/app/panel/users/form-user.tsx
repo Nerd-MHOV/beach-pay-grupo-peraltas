@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { User } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import { createUser, updateUser } from "./actions";
 import {
   Select,
@@ -47,9 +47,10 @@ const getFormSchema = (isUpdate: boolean) =>
             message: "A senha deve ter no mínimo 6 caracteres.",
           }),
       confirmPasswd: isUpdate ? z.string().optional() : z.string(),
-      role: z.enum(["admin", "user"], {
+      role: z.enum(["admin", "operational", "teacher"], {
         errorMap: () => ({ message: "Selecione um nível de acesso." }),
       }),
+      teacher_id: z.string().nullable(),
     })
     .superRefine(({ confirmPasswd, passwd }, ctx) => {
       if (confirmPasswd !== passwd) {
@@ -65,7 +66,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
   const { toast } = useToast();
   const formSchema = getFormSchema(!!user);
   const updateUserFn = async (
-    data: Omit<User, "createdAt" | "updatedAt" | "password">
+    data: Omit<User, "created_at" | "updated_at" | "password">
   ) => {
     try {
       const updatedUser = await updateUser(data);
@@ -83,7 +84,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
   };
 
   const createUserFn = async (
-    data: Omit<User, "id" | "createdAt" | "updatedAt">
+    data: Omit<User, "id" | "created_at" | "updated_at">
   ) => {
     try {
       const newUser = await createUser(data);
@@ -116,7 +117,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: user || {
-      role: "user",
+      role: "operational",
     },
   });
 

@@ -5,7 +5,7 @@ import { InvestmentType } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function createInvestmentType(
-  data: Omit<InvestmentType, "id" | "createdAt" | "updatedAt">
+  data: Omit<InvestmentType, "id" | "created_at" | "updated_at">
 ) {
   const investmentType = await db.investmentType.create({ data });
   revalidateTag("create-investmentType");
@@ -13,7 +13,7 @@ export async function createInvestmentType(
 }
 
 export async function updateInvestmentType(
-  data: Omit<InvestmentType, "createdAt" | "updatedAt">
+  data: Omit<InvestmentType, "created_at" | "updated_at">
 ) {
   const investmentType = await db.investmentType.update({
     where: {
@@ -21,7 +21,7 @@ export async function updateInvestmentType(
     },
     data: {
       ...data,
-      updatedAt: new Date(),
+      updated_at: new Date(),
     },
   });
   revalidateTag("update-investmentType");
@@ -45,7 +45,7 @@ export const cachedInvestmentType = unstable_cache(
         name: "asc",
       },
       where: {
-        canSee: {
+        can_see: {
           has: user.role,
         },
       }

@@ -19,7 +19,7 @@ const TableInvestments = ({
         return {
           ...investment,
           athlete_name: investment.athlete.name,
-          investmentType: investment.investmentType.name,
+          investment_type: investment.investment_type.name,
         };
       })}
     />

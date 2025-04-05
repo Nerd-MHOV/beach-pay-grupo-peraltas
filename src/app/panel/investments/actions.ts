@@ -4,21 +4,21 @@ import { verifySession } from "@/lib/session";
 import { Investment, InvestmentGroup } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
-export const getInvestments = async (athelteId?: string) => {
+export const getInvestments = async (athlete_id?: string) => {
   const session = await verifySession();
-  return await cachedInvestments(session.userId, athelteId);
+  return await cachedInvestments(session.userId, athlete_id);
 }
 
 const cachedInvestments = unstable_cache(
-  async (userId: string, athelteId?: string,) => {
+  async (userId: string, athlete_id?: string,) => {
     const user = await db.user.findFirst({ where: { id: userId } });
     if (!user) {
       return [];
     }
     return db.investment.findMany({
-      where: athelteId ? { athleteId: athelteId } : {},
+      where: athlete_id ? { athlete_id: athlete_id } : {},
       include: {
-        investmentGroup: {
+        investment_group: {
           include: {
             pair: true,
             tournament: {
@@ -28,23 +28,23 @@ const cachedInvestments = unstable_cache(
             },
             investments: {
               where: {
-                investmentType: {
-                  canSee: {
+                investment_type: {
+                  can_see: {
                     has: user.role,
                   },
                 }
               },
               include: {
-                investmentType: true,
+                investment_type: true,
               },
             },
           },
         },
         athlete: true,
-        investmentType: true,
+        investment_type: true,
       },
       orderBy: {
-        createdAt: "desc",
+        created_at: "desc",
       },
     });
   },
@@ -60,19 +60,19 @@ const cachedInvestments = unstable_cache(
   }
 );
 
-export const getGroupInvestments = async () => {
+export const getInvestmentGroups = async () => {
   const session = await verifySession();
   return await cachedGroupInvestments(session.userId);
 }
 
 const cachedGroupInvestments = unstable_cache(
-  async (userId: string, athleteId?: string) => {
+  async (userId: string, athlete_id?: string) => {
     const user = await db.user.findFirst({ where: { id: userId } });
     if (!user) {
       return [];
     }
     return db.investmentGroup.findMany({
-      where: athleteId ? { athleteId } : {},
+      where: athlete_id ? { athlete_id } : {},
       include: {
         pair: true,
         athlete: true,
@@ -83,19 +83,19 @@ const cachedGroupInvestments = unstable_cache(
         },
         investments: {
           where: {
-            investmentType: {
-              canSee: {
+            investment_type: {
+              can_see: {
                 has: user.role,
               },
             },
           },
           include: {
-            investmentType: true,
+            investment_type: true,
           },
         },
       },
       orderBy: {
-        createdAt: "desc",
+        created_at: "desc",
       },
     });
   },
@@ -124,14 +124,14 @@ const cachedInvestmentById = unstable_cache(
     return db.investment.findUnique({
       where: {
         id,
-        investmentType: {
-          canSee: {
+        investment_type: {
+          can_see: {
             has: user.role,
           },
         },
       },
       include: {
-        investmentGroup: {
+        investment_group: {
           include: {
             pair: true,
             tournament: {
@@ -141,20 +141,20 @@ const cachedInvestmentById = unstable_cache(
             },
             investments: {
               where: {
-                investmentType: {
-                  canSee: {
+                investment_type: {
+                  can_see: {
                     has: user.role,
                   },
                 },
               },
               include: {
-                investmentType: true,
+                investment_type: true,
               },
             },
           },
         },
         athlete: true,
-        investmentType: true,
+        investment_type: true,
       },
     });
   },
@@ -165,12 +165,12 @@ const cachedInvestmentById = unstable_cache(
 );
 
 export async function createInvestmentAthlete(
-  data: Omit<Investment, "id" | "createdAt" | "updatedAt">
+  data: Omit<Investment, "id" | "created_at" | "updated_at">
 ) {
   const investment = await db.investment.create({
     data,
     include: {
-      investmentType: true,
+      investment_type: true,
     },
   });
   revalidateTag("create-investment");
@@ -178,7 +178,7 @@ export async function createInvestmentAthlete(
 }
 
 export async function updateInvestmentAthlete(
-  data: Omit<Investment, "createdAt" | "updatedAt">
+  data: Omit<Investment, "created_at" | "updated_at">
 ) {
   const investment = await db.investment.update({
     where: {
@@ -186,10 +186,10 @@ export async function updateInvestmentAthlete(
     },
     data: {
       ...data,
-      updatedAt: new Date(),
+      updated_at: new Date(),
     },
     include: {
-      investmentType: true,
+      investment_type: true,
     },
   });
   revalidateTag("update-investment");
@@ -217,10 +217,10 @@ export async function deleteGroupInvestment(group: InvestmentGroup) {
 }
 
 export async function createGroupInvetimentAthlete(
-  data: Omit<InvestmentGroup, "id" | "createdAt" | "updatedAt">,
+  data: Omit<InvestmentGroup, "id" | "created_at" | "updated_at">,
   investments: { id: string }[]
 ) {
-  const investmentGroup = await db.investmentGroup.create({
+  const investment_group = await db.investmentGroup.create({
     data: {
       ...data,
       investments: {
@@ -229,11 +229,11 @@ export async function createGroupInvetimentAthlete(
     },
   });
   revalidateTag("create-group-investment");
-  return investmentGroup;
+  return investment_group;
 }
 
 export async function updateGroupInvestmentAthlete(
-  data: Omit<InvestmentGroup, "createdAt" | "updatedAt">,
+  data: Omit<InvestmentGroup, "created_at" | "updated_at">,
   investments: { id: string }[]
 ) {
   const groupInvestment = await db.investmentGroup.update({

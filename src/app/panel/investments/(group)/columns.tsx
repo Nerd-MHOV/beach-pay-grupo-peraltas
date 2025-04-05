@@ -88,13 +88,13 @@ export const columnsGroup: InvestmentColumns[] = [
     label: "Descrição",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Criado Em:"} />
     ),
     label: "Criado Em:",
     cell: ({ row }) => {
-      return <span>{format(row.original.createdAt, "dd/MM/yy")}</span>;
+      return <span>{format(row.original.created_at, "dd/MM/yy")}</span>;
     },
   },
   {
@@ -111,7 +111,7 @@ export const columnsGroup: InvestmentColumns[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/panel/athletes/${row.original.athleteId}`}>
+            <Link href={`/panel/athletes/${row.original.athlete_id}`}>
               <DropdownMenuItem>Atleta</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

@@ -20,8 +20,8 @@ export async function getDashboard(data?: {
     },
     _count: true,
     where: {
-      investmentType: {
-        canSee: {
+      investment_type: {
+        can_see: {
           has: user.role,
         },
       },
@@ -37,8 +37,8 @@ export async function getDashboard(data?: {
       value: true,
     },
     where: {
-      investmentType: {
-        canSee: {
+      investment_type: {
+        can_see: {
           has: user.role,
         },
       },
@@ -52,8 +52,8 @@ export async function getDashboard(data?: {
 
   const pendingInvestmentsCount = await db.investment.count({
     where: {
-      investmentType: {
-        canSee: {
+      investment_type: {
+        can_see: {
           has: user.role,
         },
       },
@@ -67,7 +67,7 @@ export async function getDashboard(data?: {
 
   const totalSubscriptions = await db.athlete.count({
     where: {
-      createdAt: {
+      created_at: {
         gte: data?.date?.from,
         lte: data?.date?.to,
       },
@@ -81,8 +81,8 @@ export async function getDashboard(data?: {
         value: true,
       },
       where: {
-        investmentType: {
-          canSee: {
+        investment_type: {
+          can_see: {
             has: user.role,
           },
         },
@@ -125,11 +125,11 @@ export async function getDashboard(data?: {
 
   const lastFiveInvestments = await db.investment.findMany({
     orderBy: {
-      createdAt: "desc",
+      created_at: "desc",
     },
     where: {
-      investmentType: {
-        canSee: {
+      investment_type: {
+        can_see: {
           has: user.role,
         },
       },
@@ -142,12 +142,12 @@ export async function getDashboard(data?: {
 
   const investmentsLast30Days = await db.investment.count({
     where: {
-      investmentType: {
-        canSee: {
+      investment_type: {
+        can_see: {
           has: user.role,
         },
       },
-      createdAt: {
+      created_at: {
         gte: new Date(new Date().setDate(new Date().getDate() - 30)),
       },
     },
@@ -155,14 +155,14 @@ export async function getDashboard(data?: {
 
   const investmentByType = await db.investment
     .groupBy({
-      by: ["investmentTypeId"],
+      by: ["investment_type_id"],
       _sum: {
         value: true,
       },
       _count: true,
       where: {
-        investmentType: {
-          canSee: {
+        investment_type: {
+          can_see: {
             has: user.role,
           },
         },
@@ -179,7 +179,9 @@ export async function getDashboard(data?: {
             type:
               (
                 await db.investmentType.findUnique({
-                  where: { id: results.investmentTypeId },
+                  where: {
+                    id: results.investment_type_id
+                  },
                 })
               )?.name || "",
             value: results._sum.value || 0,
@@ -191,13 +193,13 @@ export async function getDashboard(data?: {
 
   const investmentByAthlete = await db.investment
     .groupBy({
-      by: ["athleteId"],
+      by: ["athlete_id"],
       _sum: {
         value: true,
       },
       where: {
-        investmentType: {
-          canSee: {
+        investment_type: {
+          can_see: {
             has: user.role,
           },
         },
@@ -212,15 +214,15 @@ export async function getDashboard(data?: {
         results.map(async (result) => {
           return {
             athlete: await db.athlete.findUnique({
-              where: { id: result.athleteId },
+              where: { id: result.athlete_id },
               include: {
                 investments: {
                   include: {
-                    investmentType: true,
+                    investment_type: true,
                   },
                   where: {
-                    investmentType: {
-                      canSee: {
+                    investment_type: {
+                      can_see: {
                         has: user.role,
                       },
                     },
@@ -266,7 +268,7 @@ export async function downloadReport(data: {
 }) {
   const investments = await db.investment.findMany({
     where: {
-      createdAt: {
+      created_at: {
         gte: data.date.from,
         lte: data.date.to,
       },

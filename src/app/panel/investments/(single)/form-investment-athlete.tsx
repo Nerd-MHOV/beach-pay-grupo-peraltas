@@ -75,13 +75,13 @@ const FormInvestmentAthlete = ({
       const created = await createInvestmentAthlete({
         ...values,
         proof: file,
-        investmentGroupId: null,
-        ...(athlete ? { athleteId: athlete.id } : {}),
+        investment_group_id: null,
+        ...(athlete ? { athlete_id: athlete.id } : {}),
       });
       onCreateInvestment(created);
       form.reset({
         description: "",
-        investmentTypeId: "",
+        investment_type_id: "",
         value: 0,
         paid: null,
         proof: null,
@@ -115,7 +115,7 @@ const FormInvestmentAthlete = ({
         id: investment?.id || "",
         ...values,
         proof: file,
-        investmentGroupId: null,
+        investment_group_id: null,
       });
       toast({
         title: "Investimento Atualizado",
@@ -143,11 +143,11 @@ const FormInvestmentAthlete = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...(athlete ? { athleteId: athlete.id } : {}),
+      ...(athlete ? { athlete_id: athlete.id } : {}),
       ...(investment
         ? {
-            athleteId: investment.athleteId,
-            investmentTypeId: investment.investmentTypeId,
+            athlete_id: investment.athlete_id,
+            investment_type_id: investment.investment_type_id,
             value: investment.value,
             date: new Date(investment.date),
             description: investment.description,
@@ -168,7 +168,7 @@ const FormInvestmentAthlete = ({
       >
         <FormField
           control={form.control}
-          name="athleteId"
+          name="athlete_id"
           render={({ field }) => (
             <FormItem className={cn({})}>
               <FormLabel>Atleta*</FormLabel>
@@ -199,7 +199,7 @@ const FormInvestmentAthlete = ({
         />
         <FormField
           control={form.control}
-          name="investmentTypeId"
+          name="investment_type_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tipo de Investimento*</FormLabel>

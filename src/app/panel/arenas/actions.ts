@@ -10,6 +10,9 @@ export const getArenas = unstable_cache(
       orderBy: {
         name: "asc",
       },
+      include: {
+        address: true,
+      }
     });
   },
   ["arenas"],
@@ -33,7 +36,7 @@ export async function updateArena(
     where: { id: data.id },
     data: {
       ...data,
-      updatedAt: new Date(),
+      updated_at: new Date(),
     },
   });
   revalidateTag("update-arena");

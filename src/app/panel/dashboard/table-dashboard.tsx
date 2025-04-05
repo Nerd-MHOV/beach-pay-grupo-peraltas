@@ -46,7 +46,7 @@ const TableDashboard = ({
       })),
     ];
     row.original.subRows?.forEach((subRow) => {
-      const name = subRow.investmentType.name;
+      const name = subRow.investment_type.name;
       const value = (subRow.value || "").toLocaleString("pt-BR", {
         currency: "BRL",
         style: "currency",
@@ -76,7 +76,7 @@ const TableDashboard = ({
         .join(","),
     ];
     row.original.subRows?.forEach((subRow) => {
-      const name = subRow.investmentType.name;
+      const name = subRow.investment_type.name;
       const value = (subRow.value || "").toLocaleString("pt-BR", {
         currency: "BRL",
         style: "currency",
@@ -105,7 +105,7 @@ const TableDashboard = ({
         <TableBody>
           {row.subRows?.map((subRow) => (
             <TableRow key={subRow.id}>
-              <TableCell>{subRow.investmentType.name}</TableCell>
+              <TableCell>{subRow.investment_type.name}</TableCell>
               <TableCell>
                 {subRow.value.toLocaleString("pt-BR", {
                   currency: "BRL",

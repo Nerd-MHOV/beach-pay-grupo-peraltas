@@ -30,11 +30,11 @@ const DialogInvestmentAthlete = ({
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>
-          {investment?.updatedAt && (
+          {investment?.updated_at && (
             <div className="absolute top-0 right-8 p-4">
               <span className="text-sm text-gray-400">
                 Última atualização em{" "}
-                {format(investment.updatedAt, "dd/MM/yyyy HH:mm")}
+                {format(investment.updated_at, "dd/MM/yyyy HH:mm")}
               </span>
             </div>
           )}

@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import { Header } from "@/components/Header";
 import TableRoot from "./table-root";
 import LoadingData from "@/components/LoadingData";
-import { getGroupInvestments, getInvestments } from "./actions";
+import { getInvestmentGroups, getInvestments } from "./actions";
 
 const Page = async () => {
-  const groupInvestments = await getGroupInvestments();
+  const groupInvestments = await getInvestmentGroups();
   const investments = await getInvestments();
 
   return (
