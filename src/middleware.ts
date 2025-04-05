@@ -8,27 +8,17 @@ export default async function middleware(req: NextRequest) {
   const freeRoutes = ["/login"];
   const currentPath = req.nextUrl.pathname;
   const isProtectedRoute = !freeRoutes.includes(currentPath);
-  if (isProtectedRoute) {
-    // 2. check for valid session
-    const cookie = (await cookies()).get("session")?.value || "";
-    const session = await decrypt(cookie);
 
-    // 3. redirect unauthorized users
-    if (!session?.userId) {
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
-    }
+  // 2. check for valid session
+  const cookie = (await cookies()).get("session")?.value || "";
+  const session = await decrypt(cookie);
+  // 3. redirect unauthorized users
+  if (isProtectedRoute && !session?.userId) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
-  if (currentPath === "/login") {
-    // 2. check for valid session
-    const cookie = (await cookies()).get("session")?.value || "";
-    const session = await decrypt(cookie);
-
-    // 3. redirect unauthorized users
-    if (session?.userId) {
-      return NextResponse.redirect(new URL("/panel", req.nextUrl));
-    }
+  if (currentPath === "/login" && session?.userId) {
+    return NextResponse.redirect(new URL("/panel", req.nextUrl));
   }
-
   // 4. render route
   return NextResponse.next();
 }
