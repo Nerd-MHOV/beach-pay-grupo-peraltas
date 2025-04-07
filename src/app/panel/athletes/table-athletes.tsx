@@ -5,6 +5,7 @@ import { getAthletes } from "./actions";
 
 const TableAthletes = async () => {
   const athlete = await getAthletes();
+
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable

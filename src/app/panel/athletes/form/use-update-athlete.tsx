@@ -2,13 +2,19 @@
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateAthlete } from "../actions";
-import { Athlete } from "@prisma/client";
+import { Address, Athlete } from "@prisma/client";
 
 const useUpdateAthlete = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const updateAthleteFn = async (
-    data: Omit<Athlete, "createdAt" | "updatedAt">
+    data: Omit<
+      Athlete & {
+        address: Omit<Address, "created_at" | "updated_at">;
+        teacher_user_id?: string | null;
+      },
+      "created_at" | "updated_at" | "address_id"
+    >
   ) => {
     try {
       const updatedAthlete = await updateAthlete(data);

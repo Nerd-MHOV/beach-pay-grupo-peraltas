@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { z } from "zod";
 import {
   Form,
@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { User, UserRole } from "@prisma/client";
+import { $Enums, Athlete, User, UserRole } from "@prisma/client";
 import { createUser, updateUser } from "./actions";
 import {
   Select,
@@ -23,6 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
+import { getAthletesTeachers } from "../athletes/actions";
+import { Combobox } from "@/components/combobox";
+import DialogCreateAthlete from "../athletes/form/dialog-create-athlete";
+import { Plus } from "lucide-react";
 
 const getFormSchema = (isUpdate: boolean) =>
   z
@@ -50,7 +55,6 @@ const getFormSchema = (isUpdate: boolean) =>
       role: z.enum(["admin", "operational", "teacher"], {
         errorMap: () => ({ message: "Selecione um nível de acesso." }),
       }),
-      teacher_id: z.string().nullable(),
     })
     .superRefine(({ confirmPasswd, passwd }, ctx) => {
       if (confirmPasswd !== passwd) {
@@ -62,9 +66,29 @@ const getFormSchema = (isUpdate: boolean) =>
       }
     });
 
-const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
+const FormUser = ({
+  user,
+  permission,
+  onCreate,
+  athlete,
+}: {
+  user?: Omit<User, "passwd">;
+  permission?: $Enums.UserRole;
+  onCreate?: (user: User) => void;
+  athlete?: Athlete;
+}) => {
   const { toast } = useToast();
   const formSchema = getFormSchema(!!user);
+
+  const {
+    data: teacherAthlete,
+    isPending: isPendingTeacherAthlete,
+    refetch: refetchTeacherAthlete,
+  } = useQuery({
+    queryKey: ["teacher_athletes"],
+    queryFn: getAthletesTeachers,
+    initialData: [],
+  });
   const updateUserFn = async (
     data: Omit<User, "created_at" | "updated_at" | "password">
   ) => {
@@ -84,7 +108,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
   };
 
   const createUserFn = async (
-    data: Omit<User, "id" | "created_at" | "updated_at">
+    data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">
   ) => {
     try {
       const newUser = await createUser(data);
@@ -93,6 +117,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
         title: `Usuário ${newUser.user} Criado`,
         description: "O Usuário foi adicionado com sucesso.",
       });
+      onCreate?.(newUser);
     } catch {
       toast({
         title: "Algo de Errado",
@@ -108,7 +133,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
       passwd: values.passwd || "",
     };
     if (user) {
-      await updateUserFn({ ...data, id: user.id });
+      await updateUserFn({ ...data, id: user.id, teacher_id: user.teacher_id });
     } else {
       await createUserFn(data);
     }
@@ -117,7 +142,7 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: user || {
-      role: "operational",
+      role: permission || "operational",
     },
   });
 
@@ -206,14 +231,15 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
                   defaultValue={field.value}
                   value={field.value}
                   onValueChange={field.onChange}
-                  // disabled={true}
+                  disabled={!!permission}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o nível de acesso" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="user">Usuário</SelectItem>
+                    <SelectItem value="operational">Operacional</SelectItem>
+                    <SelectItem value="teacher">Professor</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -221,14 +247,10 @@ const FormUser = ({ user }: { user?: Omit<User, "passwd"> }) => {
             </FormItem>
           )}
         />
+
         <Input type="hidden" {...form.register("role")} />
         <div className="flex w-full justify-end mt-5">
-          <Button
-            isLoading={form.formState.isSubmitting}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
+          <Button isLoading={form.formState.isSubmitting}>
             {user ? "Atualizar" : "Adicionar"}
           </Button>
         </div>

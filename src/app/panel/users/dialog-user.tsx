@@ -8,14 +8,18 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import React from "react";
 import FormUser from "./form-user";
-import { User } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
 
 const DialogCreateUser = ({
+  permission,
   trigger,
   user,
+  onCreate,
 }: {
   trigger: React.JSX.Element;
   user?: Omit<User, "passwd">;
+  permission?: $Enums.UserRole;
+  onCreate?: (user: User) => void;
 }) => {
   return (
     <Dialog>
@@ -26,7 +30,7 @@ const DialogCreateUser = ({
           <DialogTitle>{user ? "Editar" : "Adicionar"} Usuario</DialogTitle>
           <DialogDescription>Informe os dados do usuário.</DialogDescription>
         </DialogHeader>
-        <FormUser user={user} />
+        <FormUser onCreate={onCreate} permission={permission} user={user} />
       </DialogContent>
     </Dialog>
   );

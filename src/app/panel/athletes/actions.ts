@@ -2,11 +2,8 @@
 
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { Athlete, UserRole } from "@prisma/client";
+import { Address, Athlete } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { cookies } from "next/headers";
-
-
 
 const cachedAthletes = unstable_cache(
   async (userId: string) => {
@@ -19,6 +16,7 @@ const cachedAthletes = unstable_cache(
         name: "asc",
       },
       include: {
+        address: true,
         investments: {
           where: {
             investment_type: {
@@ -63,6 +61,8 @@ export async function getAthleteById(id: string) {
   return await db.athlete.findFirst({
     where: { id },
     include: {
+      address: true,
+      user: true,
       investments: {
         where: {
           investment_type: {
@@ -112,21 +112,70 @@ export async function getAthleteById(id: string) {
 }
 
 export async function createAthlete(
-  data: Omit<Athlete, "id" | "created_at" | "updated_at">
+  data: Omit<Athlete & {
+    address: Omit<Address, "id" | "created_at" | "updated_at">,
+    teacher_user_id?: string | null,
+  }, "id" | "created_at" | "updated_at" | "address_id">
 ) {
-  const athlete = await db.athlete.create({ data });
+  const { teacher_user_id, ...rest } = data;
+  const athlete = await db.athlete.create({
+    data: {
+      ...rest,
+
+      ...(teacher_user_id && rest.is_teacher ? {
+        user: {
+          connect: {
+            id: teacher_user_id,
+          }
+        }
+      } : {}),
+
+      address: {
+        create: {
+          ...rest.address,
+        }
+      }
+    }
+  });
   revalidateTag("create-athlete");
   return athlete;
 }
 
 export async function updateAthlete(
-  data: Omit<Athlete, "created_at" | "updated_at">
+  data: Omit<Athlete & {
+    address: Omit<Address, "created_at" | "updated_at">,
+    teacher_user_id?: string | null,
+  }, "created_at" | "updated_at" | "address_id">
 ) {
+
+  const { teacher_user_id, ...rest } = data;
+
   const athlete = await db.athlete.update({
     where: { id: data.id },
     data: {
-      ...data,
+      ...rest,
       updated_at: new Date(),
+
+      ...(data.teacher_user_id && data.is_teacher ? {
+        user: {
+          connect: {
+            id: data.teacher_user_id,
+          }
+        }
+      } : {}),
+
+      address: {
+        upsert: {
+          where: { id: data.address.id },
+          update: {
+            ...data.address,
+            updated_at: new Date(),
+          },
+          create: {
+            ...data.address,
+          }
+        }
+      }
     },
   });
   revalidateTag("update-athlete");
@@ -139,4 +188,14 @@ export async function deleteAthlete(id: string) {
   });
   revalidateTag("delete-athlete");
   return athlete;
+}
+
+
+export async function getAthletesTeachers() {
+  const athletes = await db.athlete.findMany({
+    where: {
+      is_teacher: true,
+    },
+  })
+  return athletes;
 }

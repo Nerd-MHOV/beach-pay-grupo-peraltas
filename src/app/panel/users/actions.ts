@@ -21,6 +21,8 @@ export const getUserById = async (id: string) => {
   return user;
 }
 
+
+
 export const getUsers = unstable_cache(
   async () => {
     const users = await db.user.findMany({
@@ -44,7 +46,7 @@ export const getUsers = unstable_cache(
   }
 )
 
-export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at">) => {
+export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">) => {
   const { passwd, ...rest } = data;
 
   const user = await db.user.create({
@@ -71,3 +73,23 @@ export const updateUser = async (data: Omit<User, "created_at" | "updated_at">) 
   revalidateTag("update-user");
   return user;
 }
+
+export const getTeacherUsers = async (id?: string | null) => {
+  const users = await db.user.findMany({
+    where: {
+      OR: [
+        {
+          role: "teacher",
+          teacher_id: null,
+        },
+        {
+          id: id ?? undefined,
+        }
+      ]
+    },
+    omit: {
+      passwd: true,
+    },
+  });
+  return users;
+};

@@ -28,7 +28,7 @@ export function Combobox({
   above,
 }: {
   items: { label: string; value: string }[];
-  selected: string;
+  selected: string | null;
   onSelect: (value: string) => void;
   placeholder: string;
   disabled?: boolean;

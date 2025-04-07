@@ -11,15 +11,22 @@ import { Plus } from "lucide-react";
 import React from "react";
 import FormCreateAthlete from "./form-create-athlete";
 
-const DialogCreateAthlete = async () => {
+const DialogCreateAthlete = async ({
+  trigger,
+}: {
+  trigger?: React.JSX.Element;
+  // athlete?: Omit<Athlete, "passwd">;
+  // permission?: $Enums.UserRole;
+}) => {
+  const child = trigger || (
+    <Button size="sm">
+      <Plus />
+      Atleta
+    </Button>
+  );
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus />
-          Atleta
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{child}</DialogTrigger>
 
       <DialogContent className="max-h-screen overflow-auto">
         <DialogHeader>

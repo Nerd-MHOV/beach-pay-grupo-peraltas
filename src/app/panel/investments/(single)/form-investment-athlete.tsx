@@ -17,7 +17,7 @@ import { getInvestmentsType } from "../../investment-types/actions";
 import DialogCreateInvestmentType from "../../investment-types/dialog-create-investment-type";
 import { getAthletes } from "../../athletes/actions";
 import { Athlete, Investment } from "@prisma/client";
-import MoneyInput from "@/components/moneyInput";
+import MoneyInput from "@/components/money-Input";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Textarea } from "@/components/ui/textarea";

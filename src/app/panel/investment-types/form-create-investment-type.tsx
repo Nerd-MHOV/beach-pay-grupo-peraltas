@@ -103,7 +103,7 @@ const FormCreateInvestmentType = ({
         ? {
             name: investmentType.name,
             description: investmentType.description,
-            canSee: investmentType.canSee,
+            canSee: investmentType.can_see,
           }
         : {}),
     },

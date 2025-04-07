@@ -22,12 +22,13 @@ model User {
   passwd     String
   email      String
   role       UserRole @default(operational)
-  teacher_id String?
-  teacher    Athlete? @relation(fields: [teacher_id], references: [id])
+  teacher_id String?  @unique
+  teacher    Athlete? @relation(fields: [teacher_id, name], references: [id, name])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  @@unique([teacher_id, name])
   @@map("user")
 }
 
@@ -40,11 +41,12 @@ model Athlete {
   date_start    DateTime
   pix_key       String
   cpf           String?
-  address_id    String?
+  address_id    String?  @unique
   is_student    Boolean  @default(false)
   is_associated Boolean  @default(false)
   is_teacher    Boolean  @default(false)
 
+  user    User?
   address Address? @relation(fields: [address_id], references: [id])
 
   created_at               DateTime              @default(now())
@@ -52,11 +54,11 @@ model Athlete {
   investments              Investment[]
   investment_group_athlete InvestmentGroup[]     @relation("athlete_investment_group")
   investment_group_pair    InvestmentGroup[]     @relation("pair_investment_group")
-  user                     User[]
   teacher_availability     TeacherAvailability[]
   lesson                   Lesson[]
   lesson_attendance        LessonAttendance[]
 
+  @@unique([id, name])
   @@map("athlete")
 }
 
@@ -117,7 +119,7 @@ model InvestmentGroup {
 model Arena {
   id         String @id @default(cuid())
   name       String
-  address_id String
+  address_id String @unique
 
   address Address @relation(fields: [address_id], references: [id])
 
@@ -161,19 +163,18 @@ model Courts {
 
 model Address {
   id           String  @id @default(cuid())
-  street       String
-  number       String
+  street       String?
+  number       String?
   complement   String?
-  neighborhood String
-  city         String
-  state        String
-  zip_code     String
+  neighborhood String?
+  city_state   String
+  zip_code     String?
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
-  arena   Arena[]
-  athlete Athlete[]
+  arena   Arena?
+  athlete Athlete?
 
   @@map("address")
 }
