@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { forwardRef } from "react";
+import roleOptions from "./role-options";
 
 type Option = { label: string; value: string };
 
@@ -48,7 +49,13 @@ const MultiSelect = forwardRef<HTMLInputElement, ISelectProps>(
             >
               <div>
                 {selected.length
-                  ? selected.map((item) => item.label).join(", ")
+                  ? selected
+                      .map(
+                        (item) =>
+                          roleOptions.find((role) => role.value === item.value)
+                            ?.label
+                      )
+                      .join(", ")
                   : placeholder}
               </div>
               <ChevronDown className="h-4 w-4 opacity-50" />

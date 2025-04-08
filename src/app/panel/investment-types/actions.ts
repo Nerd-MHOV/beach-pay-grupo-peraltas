@@ -7,6 +7,7 @@ import { revalidateTag, unstable_cache } from "next/cache";
 export async function createInvestmentType(
   data: Omit<InvestmentType, "id" | "created_at" | "updated_at">
 ) {
+  console.log(data);
   const investmentType = await db.investmentType.create({ data });
   revalidateTag("create-investmentType");
   return investmentType;
@@ -25,6 +26,16 @@ export async function updateInvestmentType(
     },
   });
   revalidateTag("update-investmentType");
+  return investmentType;
+}
+
+export async function deleteInvestmentType(id: string) {
+  const investmentType = await db.investmentType.delete({
+    where: {
+      id,
+    },
+  });
+  revalidateTag("delete-investmentType");
   return investmentType;
 }
 

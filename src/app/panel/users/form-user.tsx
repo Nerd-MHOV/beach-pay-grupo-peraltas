@@ -28,6 +28,7 @@ import { getAthletesTeachers } from "../athletes/actions";
 import { Combobox } from "@/components/combobox";
 import DialogCreateAthlete from "../athletes/form/dialog-create-athlete";
 import { Plus } from "lucide-react";
+import roleOptions from "@/components/role-options";
 
 const getFormSchema = (isUpdate: boolean) =>
   z
@@ -237,9 +238,11 @@ const FormUser = ({
                     <SelectValue placeholder="Selecione o nível de acesso" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="operational">Operacional</SelectItem>
-                    <SelectItem value="teacher">Professor</SelectItem>
+                    {roleOptions.map((option) => (
+                      <SelectItem value={option.value} key={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>

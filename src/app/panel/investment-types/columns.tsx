@@ -13,6 +13,7 @@ import DialogCreateInvestmentType from "./dialog-create-investment-type";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
+import roleOptions from "@/components/role-options";
 
 export const columns: ExtendedColumnDef<InvestmentType, undefined>[] = [
   SelectComponentColumn as ExtendedColumnDef<InvestmentType, undefined>,
@@ -38,7 +39,15 @@ export const columns: ExtendedColumnDef<InvestmentType, undefined>[] = [
     label: "Permissões",
     cell: ({ row }) => {
       const can_see = row.original.can_see;
-      return <span>{can_see.join(", ")}</span>;
+      return (
+        <span>
+          {can_see
+            .map(
+              (item) => roleOptions.find((role) => role.value === item)?.label
+            )
+            .join(", ")}
+        </span>
+      );
     },
   },
   {

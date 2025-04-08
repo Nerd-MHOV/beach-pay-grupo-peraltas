@@ -17,12 +17,13 @@ import { z } from "zod";
 import { createInvestmentType, updateInvestmentType } from "./actions";
 import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/multiSelect";
-import { useQueryClient } from "@tanstack/react-query";
+import roleOptions from "@/components/role-options";
+import DialogDeleteInvestmentType from "./dialog-delete-investment-type";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
   description: z.string().min(5).max(255),
-  canSee: z.array(z.nativeEnum(UserRole)).min(1),
+  can_see: z.array(z.nativeEnum(UserRole)).min(1),
 });
 
 const FormCreateInvestmentType = ({
@@ -33,22 +34,22 @@ const FormCreateInvestmentType = ({
   onCreate?: (investmentType: InvestmentType) => void;
 }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const createInvestmentTypeFn = async (
-    data: Omit<InvestmentType, "id" | "createdAt" | "updatedAt">
+    data: Omit<InvestmentType, "id" | "created_at" | "updated_at">
   ) => {
     try {
       const created = await createInvestmentType(data);
-      queryClient.invalidateQueries({ queryKey: ["investmentTypes"] });
-      queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
-        ...old,
-        created,
-      ]);
+      // queryClient.invalidateQueries({ queryKey: ["investmentTypes"] });
+      // queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
+      //   ...old,
+      //   created,
+      // ]);
       form.reset({
         name: "",
         description: "",
-        canSee: ["admin"],
+        can_see: ["admin"],
       });
       toast({
         title: `${created.name} Adicionado`,
@@ -66,18 +67,20 @@ const FormCreateInvestmentType = ({
   };
 
   const updateInvestmentTypeFn = async (
-    data: Omit<InvestmentType, "createdAt" | "updatedAt">
+    data: Omit<InvestmentType, "created_at" | "updated_at">
   ) => {
     try {
       const updated = await updateInvestmentType(data);
-      queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
-        ...old.map((type) => (type.id === updated.id ? updated : type)),
-      ]);
+      // queryClient.setQueryData(["investmentTypes"], (old: InvestmentType[]) => [
+      //   ...old.map((type) => (type.id === updated.id ? updated : type)),
+      // ]);
       toast({
         title: `${updated.name} Atualizado`,
         description: "O tipo de investimento foi atualizado com sucesso.",
       });
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       toast({
         title: "Algo de Errado",
         description:
@@ -98,12 +101,12 @@ const FormCreateInvestmentType = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      canSee: ["admin"],
+      can_see: ["admin"],
       ...(investmentType
         ? {
             name: investmentType.name,
             description: investmentType.description,
-            canSee: investmentType.can_see,
+            can_see: investmentType.can_see,
           }
         : {}),
     },
@@ -149,7 +152,7 @@ const FormCreateInvestmentType = ({
 
         <FormField
           control={form.control}
-          name="canSee"
+          name="can_see"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Pode Ver*</FormLabel>
@@ -166,17 +169,17 @@ const FormCreateInvestmentType = ({
                   onSelect={(value) => {
                     field.onChange(value.map((val) => val.value));
                   }}
-                  options={Object.values(UserRole).map((role) => ({
-                    label: role,
-                    value: role,
-                  }))}
+                  options={[...roleOptions]}
                 />
               </FormControl>
             </FormItem>
           )}
         />
 
-        <div className="flex w-full justify-end mt-5">
+        <div className="flex w-full justify-end mt-5 gap-2">
+          {investmentType && (
+            <DialogDeleteInvestmentType investmentType={investmentType} />
+          )}
           <Button
             isLoading={form.formState.isSubmitting}
             onClick={(e) => {
