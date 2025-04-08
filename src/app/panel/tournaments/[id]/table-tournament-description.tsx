@@ -159,7 +159,7 @@ const TableTournamentDescription = ({
         columns={columns}
         pdfTitle={`Relatório do Torneio ${tournament.name}`}
         pdfDescription={`${tournament.arena.name} - ${
-          tournament.arena.address.city
+          tournament.arena.address.city_state
         } - ${format(tournament.date_from, "dd MMM", {
           locale: ptBR,
         })} à ${format(tournament.date_to, "dd MMM yyyy", { locale: ptBR })}`}

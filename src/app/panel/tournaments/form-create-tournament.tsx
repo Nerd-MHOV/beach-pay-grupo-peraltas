@@ -182,7 +182,7 @@ const FormCreateTournament = ({
                 <Combobox
                   placeholder="Selecione a Arena"
                   items={(arenas || []).map((arena) => ({
-                    label: arena.name + " - " + arena.address.city,
+                    label: arena.name + " - " + arena.address.city_state,
                     value: arena.id,
                   }))}
                   selected={field.value}

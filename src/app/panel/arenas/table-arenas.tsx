@@ -7,7 +7,14 @@ const TableArenas = async () => {
   const arenas = await getArenas();
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
-      <DataTable columns={columns} data={arenas} pdfTitle="Arenas" />
+      <DataTable
+        columns={columns}
+        data={arenas.map((arena) => ({
+          ...arena,
+          city: arena.address.city_state,
+        }))}
+        pdfTitle="Arenas"
+      />
     </div>
   );
 };

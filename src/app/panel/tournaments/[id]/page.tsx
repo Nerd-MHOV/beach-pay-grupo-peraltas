@@ -40,7 +40,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
         <Header.Title
-          subtitle={`${tournament.arena.name} - ${tournament.arena.address.city}`}
+          subtitle={`${tournament.arena.name} - ${tournament.arena.address.city_state}`}
         >
           <div>
             {tournament.name}

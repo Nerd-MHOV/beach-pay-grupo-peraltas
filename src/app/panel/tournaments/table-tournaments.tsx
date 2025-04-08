@@ -16,7 +16,7 @@ const TableTournaments = async () => {
         data={tournaments.map((tournament) => {
           return {
             ...tournament,
-            arena_name: `${tournament.arena.name} - ${tournament.arena.address.city}`,
+            arena_name: `${tournament.arena.name} - ${tournament.arena.address.city_state}`,
             date: `${format(tournament.date_from, "dd LLL", {
               locale: ptBR,
             })} - ${format(tournament.date_to, "dd LLL, y", {
