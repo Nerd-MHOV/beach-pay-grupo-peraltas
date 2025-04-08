@@ -5,7 +5,7 @@ import LoadingData from "@/components/LoadingData";
 import { getInvestmentGroups, getInvestments } from "./actions";
 
 const Page = async () => {
-  const groupInvestments = await getInvestmentGroups();
+  const investmentGroups = await getInvestmentGroups();
   const investments = await getInvestments();
 
   return (
@@ -16,7 +16,7 @@ const Page = async () => {
 
       <Suspense fallback={<LoadingData message="Buscando Investimentos" />}>
         <TableRoot
-          groupInvestments={groupInvestments}
+          investmentGroup={investmentGroups}
           investments={investments}
         />
       </Suspense>
