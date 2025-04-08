@@ -15,9 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/combobox";
-import { cities } from "./cities";
-import { Arena } from "@prisma/client";
+import { Address, Arena } from "@prisma/client";
+import AddressForm from "@/components/address-form";
 
 const formSchema = z.object({
   name: z
@@ -26,25 +25,41 @@ const formSchema = z.object({
     })
     .min(2)
     .max(255),
-  city: z
+  street: z.string().optional().nullable(),
+  number: z.string().optional().nullable(),
+  complement: z.string().optional().nullable(),
+  neighborhood: z.string().optional().nullable(),
+  city_state: z.string(),
+  zip_code: z
     .string({
-      message: "A cidade é obrigatória e deve ter no mínimo 2 caracteres.",
+      message: "O CEP é obrigatório e deve ter 8 dígitos.",
     })
-    .min(2)
-    .max(255),
+    .length(8, {
+      message: "O CEP deve ter 8 dígitos.",
+    })
+    .regex(/^\d+$/, {
+      message: "O CEP deve conter apenas números.",
+    })
+    .optional()
+    .nullable(),
 });
 
 const FormCreateArena = ({
   arena,
   onCreate = () => {},
 }: {
-  arena?: Arena;
+  arena?: Arena & { address: Address };
   onCreate?: (arena: Arena) => void;
 }) => {
   const { toast } = useToast();
 
   const updateArenaFn = async (
-    data: Omit<Arena, "createdAt" | "updatedAt">
+    data: Omit<
+      Arena & {
+        address: Omit<Address, "created_at" | "updated_at">;
+      },
+      "created_at" | "updated_at"
+    >
   ) => {
     try {
       const updatedArena = await updateArena(data);
@@ -62,7 +77,12 @@ const FormCreateArena = ({
   };
 
   const createArenaFn = async (
-    data: Omit<Arena, "id" | "createdAt" | "updatedAt">
+    data: Omit<
+      Arena & {
+        address: Omit<Address, "id" | "created_at" | "updated_at">;
+      },
+      "id" | "created_at" | "updated_at" | "address_id"
+    >
   ) => {
     try {
       const newArena = await createArena(data);
@@ -82,16 +102,45 @@ const FormCreateArena = ({
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const filteredValues = {
+      name: values.name,
+      address: {
+        street: values.street || null,
+        number: values.number || null,
+        complement: values.complement || null,
+        neighborhood: values.neighborhood || null,
+        city_state: values.city_state,
+        zip_code: values.zip_code || null,
+      },
+    };
     if (arena) {
-      await updateArenaFn({ ...values, id: arena.id });
+      await updateArenaFn({
+        ...filteredValues,
+        id: arena.id,
+        address_id: arena.address.id,
+        address: {
+          ...filteredValues.address,
+          id: arena.address.id,
+        },
+      });
     } else {
-      await createArenaFn(values);
+      await createArenaFn(filteredValues);
     }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: arena ? { name: arena.name, city: arena.city } : {},
+    defaultValues: arena
+      ? {
+          name: arena.name,
+          street: arena.address.street,
+          number: arena.address.number,
+          neighborhood: arena.address.neighborhood,
+          complement: arena.address.complement,
+          city_state: arena.address.city_state,
+          zip_code: arena.address.zip_code,
+        }
+      : {},
   });
 
   return (
@@ -110,33 +159,13 @@ const FormCreateArena = ({
             <FormItem>
               <FormLabel>Nome*</FormLabel>
               <FormControl>
-                <Input placeholder="Nome Completo" {...field} />
+                <Input placeholder="Nome da Arena" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="city"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cidade*</FormLabel>
-              <FormControl>
-                <Combobox
-                  placeholder="Selecione a cidade"
-                  items={cities.map((city) => ({
-                    label: city,
-                    value: city,
-                  }))}
-                  selected={field.value}
-                  onSelect={(value) => field.onChange(value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <AddressForm form={form} />
         <div className="flex w-full justify-end mt-5">
           <Button
             isLoading={form.formState.isSubmitting}
