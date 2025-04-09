@@ -1,4 +1,7 @@
+import Link from "next/link";
 import React from "react";
+import { buttonVariants } from "./ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const containerStyle: React.CSSProperties = {
   height: "100vh",
@@ -49,6 +52,16 @@ const NotPermission: React.FC = () => {
           Você não tem permissão para acessar esta página. Por favor, verifique
           suas credenciais ou entre em contato com o administrador.
         </p>
+        <Link
+          href={"/"}
+          className={buttonVariants({
+            variant: "link",
+            className: "w-full",
+          })}
+        >
+          <ArrowLeft />
+          voltar
+        </Link>
       </div>
     </div>
   );

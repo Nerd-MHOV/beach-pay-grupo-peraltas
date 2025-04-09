@@ -45,7 +45,7 @@ export async function submitLogin(
     };
 
   // 3. create  a session
-  await createSession(user.user.id);
+  await createSession(user.user);
   return {
     success: true,
     message: "Logado com sucesso",

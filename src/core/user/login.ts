@@ -12,6 +12,7 @@ const login = async (data: { user: string; passwd: string }) => {
     return {
       user: {
         id: dUser.id,
+        role: dUser.role,
       },
     };
   } catch {
