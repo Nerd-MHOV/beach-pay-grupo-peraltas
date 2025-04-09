@@ -3,6 +3,7 @@ import "server-only";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
+import { UserRole } from "@prisma/client";
 
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -59,7 +60,7 @@ export async function verifySession(redirectToLogin = true) {
 
   return {
     userId: session.userId as string,
-    userRole: session.userRole as string
+    userRole: session.userRole as UserRole
   };
 }
 

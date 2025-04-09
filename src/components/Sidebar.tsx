@@ -4,62 +4,16 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import {
-  Dumbbell,
-  HandCoins,
-  LayoutDashboard,
-  LogOut,
-  MapPinned,
-  Menu,
-  Receipt,
-  Trophy,
-  User,
-} from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { deleteSession } from "@/lib/session";
+import { UserRole } from "@prisma/client";
+import { SidebarLinks } from "@/lib/sidebarlinks";
 
-const links = [
-  {
-    link: "/panel",
-    icon: LayoutDashboard,
-    title: "Home",
-  },
-  {
-    link: "/panel/athletes",
-    icon: Dumbbell,
-    title: "Atletas",
-  },
-  {
-    link: "/panel/investments",
-    icon: HandCoins,
-    title: "Investimentos",
-  },
-  {
-    link: "/panel/investment-types",
-    icon: Receipt,
-    title: "Tipos",
-  },
-  {
-    link: "/panel/tournaments",
-    icon: Trophy,
-    title: "Torneios",
-  },
-  {
-    link: "/panel/arenas",
-    icon: MapPinned,
-    title: "Arenas",
-  },
-  {
-    link: "/panel/users",
-    icon: User,
-    title: "Usuarios",
-  },
-];
-
-const Sidebar = () => {
+const Sidebar = ({ role }: { role: UserRole }) => {
   const { activeSidebar, dispatch } = useSidebar();
   const pathname = usePathname();
-
+  const links = SidebarLinks.filter((link) => link.role.includes(role));
   const logout = async () => {
     await deleteSession();
   };
