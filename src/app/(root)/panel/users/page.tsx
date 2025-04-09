@@ -6,7 +6,6 @@ import LoadingData from "@/components/LoadingData";
 import TableUsers from "./table-users";
 import DialogCreateUser from "./dialog-user";
 import { verifySession } from "@/lib/session";
-import db from "@/core/infra/db";
 import { getUserById } from "./actions";
 import NotPermission from "@/components/notPermission";
 

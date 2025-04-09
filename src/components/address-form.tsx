@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Combobox } from "./combobox";
-import { cities } from "@/app/panel/arenas/cities";
+import { cities } from "@/app/(root)/panel/arenas/cities";
 
 // export interface AddressFormData {
 //   number: string | null;

@@ -5,7 +5,7 @@ import FormDownloadReport from "../form-download-report";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboard } from "../actions";
-import { SkeletonDefaultDashboard } from "../skeleton-default-dashboard";
+import { SkeletonDefaultDashboard } from "../../skeleton-default-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ChartPerTypeInvestment from "@/components/charts/chart-per-type-investment";

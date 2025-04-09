@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import DialogCreateArena from "../arenas/dialog-create-arena";
+import DialogCreateArena from "./dialog-create-arena";
 import TableArenas from "./table-arenas";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";

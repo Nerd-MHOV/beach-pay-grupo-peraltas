@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import React, { Suspense } from "react";
 import FormDownloadReport from "./form-download-report";
 import DefaultDashboard from "./default-dashboard";
-import { SkeletonDefaultDashboard } from "./skeleton-default-dashboard";
+import { SkeletonDefaultDashboard } from "../skeleton-default-dashboard";
 
 const Panel = () => {
   return (

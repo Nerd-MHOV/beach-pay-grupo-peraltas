@@ -7,7 +7,7 @@ import {
   saveProof,
   updateGroupInvestmentAthlete,
   updateInvestmentProof,
-} from "@/app/panel/investments/actions";
+} from "@/app/(root)/panel/investments/actions";
 import { getFileName } from "./get-file-name-group-investment";
 import { UseFormReturn } from "react-hook-form";
 
