@@ -5,18 +5,8 @@ import { Header } from "@/components/Header";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LoadingData from "@/components/LoadingData";
-import { verifySession } from "@/lib/session";
-import { getUserById } from "../users/actions";
-import NotPermission from "@/components/notPermission";
 
-const Page = async () => {
-  const session = await verifySession();
-  const user = await getUserById(session.userId);
-
-  if (!user || user.role !== "admin") {
-    return <NotPermission />;
-  }
-
+const Page = () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>

@@ -21,6 +21,14 @@ const AdminPages = [
 
 const OperationalPages = [
   "/panel",
+  "/panel/athletes",
+  "/panel/athletes/*",
+  "/panel/investments",
+  "/panel/investments/*",
+  "/panel/investments",
+  "/panel/tournaments",
+  "/panel/tournaments/*",
+  "/panel/arenas",
 ]
 
 const TeacherPages = [

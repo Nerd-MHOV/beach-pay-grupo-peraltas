@@ -5,7 +5,7 @@ export const SidebarLinks = [
     link: "/panel",
     icon: LayoutDashboard,
     title: "Home",
-    role: ["admin", "operational", "teacher"]
+    role: ["admin", "operational"]
   },
   {
     link: "/panel/athletes",
