@@ -8,7 +8,7 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import React from "react";
 import FormCreateArena from "./form-create-arena";
-import { Arena } from "@prisma/client";
+import { Address, Arena } from "@prisma/client";
 
 const DialogCreateArena = ({
   trigger,
@@ -16,7 +16,9 @@ const DialogCreateArena = ({
   onCreate,
 }: {
   trigger: React.JSX.Element;
-  arena?: Arena;
+  arena?: Arena & {
+    address: Address;
+  };
   onCreate?: (arena: Arena) => void;
 }) => {
   return (

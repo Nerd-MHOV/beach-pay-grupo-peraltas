@@ -1,4 +1,5 @@
 import {
+  Address,
   Arena,
   Investment,
   InvestmentGroup,
@@ -94,16 +95,7 @@ export const InvestmentsFn = (prismaClient: PrismaClient) => {
 
 type ArenaSeedType = Omit<Arena, "created_at" | "updated_at" | "address_id"> & {
   address: {
-    create: {
-      id: string;
-      city: string;
-      neighborhood: string;
-      street: string;
-      number: string;
-      complement: string;
-      state: string;
-      zip_code: string;
-    }
+    create: Omit<Address, "created_at" | "updated_at">;
   }
 }
 export const ArenaSeed: ArenaSeedType[] = [
@@ -113,12 +105,12 @@ export const ArenaSeed: ArenaSeedType[] = [
     address: {
       create: {
         id: "address1",
-        city: "São Carlos",
+        city_state: "São Carlos",
         neighborhood: "Centro",
         street: "Rua da Liberdade",
+
         number: "100",
         complement: "Apto 101",
-        state: "SP",
         zip_code: "13500-000",
       },
     },
@@ -129,12 +121,11 @@ export const ArenaSeed: ArenaSeedType[] = [
     address: {
       create: {
         id: "address2",
-        city: "Brotas",
+        city_state: "Brotas",
         neighborhood: "Zona Rural",
         street: "Estrada dos Bandeirantes",
         number: "200",
         complement: "Casa",
-        state: "SP",
         zip_code: "13510-000",
       },
     },
@@ -145,12 +136,11 @@ export const ArenaSeed: ArenaSeedType[] = [
     address: {
       create: {
         id: "address3",
-        city: "Dois Corregos",
+        city_state: "Dois Corregos",
         neighborhood: "Industrial",
         street: "Av. Principal",
         number: "300",
         complement: "Sala 5",
-        state: "SP",
         zip_code: "13520-000",
       },
     },

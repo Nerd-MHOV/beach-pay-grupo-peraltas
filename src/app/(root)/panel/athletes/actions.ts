@@ -49,12 +49,12 @@ const cachedAthletes = unstable_cache(
 
 export async function getAthletes() {
   const session = await verifySession();
-  return await cachedAthletes(session.userId);
+  return await cachedAthletes(session?.userId || "");
 }
 
 export async function getAthleteById(id: string) {
   const session = await verifySession();
-  const user = await db.user.findFirst({ where: { id: session.userId } });
+  const user = await db.user.findFirst({ where: { id: session?.userId } });
   if (!user) {
     return null;
   }

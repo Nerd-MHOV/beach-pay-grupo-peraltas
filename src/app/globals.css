@@ -63,13 +63,60 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* FULLCALENDAR */
+
+.fc-button {
+  background-color: 0 0% 100% !important; /* new background color */
+  color: white !important; /* text color */
+  padding: 3px 6px !important;
+}
+
+.fc-toolbar-title {
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  color: #222f3e !important; /* new text color */
+}
+
+.fc-scrollgrid {
+  border-radius: 10px !important;
+  outline-color: #dddddd36 !important;
+}
+
+.fc-scrollgrid,
+.fc-scrollgrid thead,
+.fc-scrollgrid th,
+.fc-scrollgrid td {
+  border: 3px solid #dddddd36 !important;
+  outline-color: 3px solid #dddddd36 !important;
+}
+
+.fc-header-toolbar .fc-next-button,
+.fc-header-toolbar .fc-prev-button {
+  font-size: 12px;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:has(.fc-button-group) {
+  order: -1;
+}
+
+@media (max-width: 710px) {
+  .fc-header-toolbar {
+    gap: 6px;
+    flex-direction: column;
+  }
+  .fc-header-toolbar .fc-toolbar-chunk:has(.fc-button-group) {
+    order: 2;
+  }
+  .fc-header-toolbar .fc-button {
+    padding: 3px 8px !important;
   }
 }

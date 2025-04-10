@@ -17,6 +17,8 @@ export const PublicPages = [
 const AdminPages = [
   "/panel",
   "/panel/*",
+  "/teacher",
+  "/teacher/*",
 ]
 
 const OperationalPages = [

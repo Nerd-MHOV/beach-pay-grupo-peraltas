@@ -41,7 +41,7 @@ export async function deleteInvestmentType(id: string) {
 
 export const getInvestmentsType = async () => {
   const session = await verifySession();
-  return cachedInvestmentType(session.userId);
+  return cachedInvestmentType(session?.userId || "");
 }
 
 export const cachedInvestmentType = unstable_cache(

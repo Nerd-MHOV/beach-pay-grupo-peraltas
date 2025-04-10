@@ -55,7 +55,7 @@ export const getTournaments = unstable_cache(
 
 export const getTournamentById = async (id: string) => {
   const session = await verifySession();
-  return await cachedTournamentById(session.userId, id);
+  return await cachedTournamentById(session?.userId || "", id);
 }
 
 const cachedTournamentById = unstable_cache(
