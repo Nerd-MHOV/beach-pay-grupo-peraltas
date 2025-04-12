@@ -108,6 +108,14 @@ body {
   order: -1;
 }
 
+.fc-more,
+.fc-more-link {
+  background-color: #98acc5 !important; /* Defina a cor de fundo desejada */
+  color: white !important; /* Defina a cor do texto */
+  border-radius: 4px; /* Opcional: arredonda os cantos */
+  padding: 2px 4px !important; /* Ajuste o padding, se necessário */
+}
+
 @media (max-width: 710px) {
   .fc-header-toolbar {
     gap: 6px;

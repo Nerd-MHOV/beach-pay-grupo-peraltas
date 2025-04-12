@@ -7,6 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import brLocale from "@fullcalendar/core/locales/pt-br";
 import { EventSourceInput } from "@fullcalendar/core/index.js";
+import SidebarMenuCalendar from "./sidebar-menu-calendar";
 
 const Page = () => {
   const events: EventSourceInput = [
@@ -18,6 +19,28 @@ const Page = () => {
       end: "2025-04-01", // a property! ** see important note below about 'end' **
     },
 
+    {
+      backgroundColor: "#D2d2d2", // a property!
+      borderColor: "#d2d2d2", // a property!
+      title: "DISP - Marcos", // a property!
+      start: "2025-04-01", // a property!
+      end: "2025-04-01", // a property! ** see important note below about 'end' **
+    },
+    {
+      backgroundColor: "#D2d2d2", // a property!
+      borderColor: "#d2d2d2", // a property!
+      title: "DISP - Marcos", // a property!
+      start: "2025-04-01", // a property!
+      end: "2025-04-01", // a property! ** see important note below about 'end' **
+    },
+
+    {
+      backgroundColor: "#D2d2d2", // a property!
+      borderColor: "#d2d2d2", // a property!
+      title: "DISP - Marcos", // a property!
+      start: "2025-04-01", // a property!
+      end: "2025-04-01", // a property! ** see important note below about 'end' **
+    },
     {
       backgroundColor: "#D2d2d2", // a property!
       borderColor: "#d2d2d2", // a property!
@@ -43,16 +66,12 @@ const Page = () => {
     },
   ];
   return (
-    <div className="px-2 sm:px-10 py-3 mb-20 relative grid grid-cols gap-5">
-      <div className="bg-background p-0 sm:p-7 rounded-xl shadow-lg sm:flex justify-start items-start gap-8 w-full overflow-hidden">
-        <div className="sm:w-3/12 -mt-8">
-          <div className="py-10 text-2xl font-extrabold px-2">
-            Calendario de Eventos
-          </div>
-        </div>
-        <div className="sm:w-9/12">
+    <div className="px-2 md:px-10 py-3 mb-20 relative grid grid-cols gap-5">
+      <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg flex md:flex-row flex-col justify-start items-start gap-8 w-full overflow-hidden">
+        <SidebarMenuCalendar />
+        <div className="md:w-9/12 w-full order-1 md:order-2">
           <FullCalendar
-            height={"85vh"}
+            height={"auto"}
             plugins={[
               dayGridPlugin,
               timeGridPlugin,
