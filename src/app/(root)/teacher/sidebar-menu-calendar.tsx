@@ -2,17 +2,27 @@ import React from "react";
 import { DropdownMenuCalendar } from "./dropdown-menu-calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const SidebarMenuCalendar = () => {
+const SidebarMenuCalendar = ({
+  setDialogOpen,
+  setFormSelected,
+}: {
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setFormSelected: React.Dispatch<React.SetStateAction<"availability" | "class" | "tournament">>;
+}) => {
   return (
-    <div className="md:w-3/12 w-full -mt-4 order-2 md:order-1">
-      <h1 className="py-4 text-2xl font-extrabold px-2 ">
+    <div className="md:w-3/12 w-full flex flex-row md:flex-col items-center sm:items-start justify-between md:justify-start ">
+      <h1 className="py-4 text-2xl font-extrabold px-2">
         Calendario de Eventos
       </h1>
 
       <div className="pl-4">
-        <DropdownMenuCalendar />
+        <DropdownMenuCalendar 
+          setDialogOpen={setDialogOpen}
+          setFormSelected={setFormSelected}
+        />
       </div>
 
+      <div className="hidden md:block">
       <div className="pt-10 px-3">
         <h2 className="text-sm underline underline-offset-2">
           Minhas Agendas:
@@ -77,6 +87,7 @@ const SidebarMenuCalendar = () => {
             </label>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

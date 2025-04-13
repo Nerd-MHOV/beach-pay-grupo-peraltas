@@ -105,7 +105,7 @@ body {
 }
 
 .fc-header-toolbar .fc-toolbar-chunk:has(.fc-button-group) {
-  order: -1;
+  order: 0;
 }
 
 .fc-more,
