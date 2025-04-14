@@ -22,7 +22,7 @@ import CpfInput from "@/components/cpf-input";
 import { Combobox } from "@/components/combobox";
 import DialogCreateUser from "../../users/dialog-user";
 import { Plus } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeacherUsers } from "../../users/actions";
 import CheckboxInput from "@/components/checkbox-input";
 import AddressForm from "@/components/address-form";
@@ -34,9 +34,10 @@ const FormCreateAthlete = ({
 }) => {
   const { createAthlete } = useCreateAthlete();
   const { updateAthlete } = useUpdateAthlete();
+  const query = useQueryClient();
 
   const { data: teacherUsers, refetch: refetchTeacherUsers } = useQuery({
-    queryKey: ["teacher_users"],
+    queryKey: ["users"],
     queryFn: async () => {
       const data = await getTeacherUsers(athlete?.user?.id);
       return data;
@@ -87,6 +88,9 @@ const FormCreateAthlete = ({
         form.reset();
       }
     }
+    query.invalidateQueries({
+      queryKey: ["athletes"],
+    });
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -18,7 +18,10 @@ const TeacherClientComponent = ({ events }: { events: EventSourceInput }) => {
   return (
     <>
       <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg flex md:flex-row flex-col justify-start items-start gap-8 w-full overflow-hidden">
-        <SidebarMenuCalendar setDialogOpen={setDialogOpen} setFormSelected={setFormSelected} />
+        <SidebarMenuCalendar
+          setDialogOpen={setDialogOpen}
+          setFormSelected={setFormSelected}
+        />
         <div className="md:w-9/12 w-full">
           <FullCalendar
             height={"auto"}
@@ -39,7 +42,7 @@ const TeacherClientComponent = ({ events }: { events: EventSourceInput }) => {
             }}
             eventChange={(eventChange) => {
               console.log(eventChange); // Log event changes.
-            } }
+            }}
             events={events} // Pass events to the calendar.
             locales={[brLocale]} // Set locales for the calendar.
             locale={"pt-br"} // Set locale to Portuguese.

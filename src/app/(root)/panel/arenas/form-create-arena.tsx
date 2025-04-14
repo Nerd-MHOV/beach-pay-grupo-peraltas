@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Address, Arena } from "@prisma/client";
 import AddressForm from "@/components/address-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   name: z
@@ -52,7 +53,7 @@ const FormCreateArena = ({
   onCreate?: (arena: Arena) => void;
 }) => {
   const { toast } = useToast();
-
+  const query = useQueryClient();
   const updateArenaFn = async (
     data: Omit<
       Arena & {
@@ -126,6 +127,9 @@ const FormCreateArena = ({
     } else {
       await createArenaFn(filteredValues);
     }
+    query.invalidateQueries({
+      queryKey: ["arenas"],
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({

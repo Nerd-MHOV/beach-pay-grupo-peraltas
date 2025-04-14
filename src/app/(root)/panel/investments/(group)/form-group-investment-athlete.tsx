@@ -27,11 +27,11 @@ import useFormGroupInvestmentAthlete from "./use-form-group-investment-athlete";
 import { getAthletes } from "../../athletes/actions";
 import { getTournaments } from "../../tournaments/actions";
 import { useQuery } from "@tanstack/react-query";
-import LoadingData from "@/components/LoadingData";
-import ProofFormField from "./fields/proof";
 import { createInvestmentAthlete, updateInvestmentAthlete } from "../actions";
 import { getInvestmentsType } from "../../investment-types/actions";
 import DialogDeleteInvestmentGroup from "./dialog-delete-investment-group";
+import LoadingData from "@/components/LoadingData";
+import ProofFormField from "./fields/proof";
 
 const FormGroupInvestmentAthlete = ({
   athlete,
@@ -50,7 +50,7 @@ const FormGroupInvestmentAthlete = ({
     refetch: refetchAthletes,
   } = useQuery({
     queryKey: ["athletes"],
-    queryFn: getAthletes,
+    queryFn: async () => await getAthletes(),
   });
 
   const {

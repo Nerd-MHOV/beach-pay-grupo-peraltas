@@ -1,10 +1,13 @@
 import { Toggle } from "@/components/ui/toggle";
 import React from "react";
+import FormAvailabilityCalendar from "./availability/form-availability-calendar";
 
 const FormEventCalendar = ({
   formSelected,
   setFormSelected,
+  teacher_id,
 }: {
+  teacher_id?: string;
   formSelected: "availability" | "class" | "tournament";
   setFormSelected: React.Dispatch<
     React.SetStateAction<"availability" | "class" | "tournament">
@@ -35,7 +38,11 @@ const FormEventCalendar = ({
 
       <div className="flex flex-col mt-4">
         {formSelected === "availability" && (
-          <div>Formulário de Disponibilidade</div>
+          <FormAvailabilityCalendar
+            availability={{
+              teacher_id: teacher_id,
+            }}
+          />
         )}
         {formSelected === "class" && <div>Formulário de Aula</div>}
         {formSelected === "tournament" && <div>Formulário de Torneio</div>}

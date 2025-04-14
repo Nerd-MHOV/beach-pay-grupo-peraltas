@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React from "react";
 import { z } from "zod";
 import {
   Form,
@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { $Enums, Athlete, User, UserRole } from "@prisma/client";
+import { $Enums, Athlete, User } from "@prisma/client";
 import { createUser, updateUser } from "./actions";
 import {
   Select,
@@ -23,12 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { getAthletesTeachers } from "../athletes/actions";
-import { Combobox } from "@/components/combobox";
-import DialogCreateAthlete from "../athletes/form/dialog-create-athlete";
-import { Plus } from "lucide-react";
 import roleOptions from "@/components/role-options";
+import { useQueryClient } from "@tanstack/react-query";
 
 const getFormSchema = (isUpdate: boolean) =>
   z
@@ -71,25 +67,14 @@ const FormUser = ({
   user,
   permission,
   onCreate,
-  athlete,
 }: {
   user?: Omit<User, "passwd">;
   permission?: $Enums.UserRole;
   onCreate?: (user: User) => void;
-  athlete?: Athlete;
 }) => {
   const { toast } = useToast();
   const formSchema = getFormSchema(!!user);
-
-  const {
-    data: teacherAthlete,
-    isPending: isPendingTeacherAthlete,
-    refetch: refetchTeacherAthlete,
-  } = useQuery({
-    queryKey: ["teacher_athletes"],
-    queryFn: getAthletesTeachers,
-    initialData: [],
-  });
+  const query = useQueryClient();
   const updateUserFn = async (
     data: Omit<User, "created_at" | "updated_at" | "password">
   ) => {
@@ -138,6 +123,9 @@ const FormUser = ({
     } else {
       await createUserFn(data);
     }
+    query.invalidateQueries({
+      queryKey: ["users"],
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({

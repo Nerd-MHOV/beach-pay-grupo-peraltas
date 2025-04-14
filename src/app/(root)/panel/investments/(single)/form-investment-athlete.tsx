@@ -54,7 +54,7 @@ const FormInvestmentAthlete = ({
 
   const { data: athletes } = useQuery({
     queryKey: ["athletes"],
-    queryFn: getAthletes,
+    queryFn: async () => await getAthletes(),
   });
 
   const { data: investmentTypes, refetch: refetchInvestmentTypes } = useQuery({

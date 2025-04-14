@@ -6,7 +6,9 @@ import { Address, Athlete } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 const cachedAthletes = unstable_cache(
-  async (userId: string) => {
+  async (userId: string, props?: {
+    teacher?: boolean;
+  }) => {
     const user = await db.user.findFirst({ where: { id: userId } });
     if (!user) {
       return [];
@@ -15,7 +17,15 @@ const cachedAthletes = unstable_cache(
       orderBy: {
         name: "asc",
       },
+      where: {
+        ...(props?.teacher ? {
+          is_teacher: true,
+        } : {}),
+      },
       include: {
+        ...(props?.teacher ? {
+          user: { omit: { passwd: true } }
+        } : {}),
         address: true,
         investments: {
           where: {
@@ -47,9 +57,11 @@ const cachedAthletes = unstable_cache(
   }
 );
 
-export async function getAthletes() {
+export async function getAthletes(props?: {
+  teacher?: boolean;
+}) {
   const session = await verifySession();
-  return await cachedAthletes(session?.userId || "");
+  return await cachedAthletes(session?.userId || "", props);
 }
 
 export async function getAthleteById(id: string) {
