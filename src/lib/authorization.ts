@@ -17,8 +17,8 @@ export const PublicPages = [
 const AdminPages = [
   "/panel",
   "/panel/*",
-  "/teacher",
-  "/teacher/*",
+  "/calendar",
+  "/calendar/*",
 ]
 
 const OperationalPages = [
@@ -34,8 +34,8 @@ const OperationalPages = [
 ]
 
 const TeacherPages = [
-  "/teacher",
-  "/teacher/*",
+  "/calendar",
+  "/calendar/*",
 ]
 
 

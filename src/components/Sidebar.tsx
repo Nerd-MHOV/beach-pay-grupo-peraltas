@@ -28,7 +28,7 @@ const Sidebar = ({ role }: { role: UserRole }) => {
     >
       <div className="w-full relative h-screen">
         <ul className="absolute w-full h-full flex flex-col gap-2 ">
-          <li className="list-none mb-12 pointer-events-none mt-1 relative">
+          <li className="list-none mb-10 pointer-events-none mt-1 relative">
             <Link
               href="/panel"
               className="flex whitespace-nowrap items-center  "

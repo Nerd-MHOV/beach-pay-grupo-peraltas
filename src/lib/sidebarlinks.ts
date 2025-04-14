@@ -1,4 +1,4 @@
-import { Dumbbell, HandCoins, LayoutDashboard, MapPinned, Receipt, Trophy, User } from "lucide-react";
+import { CalendarDays, Dumbbell, HandCoins, LayoutDashboard, MapPinned, Receipt, Trophy, User } from "lucide-react";
 
 export const SidebarLinks = [
   {
@@ -6,6 +6,12 @@ export const SidebarLinks = [
     icon: LayoutDashboard,
     title: "Home",
     role: ["admin", "operational"]
+  },
+  {
+    link: "/calendar",
+    icon: CalendarDays,
+    title: "Agenda",
+    role: ["admin", "operational", "teacher"]
   },
   {
     link: "/panel/athletes",

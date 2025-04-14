@@ -47,7 +47,7 @@ export async function createSession(user: {
     expires
   });
   (await cookies()).set(cookie.name, session, { ...cookie.options, expires });
-  redirect("/panel", RedirectType.push);
+  redirect("/", RedirectType.push);
 }
 
 export async function verifySession(redirectToLogin = true) {
