@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import React from "react";
-import FormCreateAthlete from "./form-create-athlete";
+import FormAthlete from "./form-athlete";
 
 const DialogCreateAthlete = async ({
   trigger,
@@ -33,7 +33,7 @@ const DialogCreateAthlete = async ({
           <DialogTitle>Adicionar Atleta</DialogTitle>
           <DialogDescription>Informe os dados do atleta.</DialogDescription>
         </DialogHeader>
-        <FormCreateAthlete />
+        <FormAthlete />
       </DialogContent>
     </Dialog>
   );

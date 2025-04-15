@@ -2,6 +2,7 @@ import { Toggle } from "@/components/ui/toggle";
 import React from "react";
 import FormAvailabilityCalendar from "./availability/form-availability-calendar";
 import { FormFieldProps, SetFormFieldProps } from "./calendar-client-component";
+import FormLessonCalendar from "./lesson/form-lesson-calendar";
 
 const FormEventCalendar = ({
   formFields,
@@ -15,6 +16,7 @@ const FormEventCalendar = ({
       <div className="flex flex-row gap-2">
         <Toggle
           pressed={formFields.formSelected === "availability"}
+          disabled={formFields.id !== undefined}
           onClick={() =>
             setFormFields((prev) => ({
               ...prev,
@@ -26,6 +28,7 @@ const FormEventCalendar = ({
         </Toggle>
         <Toggle
           pressed={formFields.formSelected === "class"}
+          disabled={formFields.id !== undefined}
           onClick={() =>
             setFormFields((prev) => ({
               ...prev,
@@ -37,6 +40,7 @@ const FormEventCalendar = ({
         </Toggle>
         <Toggle
           pressed={formFields.formSelected === "tournament"}
+          disabled={formFields.id !== undefined}
           onClick={() =>
             setFormFields((prev) => ({
               ...prev,
@@ -58,7 +62,18 @@ const FormEventCalendar = ({
             }}
           />
         )}
-        {formFields.formSelected === "class" && <div>Formulário de Aula</div>}
+        {formFields.formSelected === "class" && (
+          <FormLessonCalendar
+            lesson={{
+              teacher_id: formFields.teacher_id,
+              id: formFields.id,
+              date: formFields.selectedDate,
+              court_id: formFields.court_id,
+              attendance: formFields.attendance_ids,
+              subject: formFields.subject,
+            }}
+          />
+        )}
         {formFields.formSelected === "tournament" && (
           <div>Formulário de Torneio</div>
         )}

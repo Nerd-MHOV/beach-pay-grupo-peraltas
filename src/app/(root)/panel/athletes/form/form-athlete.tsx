@@ -27,7 +27,7 @@ import { getTeacherUsers } from "../../users/actions";
 import CheckboxInput from "@/components/checkbox-input";
 import AddressForm from "@/components/address-form";
 
-const FormCreateAthlete = ({
+const FormAthlete = ({
   athlete,
 }: {
   athlete?: Athlete & { user?: User | null; address?: Address | null };
@@ -235,4 +235,4 @@ const FormCreateAthlete = ({
   );
 };
 
-export default FormCreateAthlete;
+export default FormAthlete;

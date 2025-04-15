@@ -21,7 +21,7 @@ const DialogEventCalendar = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className="max-h-[95vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Eventos</DialogTitle>
         </DialogHeader>

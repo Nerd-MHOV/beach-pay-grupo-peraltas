@@ -6,18 +6,26 @@ import { revalidateTag, unstable_cache } from "next/cache";
 
 
 export const getAvailability = unstable_cache(
-  async () => {
+  async (props?: {
+    aula?: { start: Date; end: Date }
+  }) => {
     const availability = await db.teacherAvailability.findMany({
+      where: props?.aula
+        ? {
+          time_start: { lte: props.aula.start },
+          time_end: { gte: props.aula.end },
+        }
+        : {},
       include: {
         lesson: true,
         teacher: {
           include: {
             user: {
-              omit: { passwd: true }
-            }
-          }
+              omit: { passwd: true },
+            },
+          },
         },
-      }
+      },
     });
     return availability;
   },
@@ -28,7 +36,7 @@ export const getAvailability = unstable_cache(
       "update-availability",
       "delete-availability",
     ],
-  },
+  }
 )
 
 export const getAvailabilityById = unstable_cache(
@@ -74,6 +82,8 @@ export async function updateAvailability(
       updated_at: new Date(),
     }
   })
+
+  revalidateTag("create-courts");
   revalidateTag("update-availability");
   return availability;
 }

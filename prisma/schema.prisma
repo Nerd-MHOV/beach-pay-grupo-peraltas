@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "generated"
+  // output   = "generated"
 }
 
 datasource db {
@@ -152,12 +152,12 @@ model Tournament {
 model Courts {
   id        String  @id @default(cuid())
   name      String
-  number    Int
+  number    Int     @unique
   is_single Boolean @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  lesson    Lesson[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  lesson     Lesson[]
 
   @@map("courts")
 }

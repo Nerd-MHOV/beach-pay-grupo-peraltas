@@ -3,6 +3,7 @@ import { UserSeedFn } from "./seeds/users.seed";
 import { AthleteSeedFn } from "./seeds/athletes.seed";
 import { InvestmentTypeSeedFn } from "./seeds/investment-type.seed";
 import { investmentsSeedFN } from "./seeds/investments.seed";
+import { CourtsSeedFn } from "./seeds/courts.seed";
 const prismaClient = new PrismaClient();
 
 async function main() {
@@ -14,6 +15,7 @@ async function main() {
     AthleteSeedFn(prismaClient),
     InvestmentTypeSeedFn(prismaClient),
     investmentsSeedFN(prismaClient),
+    CourtsSeedFn(prismaClient),
   ]);
 }
 

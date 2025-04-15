@@ -3,11 +3,13 @@
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
 import { Address, Athlete } from "@prisma/client";
+import { randomUUID } from "crypto";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 const cachedAthletes = unstable_cache(
   async (userId: string, props?: {
     teacher?: boolean;
+    student?: boolean;
   }) => {
     const user = await db.user.findFirst({ where: { id: userId } });
     if (!user) {
@@ -21,6 +23,9 @@ const cachedAthletes = unstable_cache(
         ...(props?.teacher ? {
           is_teacher: true,
         } : {}),
+        ...(props?.student ? {
+          is_student: true,
+        } : {})
       },
       include: {
         ...(props?.teacher ? {
@@ -59,6 +64,7 @@ const cachedAthletes = unstable_cache(
 
 export async function getAthletes(props?: {
   teacher?: boolean;
+  student?: boolean;
 }) {
   const session = await verifySession();
   return await cachedAthletes(session?.userId || "", props);
@@ -159,9 +165,7 @@ export async function updateAthlete(
     teacher_user_id?: string | null,
   }, "created_at" | "updated_at" | "address_id">
 ) {
-
   const { teacher_user_id, ...rest } = data;
-
   const athlete = await db.athlete.update({
     where: { id: data.id },
     data: {
@@ -189,7 +193,7 @@ export async function updateAthlete(
         }
       }
     },
-  });
+  })
   revalidateTag("update-athlete");
   return athlete;
 }

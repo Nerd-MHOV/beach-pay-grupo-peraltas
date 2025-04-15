@@ -68,16 +68,23 @@ export const formSchema = z
     complement: z.string().optional().nullable(),
     neighborhood: z.string().optional().nullable(),
     city_state: z.string(),
-    zip_code: z
-      .string({
+    zip_code: z.preprocess(
+      (val) =>
+        typeof val === "string"
+          ? val.replace(/-/g, "")
+          : val,
+      z.string({
         message: "O CEP é obrigatório e deve ter 8 dígitos.",
       })
-      .length(8, {
-        message: "O CEP deve ter 8 dígitos.",
-      })
-      .regex(/^\d+$/, {
-        message: "O CEP deve conter apenas números.",
-      }).optional().nullable(),
+        .regex(/^\d+$/, {
+          message: "O CEP deve conter apenas números.",
+        })
+        .length(8, {
+          message: "O CEP deve ter 8 dígitos.",
+        })
+    )
+      .optional()
+      .nullable(),
   })
   .superRefine((data, ctx) => {
     if (data.is_teacher && !data.teacher_user_id) {

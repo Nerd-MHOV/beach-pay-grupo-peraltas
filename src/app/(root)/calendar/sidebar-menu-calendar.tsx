@@ -10,15 +10,15 @@ import {
 export const noMatchFilterEventsOthers = [
   {
     name: "Minha Disponibilidade",
-    color: "#D2d2d2", // bg-[#D2d2d2]
+    color: "#D2d2d2", // data-[state=checked]:bg-[#D2d2d2] data-[state=checked]:border-[#D2d2d2]
   },
   {
     name: "Torneios",
-    color: "#f9c2c2", // bg-[#f9c2c2]
+    color: "#f9c2c2", // data-[state=checked]:bg-[#D2d2d2] data-[state=checked]:border-[#D2d2d2]
   },
   {
     name: "Aulas",
-    color: "#7289d4", // bg-[#7289d4]
+    color: "#7289d4", // data-[state=checked]:bg-[#7289d4] data-[state=checked]:border-[#7289d4]
   },
 ];
 

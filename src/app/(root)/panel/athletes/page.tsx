@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import DialogCreateAthlete from "./form/dialog-create-athlete";
+import DialogCreateAthlete from "./form/dialog-athlete";
 import TableAthletes from "./table-athletes";
 import { Header } from "@/components/Header";
 import LoadingData from "@/components/LoadingData";

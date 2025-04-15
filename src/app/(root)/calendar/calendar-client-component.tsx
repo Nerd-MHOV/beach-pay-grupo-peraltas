@@ -10,6 +10,7 @@ import SidebarMenuCalendar from "./sidebar-menu-calendar";
 import DialogEventCalendar from "./dialog-event-calendar";
 import { EventInput } from "@fullcalendar/core/index.js";
 import { Athlete, User } from "@prisma/client";
+import { FilterdEvents } from "./functions-filter-events";
 
 export type FormFieldProps = {
   formSelected: "availability" | "class" | "tournament";
@@ -19,6 +20,9 @@ export type FormFieldProps = {
   };
   id?: string;
   teacher_id?: string;
+  court_id?: string;
+  attendance_ids?: string[];
+  subject?: string;
 };
 export type SetFormFieldProps = React.Dispatch<
   React.SetStateAction<FormFieldProps>
@@ -49,7 +53,7 @@ const CalendarClientComponent = ({
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [formFields, setFormFields] = React.useState<FormFieldProps>({
-    formSelected: "availability",
+    formSelected: "class",
   });
   const [filterEvents, setFilterEvents] = React.useState<
     {
@@ -68,59 +72,6 @@ const CalendarClientComponent = ({
       };
     }, {}),
   });
-
-  const FilterdEvents = (
-    currentUserId: string,
-    events: EventInput[],
-    filters: FilterEventsProps
-  ) => {
-    const currentTeacherId = teachers.find(
-      (teacher) => teacher.user.id === currentUserId
-    )?.id;
-
-    const myAvailability = filters["Minha Disponibilidade"]
-      ? events.filter(
-          (event) =>
-            event.extendedProps?.formSelected === "availability" &&
-            event.extendedProps?.teacher_id === currentTeacherId
-        )
-      : [];
-
-    const classes = filters["Aulas"]
-      ? events.filter((event) => event.extendedProps?.formSelected === "class")
-      : [];
-
-    const tournaments = filters["Torneio"]
-      ? events.filter(
-          (event) => event.extendedProps?.formSelected === "tournament"
-        )
-      : [];
-
-    const teachersAvailability: EventInput[] = [];
-    const teachersAvailabilityFilters = Object.entries(filters).filter(
-      ([key, value]) => key.startsWith("Disp.") && value
-    );
-
-    teachersAvailabilityFilters.forEach(([key]) => {
-      const teacherName = key.replace("Disp. ", "");
-      const teacher = teachers.find((teacher) => teacher.name === teacherName);
-      if (teacher) {
-        const teacherEvents = events.filter(
-          (event) =>
-            event.extendedProps?.formSelected === "availability" &&
-            event.extendedProps?.teacher_id === teacher.id
-        );
-        teachersAvailability.push(...teacherEvents);
-      }
-    });
-
-    return [
-      ...myAvailability,
-      ...classes,
-      ...tournaments,
-      ...teachersAvailability,
-    ];
-  };
   return (
     <>
       <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg flex md:flex-row flex-col justify-start items-start gap-8 w-full overflow-hidden">
@@ -150,20 +101,35 @@ const CalendarClientComponent = ({
                 formSelected: formFields.formSelected,
                 selectedDate: {
                   from: selectedDate.start,
-                  to: new Date(
-                    selectedDate.end.setDate(selectedDate.end.getDate() - 1)
-                  ),
+                  to: selectedDate.end,
                 },
               });
             }}
             eventChange={(eventChange) => {
-              console.log(eventChange);
+              setDialogOpen(true);
+              setFormFields({
+                ...(eventChange.event.extendedProps as FormFieldProps),
+                selectedDate: {
+                  from: (eventChange.event.start ||
+                    eventChange.event.extendedProps.selectDate.start ||
+                    new Date()) as Date,
+                  to: (eventChange.event.end ||
+                    eventChange.event.extendedProps.selectDate.end ||
+                    new Date()) as Date,
+                },
+              });
+              eventChange.revert();
             }}
             eventClick={(eventChange) => {
               setDialogOpen(true);
               setFormFields(eventChange.event.extendedProps as FormFieldProps);
             }}
-            events={FilterdEvents(currentUserId, events, filterEvents)}
+            events={FilterdEvents(
+              currentUserId,
+              events,
+              filterEvents,
+              teachers
+            )}
             locales={[brLocale]}
             locale={"pt-br"}
             initialView="dayGridMonth"

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -47,7 +47,7 @@ const FormAvailabilityCalendar = ({
   };
 }) => {
   const { toast } = useToast();
-
+  const query = useQueryClient();
   const { data: teachers, isPending: isPendingTeachers } = useQuery({
     queryKey: ["athletes"],
     queryFn: async () => {
@@ -112,6 +112,9 @@ const FormAvailabilityCalendar = ({
     } else {
       createAvailabilityFn(refined);
     }
+    query.invalidateQueries({
+      queryKey: ["availability"],
+    });
   };
 
   const form = useForm<z.infer<typeof schema>>({
