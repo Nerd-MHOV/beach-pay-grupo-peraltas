@@ -27,7 +27,7 @@ export const FilterdEvents = (
     ? events.filter((event) => event.extendedProps?.formSelected === "class")
     : [];
 
-  const tournaments = filters["Torneio"]
+  const tournaments = filters["Torneios"]
     ? events.filter(
       (event) => event.extendedProps?.formSelected === "tournament"
     )

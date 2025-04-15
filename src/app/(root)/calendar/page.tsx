@@ -8,6 +8,7 @@ import { getAthletes } from "../panel/athletes/actions";
 import { Athlete, User } from "@prisma/client";
 import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
+import { getTournaments } from "../panel/tournaments/actions";
 
 const Page = async () => {
   const me = await verifySession(false);
@@ -17,29 +18,30 @@ const Page = async () => {
   })[];
   const TeacherAvailability = await getAvailability();
   const lessons = await getLessons();
+  const tournaments = await getTournaments();
   const events: (EventInput & {
     extendedProps: FormFieldProps;
-  })[] = TeacherAvailability.map((availability) => ({
-    backgroundColor:
-      availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
-    borderColor:
-      availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
-    title: `DISP - ${availability.teacher.name}`,
-    start: availability.time_start,
-    end: availability.time_end,
-    id: availability.id,
-    extendedProps: {
+  })[] = [
+    ...TeacherAvailability.map((availability) => ({
+      backgroundColor:
+        availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
+      borderColor:
+        availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
+      title: `DISP - ${availability.teacher.name}`,
+      start: availability.time_start,
+      end: availability.time_end,
       id: availability.id,
-      formSelected: "availability" as const,
-      selectedDate: {
-        from: new Date(availability.time_start),
-        to: new Date(availability.time_end),
+      extendedProps: {
+        id: availability.id,
+        formSelected: "availability" as const,
+        selectedDate: {
+          from: new Date(availability.time_start),
+          to: new Date(availability.time_end),
+        },
+        teacher_id: availability.teacher_id,
       },
-      teacher_id: availability.teacher_id,
-    },
-  }));
+    })),
 
-  events.push(
     ...lessons.map((lesson) => ({
       backgroundColor: "#7289d4",
       borderColor: "#7289d4",
@@ -63,8 +65,29 @@ const Page = async () => {
         court_id: lesson.courts_id,
         subject: lesson.subject || undefined,
       },
-    }))
-  );
+    })),
+
+    ...tournaments.map((tournament) => ({
+      backgroundColor: "#f9c2c2",
+      borderColor: "#f9c2c2",
+      title: `TORN - ${tournament.name}`,
+      start: tournament.date_from,
+      end: tournament.date_to,
+      id: tournament.id,
+      extendedProps: {
+        id: tournament.id,
+        formSelected: "tournament" as const,
+        selectedDate: {
+          from: new Date(tournament.date_from),
+          to: new Date(tournament.date_to),
+        },
+        description: tournament.description ?? undefined,
+        arena_id: tournament.arena_id,
+        tournament_name: tournament.name,
+      },
+    })),
+  ];
+
   return (
     <div className="px-2 md:px-10 py-3 mb-20 relative grid grid-cols gap-5">
       <CalendarClientComponent

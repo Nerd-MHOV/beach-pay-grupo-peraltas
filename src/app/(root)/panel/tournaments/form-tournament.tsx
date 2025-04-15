@@ -60,11 +60,11 @@ const formSchema = z.object({
     .transform((v) => v || ""),
 });
 
-const FormCreateTournament = ({
+const FormTournament = ({
   tournament,
   onCreateTournament = () => {},
 }: {
-  tournament?: Tournament;
+  tournament?: Partial<Tournament>;
   onCreateTournament?: (tournament: Tournament) => void;
 }) => {
   const { toast } = useToast();
@@ -118,7 +118,7 @@ const FormCreateTournament = ({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { date, ...rest } = values;
-    if (tournament) {
+    if (tournament?.id) {
       updateTournamentFn({
         ...rest,
         date_from: date.from,
@@ -166,7 +166,7 @@ const FormCreateTournament = ({
             <FormItem>
               <FormLabel>Nome*</FormLabel>
               <FormControl>
-                <Input placeholder="Nome Completo" {...field} />
+                <Input placeholder="Nome" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -291,4 +291,4 @@ const FormCreateTournament = ({
   );
 };
 
-export default FormCreateTournament;
+export default FormTournament;

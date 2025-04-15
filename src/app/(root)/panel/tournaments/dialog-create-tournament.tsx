@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import React from "react";
-import FormCreateTournament from "./form-create-tournament";
+import FormTournament from "./form-tournament";
 import { Tournament } from "@prisma/client";
 
 const DialogCreateTournament = ({
@@ -28,7 +28,7 @@ const DialogCreateTournament = ({
           <DialogTitle>Adicionar Torneio</DialogTitle>
           <DialogDescription>Informe os dados do torneio.</DialogDescription>
         </DialogHeader>
-        <FormCreateTournament
+        <FormTournament
           tournament={tournament}
           onCreateTournament={onCreateTournament}
         />

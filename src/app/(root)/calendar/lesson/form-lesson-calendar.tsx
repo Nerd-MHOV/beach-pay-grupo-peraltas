@@ -285,7 +285,9 @@ const FormLessonCalendar = ({
                       athletes
                         .filter(
                           (ath) =>
-                            !form.getValues("attendance").includes(ath.id)
+                            !(form.getValues("attendance") || []).includes(
+                              ath.id
+                            )
                         )
                         .map((ath) => ({
                           label: ath.name,

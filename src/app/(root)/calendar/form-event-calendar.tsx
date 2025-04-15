@@ -3,6 +3,7 @@ import React from "react";
 import FormAvailabilityCalendar from "./availability/form-availability-calendar";
 import { FormFieldProps, SetFormFieldProps } from "./calendar-client-component";
 import FormLessonCalendar from "./lesson/form-lesson-calendar";
+import FormTournament from "../panel/tournaments/form-tournament";
 
 const FormEventCalendar = ({
   formFields,
@@ -75,7 +76,16 @@ const FormEventCalendar = ({
           />
         )}
         {formFields.formSelected === "tournament" && (
-          <div>Formulário de Torneio</div>
+          <FormTournament
+            tournament={{
+              arena_id: formFields.arena_id,
+              id: formFields.id,
+              date_from: formFields.selectedDate?.from,
+              date_to: formFields.selectedDate?.to,
+              name: formFields.tournament_name,
+              description: formFields.description,
+            }}
+          />
         )}
       </div>
     </div>

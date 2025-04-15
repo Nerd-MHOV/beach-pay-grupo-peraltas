@@ -4,7 +4,7 @@ import { getTournamentById } from "../actions";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ptBR } from "date-fns/locale";
-import FormCreateTournament from "../form-create-tournament";
+import FormTournament from "../form-tournament";
 import TableTournamentDescription from "./table-tournament-description";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -118,7 +118,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <TableTournamentDescription tournament={tournament} />
 
       <div className="bg-white p-7 rounded-xl shadow-lg">
-        <FormCreateTournament tournament={tournament} />
+        <FormTournament tournament={tournament} />
       </div>
     </div>
   );

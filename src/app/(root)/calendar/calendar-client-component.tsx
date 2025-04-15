@@ -23,6 +23,9 @@ export type FormFieldProps = {
   court_id?: string;
   attendance_ids?: string[];
   subject?: string;
+  tournament_name?: string;
+  description?: string;
+  arena_id?: string;
 };
 export type SetFormFieldProps = React.Dispatch<
   React.SetStateAction<FormFieldProps>
