@@ -18,7 +18,7 @@ import { getAthletes } from "../../panel/athletes/actions";
 import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
-import { createAvailability } from "./actions";
+import { createAvailability, updateAvailability } from "./actions";
 import { TeacherAvailability } from "@prisma/client";
 
 const schema = z.object({
@@ -84,7 +84,7 @@ const FormAvailabilityCalendar = ({
     data: Omit<TeacherAvailability, "created_at" | "updated_at" | "lesson_id">
   ) => {
     try {
-      // await updateAvailability(availability.id, data);
+      await updateAvailability(data);
       toast({
         title: "Disponibilidade atualizada com sucesso!",
         description: "A disponibilidade foi atualizada com sucesso.",

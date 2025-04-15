@@ -1,51 +1,67 @@
 import { Toggle } from "@/components/ui/toggle";
 import React from "react";
 import FormAvailabilityCalendar from "./availability/form-availability-calendar";
+import { FormFieldProps, SetFormFieldProps } from "./calendar-client-component";
 
 const FormEventCalendar = ({
-  formSelected,
-  setFormSelected,
-  teacher_id,
+  formFields,
+  setFormFields,
 }: {
-  teacher_id?: string;
-  formSelected: "availability" | "class" | "tournament";
-  setFormSelected: React.Dispatch<
-    React.SetStateAction<"availability" | "class" | "tournament">
-  >;
+  formFields: FormFieldProps;
+  setFormFields: SetFormFieldProps;
 }) => {
   return (
     <div>
       <div className="flex flex-row gap-2">
         <Toggle
-          pressed={formSelected === "availability"}
-          onClick={() => setFormSelected("availability")}
+          pressed={formFields.formSelected === "availability"}
+          onClick={() =>
+            setFormFields((prev) => ({
+              ...prev,
+              formSelected: "availability",
+            }))
+          }
         >
           Disponibilidade
         </Toggle>
         <Toggle
-          pressed={formSelected === "class"}
-          onClick={() => setFormSelected("class")}
+          pressed={formFields.formSelected === "class"}
+          onClick={() =>
+            setFormFields((prev) => ({
+              ...prev,
+              formSelected: "class",
+            }))
+          }
         >
           Aula
         </Toggle>
         <Toggle
-          pressed={formSelected === "tournament"}
-          onClick={() => setFormSelected("tournament")}
+          pressed={formFields.formSelected === "tournament"}
+          onClick={() =>
+            setFormFields((prev) => ({
+              ...prev,
+              formSelected: "tournament",
+            }))
+          }
         >
           Torneio
         </Toggle>
       </div>
 
       <div className="flex flex-col mt-4">
-        {formSelected === "availability" && (
+        {formFields.formSelected === "availability" && (
           <FormAvailabilityCalendar
             availability={{
-              teacher_id: teacher_id,
+              teacher_id: formFields.teacher_id,
+              id: formFields.id,
+              date: formFields.selectedDate,
             }}
           />
         )}
-        {formSelected === "class" && <div>Formulário de Aula</div>}
-        {formSelected === "tournament" && <div>Formulário de Torneio</div>}
+        {formFields.formSelected === "class" && <div>Formulário de Aula</div>}
+        {formFields.formSelected === "tournament" && (
+          <div>Formulário de Torneio</div>
+        )}
       </div>
     </div>
   );

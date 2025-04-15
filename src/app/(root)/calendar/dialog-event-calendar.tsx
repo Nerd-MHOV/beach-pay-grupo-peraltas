@@ -6,17 +6,18 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import FormEventCalendar from "./form-event-calendar";
+import { FormFieldProps, SetFormFieldProps } from "./calendar-client-component";
 
 const DialogEventCalendar = ({
   open,
   setOpen,
-  formSelected,
-  setFormSelected,
+  formFields,
+  setFormFields,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  formSelected: 'availability' | 'class' | 'tournament'
-  setFormSelected: React.Dispatch<React.SetStateAction<'availability' | 'class' | 'tournament'>>
+  formFields: FormFieldProps;
+  setFormFields: SetFormFieldProps;
 }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -24,7 +25,10 @@ const DialogEventCalendar = ({
         <DialogHeader>
           <DialogTitle>Eventos</DialogTitle>
         </DialogHeader>
-        <FormEventCalendar formSelected={formSelected} setFormSelected={setFormSelected} />
+        <FormEventCalendar
+          formFields={formFields}
+          setFormFields={setFormFields}
+        />
       </DialogContent>
     </Dialog>
   );

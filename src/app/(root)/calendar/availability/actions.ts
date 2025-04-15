@@ -7,7 +7,18 @@ import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getAvailability = unstable_cache(
   async () => {
-    const availability = await db.teacherAvailability.findMany({});
+    const availability = await db.teacherAvailability.findMany({
+      include: {
+        lesson: true,
+        teacher: {
+          include: {
+            user: {
+              omit: { passwd: true }
+            }
+          }
+        },
+      }
+    });
     return availability;
   },
   ["availability"],
@@ -45,7 +56,7 @@ export async function createAvailability(
   const availability = await db.teacherAvailability.create({
     data
   })
-  revalidateTag("create_availability");
+  revalidateTag("create-availability");
   return availability;
 }
 
@@ -63,7 +74,7 @@ export async function updateAvailability(
       updated_at: new Date(),
     }
   })
-  revalidateTag("update_availability");
+  revalidateTag("update-availability");
   return availability;
 }
 
@@ -73,6 +84,6 @@ export async function deleteAvailability(id: string) {
       id,
     },
   })
-  revalidateTag("delete_availability");
+  revalidateTag("delete-availability");
   return availability;
 }
