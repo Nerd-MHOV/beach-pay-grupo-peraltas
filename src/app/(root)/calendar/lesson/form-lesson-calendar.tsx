@@ -147,6 +147,14 @@ const FormLessonCalendar = ({
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
+    if (!availabilities.some((av) => av.teacher.id === data.teacher_id)) {
+      toast({
+        title: "Professor não disponível",
+        description: "O professor não está disponível nesse horário.",
+        variant: "destructive",
+      });
+      return;
+    }
     const refined = {
       teacher_id: data.teacher_id,
       time_start: data.date.from,

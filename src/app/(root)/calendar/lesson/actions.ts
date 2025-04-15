@@ -83,9 +83,6 @@ export async function updateLesson(
     await db.lessonAttendance.deleteMany({
       where: {
         lesson_id: data.id,
-        student_id: {
-          notIn: attendance_ids,
-        }
       }
     })
     await db.lessonAttendance.createMany({
