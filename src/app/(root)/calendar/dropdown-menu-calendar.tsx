@@ -11,14 +11,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Plus } from "lucide-react";
-import { SetFormFieldProps } from "./calendar-client-component";
+import {
+  FilterEventsProps,
+  SetFilterEventsProps,
+  SetFormFieldProps,
+} from "./calendar-client-component";
+import { noMatchFilterEventsOthers } from "./sidebar-menu-calendar";
 
 export function DropdownMenuCalendar({
   setDialogOpen,
   setFormFields,
+  filterEvents,
+  setFilterEvents,
 }: {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setFormFields: SetFormFieldProps;
+  filterEvents: FilterEventsProps;
+  setFilterEvents: SetFilterEventsProps;
 }) {
   return (
     <DropdownMenu>
@@ -75,48 +84,65 @@ export function DropdownMenuCalendar({
           <DropdownMenuLabel>Minhas Agendas</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox
-                id="evento1"
-                className="mr-2 data-[state=checked]:bg-[#f9c2c2] data-[state=checked]:border-[#f9c2c2]"
-              />
-              Minha Disponibilidade
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox
-                id="evento1"
-                className="mr-2 data-[state=checked]:bg-[#D2d2d2] data-[state=checked]:border-[#D2d2d2]"
-              />
-              Torneios
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox id="evento1" />
-              Aulas
-            </DropdownMenuItem>
+            {noMatchFilterEventsOthers.map((filter) => (
+              <DropdownMenuItem
+                onSelect={(event) => event.preventDefault()}
+                key={filter.name}
+              >
+                <Checkbox
+                  id={`evento-${filter.name}`}
+                  checked={filterEvents[filter.name]}
+                  onCheckedChange={(checked) =>
+                    setFilterEvents((prev) => ({
+                      ...prev,
+                      [filter.name]: !!checked,
+                    }))
+                  }
+                  className={`mr-2 data-[state=checked]:bg-[${filter.color}] data-[state=checked]:border-[${filter.color}]`}
+                />
+                <label
+                  htmlFor={`evento-${filter.name}`}
+                  className="text-md font-medium"
+                >
+                  {filter.name}
+                </label>
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Outras Agendas</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox
-                id="evento1"
-                className="mr-2 data-[state=checked]:bg-[#f219c9] data-[state=checked]:border-[#f219c9]"
-              />
-              Disponibilidade João
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox
-                id="evento1"
-                className="mr-2 data-[state=checked]:bg-[#029af8] data-[state=checked]:border-[#029af8]"
-              />
-              Disponibilidade Marcos
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-              <Checkbox id="evento1" />
-              Disponibilidade Felipe
-            </DropdownMenuItem>
+            {Object.keys(filterEvents)
+              .filter(
+                (fe) =>
+                  !noMatchFilterEventsOthers.map((mat) => mat.name).includes(fe)
+              )
+              .map((filter) => (
+                <DropdownMenuItem
+                  onSelect={(event) => event.preventDefault()}
+                  key={filter}
+                >
+                  <Checkbox
+                    id={`evento-${filter}`}
+                    checked={filterEvents[filter]}
+                    onCheckedChange={(checked) =>
+                      setFilterEvents((prev) => ({
+                        ...prev,
+                        [`${filter}`]: !!checked,
+                      }))
+                    }
+                    className="mr-2 data-[state=checked]:bg-[#95cf9a] data-[state=checked]:border-[#95cf9a]"
+                  />
+                  <label
+                    htmlFor={`evento-${filter}`}
+                    className="text-md font-medium"
+                  >
+                    {filter}
+                  </label>
+                </DropdownMenuItem>
+              ))}
           </DropdownMenuGroup>
         </div>
       </DropdownMenuContent>

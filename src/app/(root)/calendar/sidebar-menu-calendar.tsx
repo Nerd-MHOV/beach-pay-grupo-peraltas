@@ -43,6 +43,8 @@ const SidebarMenuCalendar = ({
         <DropdownMenuCalendar
           setDialogOpen={setDialogOpen}
           setFormFields={setFormFields}
+          setFilterEvents={setFilterEvents}
+          filterEvents={filterEvents}
         />
       </div>
 

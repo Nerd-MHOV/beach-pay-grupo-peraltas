@@ -155,6 +155,7 @@ export async function createAthlete(
       }
     }
   });
+  revalidateTag("update-user");
   revalidateTag("create-athlete");
   return athlete;
 }
@@ -194,6 +195,7 @@ export async function updateAthlete(
       }
     },
   })
+  revalidateTag("update-user");
   revalidateTag("update-athlete");
   return athlete;
 }
