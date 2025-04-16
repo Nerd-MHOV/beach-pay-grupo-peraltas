@@ -31,40 +31,33 @@ export type SetFormFieldProps = React.Dispatch<
   React.SetStateAction<FormFieldProps>
 >;
 
-export type FilterEventsProps = {
+export interface FilterEventsProps {
   "Minha Disponibilidade": boolean;
   Torneios: boolean;
   Aulas: boolean;
-} & Record<string, boolean>;
+  [key: string]: boolean;
+}
+
 export type SetFilterEventsProps = React.Dispatch<
   React.SetStateAction<FilterEventsProps>
 >;
 
-const CalendarClientComponent = ({
-  events,
-  currentUserId,
-  teachers,
-}: {
+interface CalendarClientComponentProps {
   currentUserId: string;
-  events: (EventInput & {
-    extendedProps: FormFieldProps;
-  })[];
-  teachers: (Athlete & {
-    user: Omit<User, "passwd">;
-    is_teacher: true;
-  })[];
+  events: (EventInput & { extendedProps: FormFieldProps })[];
+  teachers: (Athlete & { user: Omit<User, "passwd">; is_teacher: true })[];
+}
+const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
+  currentUserId,
+  events,
+  teachers,
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [formFields, setFormFields] = React.useState<FormFieldProps>({
     formSelected: "class",
   });
-  const [filterEvents, setFilterEvents] = React.useState<
-    {
-      "Minha Disponibilidade": boolean;
-      Torneios: boolean;
-      Aulas: boolean;
-    } & Record<string, boolean>
-  >({
+  // Estado para os filtros dos eventos
+  const initialFilterState: FilterEventsProps = {
     "Minha Disponibilidade": true,
     Torneios: true,
     Aulas: true,
@@ -74,7 +67,10 @@ const CalendarClientComponent = ({
         [`Disp. ${teacher.name}`]: false,
       };
     }, {}),
-  });
+  };
+  const [filterEvents, setFilterEvents] =
+    React.useState<FilterEventsProps>(initialFilterState);
+
   return (
     <>
       <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg flex md:flex-row flex-col justify-start items-start gap-8 w-full overflow-hidden">
@@ -99,7 +95,6 @@ const CalendarClientComponent = ({
               right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
             }}
             select={(selectedDate) => {
-              setDialogOpen(true); // Open dialog when a date is selected.
               setFormFields({
                 formSelected: formFields.formSelected,
                 selectedDate: {
@@ -107,6 +102,7 @@ const CalendarClientComponent = ({
                   to: selectedDate.end,
                 },
               });
+              setDialogOpen(true);
             }}
             eventChange={(eventChange) => {
               setDialogOpen(true);
