@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { format } from "date-fns";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RadarChartAthlete from "./radar-chart-athlete";
 import TableRoot from "../../investments/table-root";
 import { getAthleteById } from "../actions";
+import LoadingData from "@/components/LoadingData";
 
 const Page = async ({
   params,
@@ -154,13 +155,13 @@ const Page = async ({
         </div>
       </div>
 
-      <div className="">
+      <Suspense fallback={<LoadingData message="Buscando Investimentos" />}>
         <TableRoot
           investments={athlete.investments}
           investmentGroup={athlete.investment_group_athlete}
           athlete={athlete}
         />
-      </div>
+      </Suspense>
 
       <div className="bg-white p-7 rounded-xl shadow-lg">
         <FormAthlete athlete={athlete} />

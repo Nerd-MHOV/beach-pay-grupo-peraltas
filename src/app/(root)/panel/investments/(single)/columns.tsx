@@ -82,7 +82,7 @@ export const columns: InvestmentColumns[] = [
     label: "Atleta",
   },
   {
-    accessorKey: "investmentType",
+    accessorKey: "investment_type",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Tipo de Investimento"} />
     ),
