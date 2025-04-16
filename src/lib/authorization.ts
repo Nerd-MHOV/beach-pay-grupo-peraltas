@@ -31,6 +31,8 @@ const OperationalPages = [
   "/panel/tournaments",
   "/panel/tournaments/*",
   "/panel/arenas",
+  "/calendar",
+  "/calendar/*",
 ]
 
 const TeacherPages = [

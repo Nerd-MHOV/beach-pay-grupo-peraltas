@@ -20,13 +20,14 @@ const Sidebar = ({ role }: { role: UserRole }) => {
   return (
     <div
       className={cn(
-        "h-screen transition-all duration-500 bg-slate-900 absolute md:static sm:static overflow-x-hidden",
+        "h-screen transition-all duration-500 bg-slate-900 absolute md:static sm:static overflow-x-hidden ",
         activeSidebar
           ? "min-w-full md:min-w-80 sm:min-w-80 relative"
           : "min-w-0 md:min-w-16"
       )}
+      style={{ direction: "rtl" }}
     >
-      <div className="w-full relative h-screen">
+      <div className="w-full relative h-screen" style={{ direction: "ltr" }}>
         <ul className="absolute w-full h-full flex flex-col gap-2 ">
           <li className="list-none mb-10 pointer-events-none mt-1 relative">
             <Link
