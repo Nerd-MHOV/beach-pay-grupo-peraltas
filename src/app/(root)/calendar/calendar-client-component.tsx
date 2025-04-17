@@ -11,6 +11,7 @@ import DialogEventCalendar from "./dialog-event-calendar";
 import { EventInput } from "@fullcalendar/core/index.js";
 import { Athlete, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
+import { subDays } from "date-fns";
 
 export type FormFieldProps = {
   formSelected: "availability" | "class" | "tournament";
@@ -26,6 +27,7 @@ export type FormFieldProps = {
   tournament_name?: string;
   description?: string;
   arena_id?: string;
+  closure?: boolean;
 };
 export type SetFormFieldProps = React.Dispatch<
   React.SetStateAction<FormFieldProps>
@@ -99,7 +101,10 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
                 formSelected: formFields.formSelected,
                 selectedDate: {
                   from: selectedDate.start,
-                  to: selectedDate.end,
+                  to:
+                    selectedDate.start.getDay() !== selectedDate.end.getDay()
+                      ? subDays(selectedDate.end, 1)
+                      : selectedDate.end,
                 },
               });
               setDialogOpen(true);

@@ -203,6 +203,7 @@ model Lesson {
   time_end   DateTime
   courts_id  String
   subject    String?
+  closure    Boolean  @default(false)
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
@@ -229,5 +230,6 @@ model LessonAttendance {
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
+  @@unique([lesson_id, student_id])
   @@map("lesson_attendance")
 }

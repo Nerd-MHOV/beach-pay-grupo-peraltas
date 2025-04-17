@@ -72,6 +72,7 @@ const FormEventCalendar = ({
               court_id: formFields.court_id,
               attendance: formFields.attendance_ids,
               subject: formFields.subject,
+              closure: formFields.closure,
             }}
           />
         )}

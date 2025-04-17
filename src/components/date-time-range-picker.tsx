@@ -34,6 +34,7 @@ export interface DateRange {
 export interface DateTimeRangePickerProps {
   value: DateRange | null;
   onChange: (value: DateRange) => void;
+  disabled?: boolean;
 }
 
 /**
@@ -63,11 +64,13 @@ function handleTimeChange(
 export default function DateTimeRangePicker({
   value,
   onChange,
+  disabled,
 }: DateTimeRangePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={"outline"}
           className={cn(
             "w-full pl-3 text-left font-normal",

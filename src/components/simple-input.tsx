@@ -14,9 +14,11 @@ const SimpleInput = ({
   label,
   placeholder,
   name,
+  disabled,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any>;
+  disabled?: boolean;
   label: string;
   placeholder: string;
   name: string;
@@ -29,7 +31,7 @@ const SimpleInput = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input disabled={disabled} placeholder={placeholder} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

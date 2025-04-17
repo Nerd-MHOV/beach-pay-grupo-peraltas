@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/combobox";
 import { createTournament, updateTournament } from "./actions";
 import { getArenas } from "../arenas/actions";
-import { format } from "date-fns";
+import { format, isDate } from "date-fns";
 import DialogCreateArena from "../arenas/dialog-create-arena";
 import {
   Popover,
@@ -223,8 +223,8 @@ const FormTournament = ({
                         !field.value && "text-muted-foreground"
                       )}
                     >
-                      {field.value ? (
-                        field.value.to ? (
+                      {field.value && isDate(field.value.from) ? (
+                        field.value.to && isDate(field.value.to) ? (
                           <>
                             {format(field.value.from, "dd LLL", {
                               locale: ptBR,

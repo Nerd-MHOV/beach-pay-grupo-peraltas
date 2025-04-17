@@ -51,7 +51,7 @@ export const getLessonById = unstable_cache(
 )
 
 export async function createLesson(
-  data: Omit<Lesson, "id" | "created_at" | "updated_at"> & {
+  data: Omit<Lesson, "id" | "created_at" | "updated_at" | "closure"> & {
     attendance_ids: string[];
   },
 ) {
@@ -117,3 +117,36 @@ export async function deleteLesson(
   return lesson;
 }
 
+export async function closeLesson(props: {
+  id: string,
+  subject: string,
+  attendance_relation: { student_id: string, presence: boolean }[],
+}) {
+
+
+  await Promise.all(props.attendance_relation.map(async (attendance) => {
+    await db.lessonAttendance.update({
+      where: {
+        lesson_id_student_id: {
+          lesson_id: props.id,
+          student_id: attendance.student_id,
+        }
+      },
+      data: {
+        did_attend: attendance.presence,
+      },
+    });
+  }));
+
+  const lesson = await db.lesson.update({
+    where: { id: props.id },
+    data: {
+      subject: props.subject,
+      closure: true,
+      updated_at: new Date(),
+    }
+  })
+
+  revalidateTag("update-lesson");
+  return lesson;
+}

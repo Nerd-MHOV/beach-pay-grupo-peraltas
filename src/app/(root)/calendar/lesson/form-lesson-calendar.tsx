@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,6 +25,8 @@ import { getCourts } from "../courts/actions";
 import SimpleInput from "@/components/simple-input";
 import { Separator } from "@/components/ui/separator";
 import { X } from "lucide-react";
+import DialogLessonClosure from "./dialog-lesson-closure";
+import ListAttendance from "./list-attendance";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -50,6 +52,7 @@ const FormLessonCalendar = ({
   lesson,
 }: {
   lesson?: {
+    closure?: boolean;
     id?: string;
     teacher_id?: string;
     date?: {
@@ -61,8 +64,8 @@ const FormLessonCalendar = ({
     attendance?: string[];
   };
 }) => {
-  console.log(lesson);
   const { toast } = useToast();
+  const query = useQueryClient();
   const { data: athletes, isPending: isPendingAthletes } = useQuery({
     queryKey: ["athletes"],
     queryFn: async () => {
@@ -107,7 +110,7 @@ const FormLessonCalendar = ({
   });
 
   const createLessonFn = async (
-    data: Omit<Lesson, "id" | "created_at" | "updated_at"> & {
+    data: Omit<Lesson, "id" | "created_at" | "updated_at" | "closure"> & {
       attendance_ids: string[];
     }
   ) => {
@@ -117,6 +120,7 @@ const FormLessonCalendar = ({
         title: "Aula criada com sucesso!",
         description: "A aula foi criada com sucesso.",
       });
+      form.reset();
     } catch (error) {
       toast({
         title: "Erro ao criar aula",
@@ -127,7 +131,7 @@ const FormLessonCalendar = ({
   };
 
   const updateLessonFn = async (
-    data: Omit<Lesson, "created_at" | "updated_at"> & {
+    data: Omit<Lesson, "created_at" | "updated_at" | "closure"> & {
       attendance_ids: string[];
     }
   ) => {
@@ -147,6 +151,14 @@ const FormLessonCalendar = ({
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
+    if (lesson?.closure) {
+      toast({
+        title: "Aula FECHADA.",
+        description: "Essa aula já foi fechada, não pode ser atualizada.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (!availabilities.some((av) => av.teacher.id === data.teacher_id)) {
       toast({
         title: "Professor não disponível",
@@ -171,6 +183,10 @@ const FormLessonCalendar = ({
     } else {
       createLessonFn(refined);
     }
+
+    query.invalidateQueries({
+      queryKey: ["lesson"],
+    });
   };
 
   const form = useForm<z.infer<typeof schema>>({
@@ -181,7 +197,6 @@ const FormLessonCalendar = ({
     },
   });
 
-  console.log(form.getValues("attendance"));
   return (
     <Form {...form}>
       <form
@@ -198,6 +213,7 @@ const FormLessonCalendar = ({
             <FormItem>
               <FormLabel>Data*</FormLabel>
               <DateTimeRangePicker
+                disabled={!!lesson?.closure}
                 value={field.value}
                 onChange={(value) => {
                   field.onChange(value);
@@ -219,6 +235,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Professor*</FormLabel>
                 <FormControl>
                   <Combobox
+                    disabled={!!lesson?.closure}
                     placeholder="Selecione a Professor"
                     items={(
                       availabilities.map((av) => av.teacher).flat() || []
@@ -247,6 +264,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Quadra*</FormLabel>
                 <FormControl>
                   <Combobox
+                    disabled={!!lesson?.closure}
                     placeholder="Selecione a Quadra"
                     items={courts.map((courts) => ({
                       label: courts.name,
@@ -266,103 +284,113 @@ const FormLessonCalendar = ({
           form={form}
           label="Assunto"
           name="subject"
+          disabled={!!lesson?.closure}
           placeholder="Tema da aula"
         />
 
-        {isPendingAthletes ? (
-          <LoadingData message="Carregando Quadras..." />
+        {lesson?.closure && lesson?.id ? (
+          <ListAttendance id={lesson.id} />
         ) : (
-          <FormField
-            control={form.control}
-            name="attendance"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Adicionar Aluno*</FormLabel>
-                <FormControl>
-                  <Combobox
-                    placeholder="Selecione o Aluno"
-                    items={
-                      athletes
-                        .filter(
-                          (ath) =>
-                            !(form.getValues("attendance") || []).includes(
-                              ath.id
+          <>
+            {isPendingAthletes ? (
+              <LoadingData message="Carregando Alunos..." />
+            ) : (
+              <FormField
+                control={form.control}
+                name="attendance"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Adicionar Aluno*</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        placeholder="Selecione o Aluno"
+                        items={
+                          athletes
+                            .filter(
+                              (ath) =>
+                                !(form.getValues("attendance") || []).includes(
+                                  ath.id
+                                )
                             )
-                        )
-                        .map((ath) => ({
-                          label: ath.name,
-                          value: ath.id,
-                        })) || []
-                    }
-                    selected={""}
-                    onSelect={(value) => {
-                      console.log(value, field.value);
-                      field.onChange([...field.value, value]);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                            .map((ath) => ({
+                              label: ath.name,
+                              value: ath.id,
+                            })) || []
+                        }
+                        selected={""}
+                        onSelect={(value) => {
+                          field.onChange([...(field.value || []), value]);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
-          />
-        )}
-        <FormField
-          control={form.control}
-          name="attendance"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Alunos*</FormLabel>
-              <FormControl>
-                <div className="h-32 rounded-md border overflow-auto py-1">
-                  <div className="p-4">
-                    {field.value?.map((id, index) => {
-                      const athlete = athletes.find((find) => find.id === id);
-                      if (!athlete) return null;
-                      return (
-                        <div key={index}>
-                          <div className="text-sm flex justify-between gap-2 items-center">
-                            <div className="relative flex flex-col flex-1">
-                              <h1 className="font-bold">{athlete.name}</h1>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                type="button"
-                                className="bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-900"
-                                onClick={() => {
-                                  const array = field.value?.filter(
-                                    (_, i) => i !== index
-                                  );
-                                  field.onChange(array);
-                                }}
-                              >
-                                <X />
-                              </Button>
-                            </div>
-                          </div>
-                          <Separator className="my-2" />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <div className="flex w-full justify-end mt-5">
-          <Button
-            isLoading={form.formState.isSubmitting}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            {lesson?.id ? "Atualizar" : "Adicionar"}
-          </Button>
-        </div>
+            <FormField
+              control={form.control}
+              name="attendance"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Alunos*</FormLabel>
+                  <FormControl>
+                    <div className="h-32 rounded-md border overflow-auto py-1">
+                      <div className="p-4">
+                        {field.value?.map((id, index) => {
+                          const athlete = athletes.find(
+                            (find) => find.id === id
+                          );
+                          if (!athlete) return null;
+                          return (
+                            <div key={index}>
+                              <div className="text-sm flex justify-between gap-2 items-center">
+                                <div className="relative flex flex-col flex-1">
+                                  <h1 className="font-bold">{athlete.name}</h1>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    type="button"
+                                    className="bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-900"
+                                    onClick={() => {
+                                      const array = field.value?.filter(
+                                        (_, i) => i !== index
+                                      );
+                                      field.onChange(array);
+                                    }}
+                                  >
+                                    <X />
+                                  </Button>
+                                </div>
+                              </div>
+                              <Separator className="my-2" />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex w-full justify-end mt-5 gap-2">
+              {lesson?.id && <DialogLessonClosure id={lesson.id} />}
+              <Button
+                isLoading={form.formState.isSubmitting}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                {lesson?.id ? "Atualizar" : "Adicionar"}
+              </Button>
+            </div>
+          </>
+        )}
       </form>
     </Form>
   );

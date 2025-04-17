@@ -64,6 +64,7 @@ const Page = async () => {
         ),
         court_id: lesson.courts_id,
         subject: lesson.subject || undefined,
+        closure: lesson.closure,
       },
     })),
 

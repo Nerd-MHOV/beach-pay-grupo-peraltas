@@ -14,7 +14,7 @@ export const noMatchFilterEventsOthers = [
   },
   {
     name: "Torneios",
-    color: "#f9c2c2", // data-[state=checked]:bg-[#D2d2d2] data-[state=checked]:border-[#D2d2d2]
+    color: "#f9c2c2", // data-[state=checked]:bg-[#f9c2c2] data-[state=checked]:border-[#f9c2c2]
   },
   {
     name: "Aulas",
