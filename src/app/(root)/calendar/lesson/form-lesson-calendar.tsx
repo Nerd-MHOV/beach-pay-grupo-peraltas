@@ -19,7 +19,7 @@ import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createLesson, updateLesson } from "./actions";
-import { Lesson } from "@prisma/client";
+import { Lesson, LessonStatus } from "@prisma/client";
 import { getAvailability } from "../availability/actions";
 import { getCourts } from "../courts/actions";
 import SimpleInput from "@/components/simple-input";
@@ -27,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { X } from "lucide-react";
 import DialogLessonClosure from "./dialog-lesson-closure";
 import ListAttendance from "./list-attendance";
+import { DialogClose } from "@/components/ui/dialog";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -50,9 +51,11 @@ const schema = z.object({
 });
 const FormLessonCalendar = ({
   lesson,
+  onClosure,
 }: {
+  onClosure?: () => void;
   lesson?: {
-    closure?: boolean;
+    status?: LessonStatus;
     id?: string;
     teacher_id?: string;
     date?: {
@@ -110,7 +113,7 @@ const FormLessonCalendar = ({
   });
 
   const createLessonFn = async (
-    data: Omit<Lesson, "id" | "created_at" | "updated_at" | "closure"> & {
+    data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status"> & {
       attendance_ids: string[];
     }
   ) => {
@@ -131,7 +134,7 @@ const FormLessonCalendar = ({
   };
 
   const updateLessonFn = async (
-    data: Omit<Lesson, "created_at" | "updated_at" | "closure"> & {
+    data: Omit<Lesson, "created_at" | "updated_at" | "status"> & {
       attendance_ids: string[];
     }
   ) => {
@@ -151,7 +154,7 @@ const FormLessonCalendar = ({
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    if (lesson?.closure) {
+    if (lesson?.status === "completed") {
       toast({
         title: "Aula FECHADA.",
         description: "Essa aula já foi fechada, não pode ser atualizada.",
@@ -213,7 +216,7 @@ const FormLessonCalendar = ({
             <FormItem>
               <FormLabel>Data*</FormLabel>
               <DateTimeRangePicker
-                disabled={!!lesson?.closure}
+                disabled={lesson?.status === "completed"}
                 value={field.value}
                 onChange={(value) => {
                   field.onChange(value);
@@ -235,7 +238,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Professor*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={!!lesson?.closure}
+                    disabled={lesson?.status === "completed"}
                     placeholder="Selecione a Professor"
                     items={(
                       availabilities.map((av) => av.teacher).flat() || []
@@ -264,7 +267,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Quadra*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={!!lesson?.closure}
+                    disabled={lesson?.status === "completed"}
                     placeholder="Selecione a Quadra"
                     items={courts.map((courts) => ({
                       label: courts.name,
@@ -284,11 +287,11 @@ const FormLessonCalendar = ({
           form={form}
           label="Assunto"
           name="subject"
-          disabled={!!lesson?.closure}
+          disabled={lesson?.status === "completed"}
           placeholder="Tema da aula"
         />
 
-        {lesson?.closure && lesson?.id ? (
+        {lesson?.status === "completed" && lesson?.id ? (
           <ListAttendance id={lesson.id} />
         ) : (
           <>
@@ -379,7 +382,15 @@ const FormLessonCalendar = ({
             />
 
             <div className="flex w-full justify-end mt-5 gap-2">
-              {lesson?.id && <DialogLessonClosure id={lesson.id} />}
+              {lesson?.id && (
+                <DialogLessonClosure
+                  id={lesson.id}
+                  onClosure={() => {
+                    onClosure?.();
+                  }}
+                />
+              )}
+
               <Button
                 isLoading={form.formState.isSubmitting}
                 onClick={(e) => {

@@ -10,6 +10,12 @@ import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
 
+const ColorStatusLesson = {
+  canceled: "#9aace7",
+  scheduled: "#7289d4",
+  completed: "#7279E9",
+};
+
 const Page = async () => {
   const me = await verifySession(false);
   const teachers = (await getAthletes({ teacher: true })) as (Athlete & {
@@ -43,7 +49,7 @@ const Page = async () => {
     })),
 
     ...lessons.map((lesson) => ({
-      backgroundColor: lesson.closure ? "#7289B1" : "#7289d4",
+      backgroundColor: ColorStatusLesson[lesson.status] || "#7289d4",
       borderColor: "#7289d4",
       title: `${lesson.attendances.length.toString().padStart(2, "0")} - ${
         lesson.teacher.name
@@ -64,7 +70,7 @@ const Page = async () => {
         ),
         court_id: lesson.courts_id,
         subject: lesson.subject || undefined,
-        closure: lesson.closure,
+        status: lesson.status,
       },
     })),
 

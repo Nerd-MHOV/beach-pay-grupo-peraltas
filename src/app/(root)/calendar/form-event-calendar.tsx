@@ -8,9 +8,11 @@ import FormTournament from "../panel/tournaments/form-tournament";
 const FormEventCalendar = ({
   formFields,
   setFormFields,
+  close,
 }: {
   formFields: FormFieldProps;
   setFormFields: SetFormFieldProps;
+  close?: VoidFunction;
 }) => {
   return (
     <div>
@@ -72,7 +74,10 @@ const FormEventCalendar = ({
               court_id: formFields.court_id,
               attendance: formFields.attendance_ids,
               subject: formFields.subject,
-              closure: formFields.closure,
+              status: formFields.status,
+            }}
+            onClosure={() => {
+              close?.();
             }}
           />
         )}

@@ -12,14 +12,22 @@ import { useQuery } from "@tanstack/react-query";
 import { getLessonById } from "./actions";
 import LoadingData from "@/components/LoadingData";
 
-const DialogLessonClosure = ({ id }: { id: string }) => {
+const DialogLessonClosure = ({
+  id,
+  onClosure,
+}: {
+  id: string;
+  onClosure?: VoidFunction;
+}) => {
   const { data: lesson, isPending } = useQuery({
     queryKey: ["lesson"],
     queryFn: async () => await getLessonById(id),
   });
 
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Encerrar Aula</Button>
       </DialogTrigger>
@@ -30,7 +38,13 @@ const DialogLessonClosure = ({ id }: { id: string }) => {
         {!lesson || isPending ? (
           <LoadingData message="buscando aula..." />
         ) : (
-          <FormLessonClosure lesson={lesson} />
+          <FormLessonClosure
+            lesson={lesson}
+            onClosure={() => {
+              setIsOpen(false);
+              onClosure?.();
+            }}
+          />
         )}
       </DialogContent>
     </Dialog>

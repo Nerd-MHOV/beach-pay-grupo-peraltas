@@ -28,6 +28,9 @@ const DialogEventCalendar = ({
         <FormEventCalendar
           formFields={formFields}
           setFormFields={setFormFields}
+          close={() => {
+            setOpen(false);
+          }}
         />
       </DialogContent>
     </Dialog>

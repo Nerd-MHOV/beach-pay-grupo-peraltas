@@ -16,6 +16,14 @@ enum UserRole {
   @@map("user_role")
 }
 
+enum LessonStatus {
+  scheduled
+  canceled
+  completed
+
+  @@map("lesson_status")
+}
+
 model User {
   id         String   @id @default(cuid())
   name       String
@@ -197,13 +205,13 @@ model TeacherAvailability {
 }
 
 model Lesson {
-  id         String   @id @default(cuid())
+  id         String       @id @default(cuid())
   teacher_id String
   time_start DateTime
   time_end   DateTime
   courts_id  String
   subject    String?
-  closure    Boolean  @default(false)
+  status     LessonStatus @default(scheduled)
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())

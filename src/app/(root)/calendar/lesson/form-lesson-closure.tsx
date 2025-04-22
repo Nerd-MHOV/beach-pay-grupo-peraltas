@@ -16,6 +16,7 @@ import { z } from "zod";
 import { closeLesson, getLessonById } from "./actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { DialogClose } from "@/components/ui/dialog";
 
 const schema = z.object({
   subject: z.string().min(1, {
@@ -32,7 +33,9 @@ const schema = z.object({
 });
 const FormLessonClosure = ({
   lesson,
+  onClosure,
 }: {
+  onClosure?: () => void;
   lesson: NonNullable<Awaited<ReturnType<typeof getLessonById>>>;
 }) => {
   const { toast } = useToast();
@@ -48,6 +51,7 @@ const FormLessonClosure = ({
         title: "Aula encerrada com sucesso",
         description: "A aula foi encerrada com sucesso.",
       });
+      onClosure?.();
     } catch (error) {
       toast({
         title: "Erro ao encerrar aula",

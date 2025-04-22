@@ -5,11 +5,8 @@ import { unstable_cache } from "next/cache";
 
 export const getCourts = unstable_cache(
   async () => {
-    const courts = await db.courts.findMany({
-      orderBy: {
-        name: "asc",
-      }
-    });
+    const courts = await db.courts.findMany();
+    courts.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
     return courts;
   },
   ["courts"],
