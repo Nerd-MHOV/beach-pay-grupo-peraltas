@@ -119,7 +119,6 @@ export async function deleteLesson(
 
 export async function closeLesson(props: {
   id: string,
-  subject: string,
   attendance_relation: { student_id: string, presence: boolean }[],
 }) {
 
@@ -141,7 +140,6 @@ export async function closeLesson(props: {
   const lesson = await db.lesson.update({
     where: { id: props.id },
     data: {
-      subject: props.subject,
       status: "completed",
       updated_at: new Date(),
     }

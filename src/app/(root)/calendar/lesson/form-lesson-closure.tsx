@@ -16,12 +16,8 @@ import { z } from "zod";
 import { closeLesson, getLessonById } from "./actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { DialogClose } from "@/components/ui/dialog";
 
 const schema = z.object({
-  subject: z.string().min(1, {
-    message: "Campo obrigatório",
-  }),
   attendance_relation: z.array(
     z.object({
       student_id: z.string(),
@@ -44,7 +40,6 @@ const FormLessonClosure = ({
     try {
       await closeLesson({
         id: lesson.id,
-        subject: data.subject,
         attendance_relation: data.attendance_relation,
       });
       toast({
@@ -71,7 +66,6 @@ const FormLessonClosure = ({
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      subject: lesson?.subject ?? "",
       attendance_relation: defaultAttendance,
     },
   });
@@ -86,13 +80,6 @@ const FormLessonClosure = ({
         }}
         className="space-y-4"
       >
-        <SimpleInput
-          form={form}
-          label="Assunto"
-          name="subject"
-          placeholder="Tema da Aula"
-        />
-
         {/* Lista de alunos com checkbox */}
         <FormField
           control={form.control}

@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
 import CalendarPickerInput from "@/components/calendarPickerInput";
-import { Address, Athlete, User } from "@prisma/client";
+import { Address, Athlete, Tier, User } from "@prisma/client";
 import useCreateAthlete from "./use-create-athlete";
 import useUpdateAthlete from "./use-update-athlete";
 import { formSchema } from "./schema";
@@ -64,6 +64,7 @@ const FormAthlete = ({
       is_associated: values.is_associated,
       is_teacher: values.is_teacher,
       teacher_user_id: values.teacher_user_id,
+      tier: values.tier,
       address: {
         street: values.street || null,
         number: values.number || null,
@@ -112,6 +113,7 @@ const FormAthlete = ({
       neighborhood: athlete?.address?.neighborhood ?? "",
       city_state: athlete?.address?.city_state ?? "",
       zip_code: athlete?.address?.zip_code ?? "",
+      tier: athlete?.tier || undefined,
     },
   });
 
@@ -138,7 +140,34 @@ const FormAthlete = ({
             placeholder="Nome Completo do Responsável"
           />
         </div>
-        <CpfInput name="cpf" form={form} label="CPF*" placeholder="CPF" />
+        <div className="grid grid-cols-3 gap-2">
+          <div className="col-span-2">
+            <CpfInput name="cpf" form={form} label="CPF*" placeholder="CPF" />
+          </div>
+          <FormField
+            control={form.control}
+            name="tier"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Classificação*</FormLabel>
+                <FormControl>
+                  <Combobox
+                    placeholder="Selecione"
+                    items={Object.values(Tier).map((tier) => ({
+                      label: tier,
+                      value: tier,
+                    }))}
+                    selected={field.value}
+                    onSelect={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-2">
           <FormField
             control={form.control}

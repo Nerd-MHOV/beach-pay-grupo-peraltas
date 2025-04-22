@@ -1,4 +1,5 @@
 import { cpfValidator } from "@/lib/utils";
+import { Tier } from "@prisma/client";
 import { z } from "zod";
 
 export const formSchema = z
@@ -25,6 +26,9 @@ export const formSchema = z
       .refine((value) => cpfValidator(value), {
         message: "O CPF é inválido.",
       }),
+    tier: z.nativeEnum(Tier, {
+      required_error: "Selecione o nível",
+    }),
     phone: z
       .string({
         message: "O telefone é obrigatório (ddd) 99999-9999.",

@@ -19,15 +19,20 @@ import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createLesson, updateLesson } from "./actions";
-import { Lesson, LessonStatus } from "@prisma/client";
+import { Lesson, LessonStatus, Tier } from "@prisma/client";
 import { getAvailability } from "../availability/actions";
 import { getCourts } from "../courts/actions";
 import SimpleInput from "@/components/simple-input";
 import { Separator } from "@/components/ui/separator";
-import { X } from "lucide-react";
+import { AlertTriangle, X } from "lucide-react";
 import DialogLessonClosure from "./dialog-lesson-closure";
 import ListAttendance from "./list-attendance";
-import { DialogClose } from "@/components/ui/dialog";
+import { Portal } from "@radix-ui/react-portal";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -42,11 +47,9 @@ const schema = z.object({
     }),
   }),
   court_id: z.string(),
-  subject: z
-    .string()
-    .nullable()
-    .optional()
-    .transform((value) => value || null),
+  tier: z.nativeEnum(Tier, {
+    required_error: "Selecione o nível",
+  }),
   attendance: z.array(z.string()),
 });
 const FormLessonCalendar = ({
@@ -175,7 +178,7 @@ const FormLessonCalendar = ({
       time_start: data.date.from,
       time_end: data.date.to,
       courts_id: data.court_id,
-      subject: data.subject,
+      tier: data.tier,
       attendance_ids: data.attendance,
     };
     if (lesson?.id) {
@@ -256,40 +259,64 @@ const FormLessonCalendar = ({
           />
         )}
 
-        {isPendingCourts ? (
-          <LoadingData message="Carregando Quadras..." />
-        ) : (
+        <div className="grid grid-cols-3 gap-2">
+          <div className="col-span-2">
+            {isPendingCourts ? (
+              <LoadingData message="Carregando Quadras..." />
+            ) : (
+              <FormField
+                control={form.control}
+                name="court_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Quadra*</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        disabled={lesson?.status === "completed"}
+                        placeholder="Selecione a Quadra"
+                        items={courts.map((courts) => ({
+                          label: courts.name,
+                          value: courts.id,
+                        }))}
+                        selected={field.value}
+                        onSelect={(value) => field.onChange(value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
           <FormField
             control={form.control}
-            name="court_id"
+            name="tier"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Quadra*</FormLabel>
+                <FormLabel>Classificação*</FormLabel>
                 <FormControl>
                   <Combobox
                     disabled={lesson?.status === "completed"}
-                    placeholder="Selecione a Quadra"
-                    items={courts.map((courts) => ({
-                      label: courts.name,
-                      value: courts.id,
+                    placeholder="Selecione"
+                    items={Object.values(Tier).map((tier) => ({
+                      label: tier,
+                      value: tier,
                     }))}
                     selected={field.value}
-                    onSelect={(value) => field.onChange(value)}
+                    onSelect={(value) => {
+                      field.onChange(value);
+                      // revalida alunos
+                      form.setValue("attendance", [
+                        ...form.getValues("attendance"),
+                      ]);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
-
-        <SimpleInput
-          form={form}
-          label="Assunto"
-          name="subject"
-          disabled={lesson?.status === "completed"}
-          placeholder="Tema da aula"
-        />
+        </div>
 
         {lesson?.status === "completed" && lesson?.id ? (
           <ListAttendance id={lesson.id} />
@@ -349,9 +376,33 @@ const FormLessonCalendar = ({
                           return (
                             <div key={index}>
                               <div className="text-sm flex justify-between gap-2 items-center">
-                                <div className="relative flex flex-col flex-1">
+                                <div className="flex-1">
                                   <h1 className="font-bold">{athlete.name}</h1>
                                 </div>
+                                {athlete.tier !== form.getValues("tier") && (
+                                  <HoverCard>
+                                    <HoverCardTrigger>
+                                      <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                                    </HoverCardTrigger>
+                                    <Portal>
+                                      <HoverCardContent>
+                                        <div className="flex flex-col gap-2">
+                                          <h1 className="text-sm font-bold">
+                                            Classificação - Atenção!
+                                          </h1>
+                                          <p className="text-sm">
+                                            Você está adicionando um aluno que
+                                            não está classificado para essa
+                                            aula.
+                                          </p>
+                                          <span className="text-xs text-muted-foreground">
+                                            <b>Aluno tier {athlete.tier} </b>
+                                          </span>
+                                        </div>
+                                      </HoverCardContent>
+                                    </Portal>
+                                  </HoverCard>
+                                )}
                                 <div className="flex flex-col gap-1">
                                   <Button
                                     size="sm"
