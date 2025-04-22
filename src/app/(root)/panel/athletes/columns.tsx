@@ -92,7 +92,7 @@ export const columns: ExtendedColumnDef<Athlete, undefined>[] = [
                 }
               />
             </DropdownMenuItem>
-            <DropdownMenuItem asChild></DropdownMenuItem>
+            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem asChild>
               <Link href={`/panel/athletes/${athlete.id}`}>Detalhes</Link>
             </DropdownMenuItem>

@@ -118,7 +118,9 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
                     eventChange.event.extendedProps.selectDate.start ||
                     new Date()) as Date,
                   to: (eventChange.event.end ||
-                    eventChange.event.extendedProps.selectDate.end ||
+                    eventChange.event.extendedProps.selectDate?.end ||
+                    eventChange.event.start ||
+                    eventChange.event.extendedProps.selectDate.start ||
                     new Date()) as Date,
                 },
               });

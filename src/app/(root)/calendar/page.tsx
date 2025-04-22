@@ -27,7 +27,7 @@ const Page = async () => {
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
       borderColor:
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
-      title: `DISP - ${availability.teacher.name}`,
+      title: `${availability.teacher.name}`,
       start: availability.time_start,
       end: availability.time_end,
       id: availability.id,
@@ -43,11 +43,11 @@ const Page = async () => {
     })),
 
     ...lessons.map((lesson) => ({
-      backgroundColor: "#7289d4",
+      backgroundColor: lesson.closure ? "#7289B1" : "#7289d4",
       borderColor: "#7289d4",
-      title: `AULA - ${lesson.attendances.length
-        .toString()
-        .padStart(2, "0")} - ${lesson.teacher.name}`,
+      title: `${lesson.attendances.length.toString().padStart(2, "0")} - ${
+        lesson.teacher.name
+      }`,
       start: lesson.time_start,
       end: lesson.time_end,
       id: lesson.id,
@@ -71,7 +71,7 @@ const Page = async () => {
     ...tournaments.map((tournament) => ({
       backgroundColor: "#f9c2c2",
       borderColor: "#f9c2c2",
-      title: `TORN - ${tournament.name}`,
+      title: `${tournament.name}`,
       start: tournament.date_from,
       end: tournament.date_to,
       id: tournament.id,
