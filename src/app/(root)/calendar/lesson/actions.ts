@@ -1,9 +1,8 @@
 "use server";
 
 import db from "@/core/infra/db";
-import { Lesson } from "@prisma/client";
+import { Lesson, ReasonsToNotAttend } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
-
 
 export const getLessons = unstable_cache(
   async () => {
@@ -119,7 +118,7 @@ export async function deleteLesson(
 
 export async function closeLesson(props: {
   id: string,
-  attendance_relation: { student_id: string, presence: boolean }[],
+  attendance_relation: { student_id: string, presence: boolean, reason?: ReasonsToNotAttend }[],
 }) {
 
 
@@ -132,6 +131,7 @@ export async function closeLesson(props: {
         }
       },
       data: {
+        reason: attendance.reason,
         did_attend: attendance.presence,
       },
     });

@@ -16,15 +16,28 @@ import { z } from "zod";
 import { closeLesson, getLessonById } from "./actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { Combobox } from "@/components/combobox";
+import { reasonOptions } from "./reason-options";
+import { ReasonsToNotAttend } from "@prisma/client";
 
 const schema = z.object({
   attendance_relation: z.array(
-    z.object({
-      student_id: z.string(),
-      presence: z.boolean(),
-      // Esse campo não é validado, mas pode ser usado para exibição
-      student_name: z.string().optional(),
-    })
+    z
+      .object({
+        student_id: z.string(),
+        presence: z.boolean(),
+        reason: z.nativeEnum(ReasonsToNotAttend).optional(),
+        student_name: z.string().optional(),
+      })
+      .superRefine((data, ctx) => {
+        if (!data.presence && (!data.reason || data.reason.trim() === "")) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "O campo é obrigatório",
+            path: ["attendance_realtion", "reason"],
+          });
+        }
+      })
   ),
 });
 const FormLessonClosure = ({
@@ -61,6 +74,7 @@ const FormLessonClosure = ({
       student_id: attendance.student_id,
       presence: attendance.did_attend,
       student_name: attendance.student.name,
+      reason: attendance.reason || undefined,
     })) ?? [];
 
   const form = useForm<z.infer<typeof schema>>({
@@ -105,9 +119,30 @@ const FormLessonClosure = ({
                           >
                             {att_field.student_name || "Aluno não identificado"}
                           </label>
+                          {!att_field.presence && (
+                            <FormItem>
+                              <FormControl>
+                                <Combobox
+                                  placeholder="Motivo"
+                                  items={reasonOptions}
+                                  selected={field.value[index].reason || null}
+                                  onSelect={(value) => {
+                                    field.onChange(
+                                      field.value.map((item, i) =>
+                                        i === index
+                                          ? { ...item, reason: value }
+                                          : item
+                                      )
+                                    );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                           <Checkbox
                             id={`student-${att_field.student_id}`}
-                            className="w-5 h-5"
+                            className="w-5 h-5 ml-2"
                             checked={att_field.presence}
                             onCheckedChange={(e) => {
                               field.onChange(

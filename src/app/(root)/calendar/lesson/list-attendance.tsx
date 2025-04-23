@@ -4,6 +4,8 @@ import React from "react";
 import { getLessonById } from "./actions";
 import { useQuery } from "@tanstack/react-query";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Combobox } from "@/components/combobox";
+import { reasonOptions } from "./reason-options";
 
 const ListAttendance = ({ id }: { id: string }) => {
   const { data: lesson, isPending } = useQuery({
@@ -26,6 +28,19 @@ const ListAttendance = ({ id }: { id: string }) => {
                 >
                   {att_field.student.name || "Aluno não identificado"}
                 </label>
+                {!att_field.did_attend && (
+                  <FormItem>
+                    <FormControl>
+                      <Combobox
+                        disabled={true}
+                        placeholder="Motivo"
+                        items={reasonOptions}
+                        selected={att_field.reason}
+                        onSelect={() => {}}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
                 <Checkbox
                   id={`student-${att_field.student_id}`}
                   className="w-5 h-5"

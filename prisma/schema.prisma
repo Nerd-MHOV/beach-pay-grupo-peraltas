@@ -29,6 +29,18 @@ enum Tier {
   B
   C
   D
+
+  @@map("tier")
+}
+
+enum ReasonsToNotAttend {
+  climatic
+  health
+  cancelled
+  no_teacher
+  no_justification
+
+  @@map("reasons_to_not_attend")
 }
 
 model User {
@@ -234,11 +246,11 @@ model Lesson {
 }
 
 model LessonAttendance {
-  id         String  @id @default(cuid())
+  id         String              @id @default(cuid())
   lesson_id  String
   student_id String
-  did_attend Boolean @default(false)
-  reason     String?
+  did_attend Boolean             @default(false)
+  reason     ReasonsToNotAttend?
 
   lesson  Lesson  @relation(fields: [lesson_id], references: [id])
   student Athlete @relation(fields: [student_id], references: [id])
