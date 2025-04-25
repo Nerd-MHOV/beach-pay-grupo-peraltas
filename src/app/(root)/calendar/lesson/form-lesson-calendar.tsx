@@ -180,6 +180,9 @@ const FormLessonCalendar = ({
       courts_id: data.court_id,
       tier: data.tier,
       attendance_ids: data.attendance,
+      teacher_availability_id:
+        availabilities.find((av) => av.teacher.id === data.teacher_id)?.id ||
+        "",
     };
     if (lesson?.id) {
       updateLessonFn({

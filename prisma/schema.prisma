@@ -213,25 +213,25 @@ model TeacherAvailability {
   teacher_id String
   time_start DateTime
   time_end   DateTime
-  lesson_id  String?
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
-  teacher Athlete @relation(fields: [teacher_id], references: [id])
-  lesson  Lesson? @relation(fields: [lesson_id], references: [id])
+  teacher Athlete  @relation(fields: [teacher_id], references: [id])
+  lessons Lesson[]
 
   @@map("teacher_availability")
 }
 
 model Lesson {
-  id         String       @id @default(cuid())
-  teacher_id String
-  time_start DateTime
-  time_end   DateTime
-  courts_id  String
-  tier       Tier         @default(D)
-  status     LessonStatus @default(scheduled)
+  id                      String       @id @default(cuid())
+  teacher_id              String
+  time_start              DateTime
+  time_end                DateTime
+  courts_id               String
+  tier                    Tier         @default(D)
+  status                  LessonStatus @default(scheduled)
+  teacher_availability_id String
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
@@ -239,8 +239,8 @@ model Lesson {
   teacher Athlete @relation(fields: [teacher_id], references: [id])
   courts  Courts  @relation(fields: [courts_id], references: [id])
 
-  teacher_availability TeacherAvailability[]
   attendances          LessonAttendance[]
+  teacher_availability TeacherAvailability @relation(fields: [teacher_availability_id], references: [id])
 
   @@map("lesson")
 }

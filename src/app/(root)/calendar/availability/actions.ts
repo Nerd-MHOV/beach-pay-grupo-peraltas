@@ -17,7 +17,7 @@ export const getAvailability = unstable_cache(
         }
         : {},
       include: {
-        lesson: true,
+        lessons: true,
         teacher: {
           include: {
             user: {
