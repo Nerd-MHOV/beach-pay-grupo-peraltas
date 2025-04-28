@@ -81,6 +81,7 @@ export async function getAthleteById(id: string) {
     include: {
       address: true,
       user: true,
+      lesson: true,
       investments: {
         where: {
           investment_type: {
@@ -124,6 +125,11 @@ export async function getAthleteById(id: string) {
             },
           },
         },
+      },
+      teacher_availability: {
+        include: {
+          lessons: true,
+        }
       },
     },
   });

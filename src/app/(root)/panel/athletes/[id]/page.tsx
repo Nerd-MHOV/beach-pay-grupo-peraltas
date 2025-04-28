@@ -7,6 +7,7 @@ import DialogDeleteAthlete from "./dialog-delete-athlete";
 import { getAthleteById } from "../actions";
 import DashboardAthleteInvestments from "./dashboard-athlete-investments";
 import { Separator } from "@/components/ui/separator";
+import DashboardAthleteTeacher from "./dashboard-athlete-teacher";
 
 const Page = async ({
   params,
@@ -42,8 +43,14 @@ const Page = async ({
 
       <DashboardAthleteInvestments athlete={athlete} />
 
-      <Separator className="my-8" />
+      {athlete.is_teacher && (
+        <>
+          <Separator className="my-8" />
+          <DashboardAthleteTeacher athlete={athlete} />
+        </>
+      )}
 
+      <Separator className="my-8" />
       <div className="bg-white p-7 rounded-xl shadow-lg">
         <FormAthlete athlete={athlete} />
       </div>
