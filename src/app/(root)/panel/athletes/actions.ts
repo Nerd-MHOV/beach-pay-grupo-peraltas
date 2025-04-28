@@ -82,6 +82,11 @@ export async function getAthleteById(id: string) {
       address: true,
       user: true,
       lesson: true,
+      lesson_attendance: {
+        include: {
+          lesson: true,
+        },
+      },
       investments: {
         where: {
           investment_type: {

@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { getAthleteById } from "../actions";
 import LoadingData from "@/components/LoadingData";
-import { BarChartTeacherTimes } from "./bar-chart-teacher-times";
-import { PieChartTeacherLesson } from "./pie-chart-teacher-lessons";
+import { BarChartTeacherTimes } from "./charts/bar-chart-teacher-times";
+import { PieChartTeacherLesson } from "./charts/pie-chart-teacher-lessons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -17,7 +17,6 @@ const DashboardAthleteTeacher = ({
 }) => {
   const pointedData = getPointedData(athlete);
   const tiers = getCountTiers(athlete);
-  console.log(tiers);
   return (
     <Suspense fallback={<LoadingData />}>
       <div className="grid gap-4 md:grid-cols-2 ">

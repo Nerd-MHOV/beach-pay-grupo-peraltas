@@ -54,7 +54,9 @@ export function BarChartTeacherTimes({
     <Card className="bg-background border-none shadow-lg select-none">
       <CardHeader>
         <CardTitle>Relação de horas apontadas e convertidas</CardTitle>
-        <CardDescription>Janeiro - Junho 2025</CardDescription>
+        <CardDescription>
+          {chartData[0].month} - {chartData[5].month} {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

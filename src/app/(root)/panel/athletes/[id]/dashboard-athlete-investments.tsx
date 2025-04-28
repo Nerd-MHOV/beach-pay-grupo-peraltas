@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import RadarChartAthlete from "./radar-chart-athlete";
+import RadarChartAthlete from "./charts/radar-chart-athlete";
 import TableRoot from "../../investments/table-root";
 import LoadingData from "@/components/LoadingData";
 import { getAthleteById } from "../actions";

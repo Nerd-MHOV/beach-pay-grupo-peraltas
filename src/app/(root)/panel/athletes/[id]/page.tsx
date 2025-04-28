@@ -8,6 +8,7 @@ import { getAthleteById } from "../actions";
 import DashboardAthleteInvestments from "./dashboard-athlete-investments";
 import { Separator } from "@/components/ui/separator";
 import DashboardAthleteTeacher from "./dashboard-athlete-teacher";
+import DashboardAthleteStudent from "./dashboard-athlete-student";
 
 const Page = async ({
   params,
@@ -47,6 +48,13 @@ const Page = async ({
         <>
           <Separator className="my-8" />
           <DashboardAthleteTeacher athlete={athlete} />
+        </>
+      )}
+
+      {athlete.is_student && (
+        <>
+          <Separator className="my-8" />
+          <DashboardAthleteStudent athlete={athlete} />
         </>
       )}
 
