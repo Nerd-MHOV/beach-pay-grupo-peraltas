@@ -292,7 +292,7 @@ const FormGroupInvestmentAthlete = ({
             name="pair_amount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Qnt. Duplas</FormLabel>
+                <FormLabel>Qnt. Duplas na Categoria</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -312,9 +312,24 @@ const FormGroupInvestmentAthlete = ({
           name="podium"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pódio</FormLabel>
+              <FormLabel>Colocação</FormLabel>
               <FormControl>
-                <Input placeholder="Colocação..." {...field} />
+                <Combobox
+                  placeholder="Selecione a colocação"
+                  items={[
+                    { label: "1º Lugar", value: "1º Lugar" },
+                    { label: "2º Lugar", value: "2º Lugar" },
+                    { label: "3º Lugar", value: "3º Lugar" },
+                    { label: "4º Lugar", value: "4º Lugar" },
+                    { label: "Quartas de Final", value: "Quartas de Final" },
+                    { label: "Oitavas de Final", value: "Oitavas de Final" },
+                    { label: "Fase de Grupo", value: "Fase de Grupo" },
+                  ]}
+                  selected={""}
+                  onSelect={(value) => {
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
