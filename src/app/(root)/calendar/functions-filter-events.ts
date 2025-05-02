@@ -23,9 +23,27 @@ export const FilterdEvents = (
     )
     : [];
 
-  const classes = filters["Aulas"]
-    ? events.filter((event) => event.extendedProps?.formSelected === "class")
-    : [];
+  const classes = [
+    ...filters["Aulas agendas"]
+      ? events.filter((event) =>
+        event.extendedProps?.formSelected === "class" &&
+        event.extendedProps?.status === "scheduled")
+      : [],
+    ...filters["Aulas canceladas"]
+      ? events.filter(
+        (event) =>
+          event.extendedProps?.formSelected === "class" &&
+          event.extendedProps?.status === "canceled"
+      )
+      : [],
+    ...filters["Aulas concluídas"]
+      ? events.filter(
+        (event) =>
+          event.extendedProps?.formSelected === "class" &&
+          event.extendedProps?.status === "completed"
+      )
+      : [],
+  ]
 
   const tournaments = filters["Torneios"]
     ? events.filter(

@@ -23,7 +23,6 @@ export type FormFieldProps = {
   teacher_id?: string;
   court_id?: string;
   attendance_ids?: string[];
-  subject?: string;
   tournament_name?: string;
   description?: string;
   arena_id?: string;
@@ -36,7 +35,9 @@ export type SetFormFieldProps = React.Dispatch<
 export interface FilterEventsProps {
   "Minha Disponibilidade": boolean;
   Torneios: boolean;
-  Aulas: boolean;
+  "Aulas agendas": boolean;
+  "Aulas canceladas": boolean;
+  "Aulas concluídas": boolean;
   [key: string]: boolean;
 }
 
@@ -62,7 +63,9 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   const initialFilterState: FilterEventsProps = {
     "Minha Disponibilidade": true,
     Torneios: true,
-    Aulas: true,
+    "Aulas agendas": true,
+    "Aulas canceladas": true,
+    "Aulas concluídas": true,
     ...teachers.reduce((acc, teacher) => {
       return {
         ...acc,

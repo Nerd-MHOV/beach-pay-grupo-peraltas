@@ -17,8 +17,16 @@ export const noMatchFilterEventsOthers = [
     color: "#f9c2c2", // data-[state=checked]:bg-[#f9c2c2] data-[state=checked]:border-[#f9c2c2]
   },
   {
-    name: "Aulas",
+    name: "Aulas agendas",
     color: "#7289d4", // data-[state=checked]:bg-[#7289d4] data-[state=checked]:border-[#7289d4]
+  },
+  {
+    name: "Aulas canceladas",
+    color: "#763fa2", // data-[state=checked]:bg-[#763fa2] data-[state=checked]:border-[#763fa2]
+  },
+  {
+    name: "Aulas concluídas",
+    color: "#52848c", // data-[state=checked]:bg-[#52848c] data-[state=checked]:border-[#52848c]
   },
 ];
 

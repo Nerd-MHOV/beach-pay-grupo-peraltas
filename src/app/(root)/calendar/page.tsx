@@ -11,9 +11,9 @@ import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
 
 const ColorStatusLesson = {
-  canceled: "#9aace7",
+  canceled: "#763fa2",
   scheduled: "#7289d4",
-  completed: "#7279E9",
+  completed: "#52848c",
 };
 
 const Page = async () => {
@@ -50,7 +50,7 @@ const Page = async () => {
 
     ...lessons.map((lesson) => ({
       backgroundColor: ColorStatusLesson[lesson.status] || "#7289d4",
-      borderColor: "#7289d4",
+      borderColor: ColorStatusLesson[lesson.status] || "#7289d4",
       title: `${lesson.attendances.length.toString().padStart(2, "0")} - ${
         lesson.teacher.name
       }`,
@@ -69,7 +69,6 @@ const Page = async () => {
           (attendance) => attendance.student_id
         ),
         court_id: lesson.courts_id,
-        subject: lesson.subject || undefined,
         status: lesson.status,
       },
     })),
@@ -77,6 +76,7 @@ const Page = async () => {
     ...tournaments.map((tournament) => ({
       backgroundColor: "#f9c2c2",
       borderColor: "#f9c2c2",
+      textColor: "#782d2f",
       title: `${tournament.name}`,
       start: tournament.date_from,
       end: tournament.date_to,
