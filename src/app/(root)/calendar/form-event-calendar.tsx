@@ -73,7 +73,7 @@ const FormEventCalendar = ({
               date: formFields.selectedDate,
               court_id: formFields.court_id,
               attendance: formFields.attendance_ids,
-              subject: formFields.subject,
+              tier: formFields.tier,
               status: formFields.status,
             }}
             onClosure={() => {

@@ -69,6 +69,7 @@ const Page = async () => {
           (attendance) => attendance.student_id
         ),
         court_id: lesson.courts_id,
+        tier: lesson.tier,
         status: lesson.status,
       },
     })),

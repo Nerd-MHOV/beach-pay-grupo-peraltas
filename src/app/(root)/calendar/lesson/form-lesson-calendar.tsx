@@ -19,7 +19,7 @@ import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createLesson, updateLesson } from "./actions";
-import { Lesson, LessonStatus, Tier } from "@prisma/client";
+import { $Enums, Lesson, LessonStatus, Tier } from "@prisma/client";
 import { getAvailability } from "../availability/actions";
 import { getCourts } from "../courts/actions";
 import SimpleInput from "@/components/simple-input";
@@ -67,6 +67,7 @@ const FormLessonCalendar = ({
     };
     court_id?: string;
     subject?: string;
+    tier?: $Enums.Tier;
     attendance?: string[];
   };
 }) => {

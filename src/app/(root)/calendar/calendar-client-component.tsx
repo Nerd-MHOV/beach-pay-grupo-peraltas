@@ -9,7 +9,7 @@ import brLocale from "@fullcalendar/core/locales/pt-br";
 import SidebarMenuCalendar from "./sidebar-menu-calendar";
 import DialogEventCalendar from "./dialog-event-calendar";
 import { EventInput } from "@fullcalendar/core/index.js";
-import { Athlete, LessonStatus, User } from "@prisma/client";
+import { $Enums, Athlete, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
 
@@ -26,6 +26,7 @@ export type FormFieldProps = {
   tournament_name?: string;
   description?: string;
   arena_id?: string;
+  tier?: $Enums.Tier;
   status?: LessonStatus;
 };
 export type SetFormFieldProps = React.Dispatch<
