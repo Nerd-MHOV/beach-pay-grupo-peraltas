@@ -54,8 +54,9 @@ const cachedInvestments = unstable_cache(
       "create-investment",
       "update-investment",
       "delete-investment",
-      "delete-investment-group",
-      "update-group-investment"
+      "delete-group-investment",
+      "update-group-investment",
+      "create-group-investment",
     ],
   }
 );
@@ -104,7 +105,7 @@ const cachedGroupInvestments = unstable_cache(
     tags: [
       "create-group-investment",
       "update-group-investment",
-      "delete-investment-group",
+      "delete-group-investment",
       "update-investment",
       "delete-investment",
     ],
@@ -212,7 +213,7 @@ export async function deleteGroupInvestment(group: InvestmentGroup) {
       id: group.id,
     },
   });
-  revalidateTag("delete-investment-group");
+  revalidateTag("delete-group-investment");
   return deleted;
 }
 
@@ -287,16 +288,4 @@ export async function saveProof(file: File, name: string) {
     folder: "uploads/proofs",
   });
   return uploadResponse.secure_url;
-  // const uploadPath = path.join(process.cwd(), "public", "uploads", "proofs");
-  // if (!fs.existsSync(uploadPath)) {
-  //   fs.mkdirSync(uploadPath, { recursive: true });
-  // }
-  // const filePath = path.join(uploadPath, name);
-  // const fileBuffer = Buffer.from(await file.arrayBuffer());
-  // fs.writeFileSync(filePath, fileBuffer);
-  // const relativeFilePath = path.relative(
-  //   path.join(process.cwd(), "public"),
-  //   filePath
-  // );
-  // return `/${relativeFilePath}`;
 }
