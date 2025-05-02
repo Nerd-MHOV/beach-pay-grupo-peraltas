@@ -19,7 +19,7 @@ export const AthleteSeedFn = (prismaClient: PrismaClient) => {
   });
 };
 
-export const AthleteSeed: Omit<Athlete, "created_at" | "updated_at" | "is_teacher" | "is_associated" | "is_student" | "cpf" | "address_id">[] = [
+export const AthleteSeed: Omit<Athlete, "created_at" | "updated_at" | "is_teacher" | "is_associated" | "is_student" | "cpf" | "address_id" | "tier">[] = [
   {
     id: "athleteseed1",
     name: "Matheus Henrique",
