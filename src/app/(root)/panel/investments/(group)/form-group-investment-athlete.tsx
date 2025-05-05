@@ -325,7 +325,7 @@ const FormGroupInvestmentAthlete = ({
                     { label: "Oitavas de Final", value: "Oitavas de Final" },
                     { label: "Fase de Grupo", value: "Fase de Grupo" },
                   ]}
-                  selected={""}
+                  selected={field.value}
                   onSelect={(value) => {
                     field.onChange(value);
                   }}
