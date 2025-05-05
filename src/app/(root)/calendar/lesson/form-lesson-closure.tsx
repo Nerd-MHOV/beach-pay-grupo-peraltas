@@ -1,4 +1,3 @@
-import SimpleInput from "@/components/simple-input";
 import { Button } from "@/components/ui/button";
 import {
   Form,

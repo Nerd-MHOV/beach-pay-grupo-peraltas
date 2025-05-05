@@ -9,6 +9,17 @@ export const getAvailability = unstable_cache(
   async (props?: {
     aula?: { start: Date; end: Date }
   }) => {
+
+    // Check if the start and end dates are set to 00:00:00.000
+    // If so, set them to 5:00:00.000 and 23:00:00.000 respectively
+    // This is to avoid issues with the database query
+    if (props?.aula?.start && props.aula.start.getHours() === 0 && props.aula.start.getMinutes() === 0 && props.aula.start.getSeconds() === 0) {
+      props.aula.start.setHours(5, 0, 0, 0);
+    }
+    if (props?.aula?.end && props.aula.end.getHours() === 0 && props.aula.end.getMinutes() === 0 && props.aula.end.getSeconds() === 0) {
+      props.aula.end.setHours(23, 0, 0, 0);
+    }
+
     const availability = await db.teacherAvailability.findMany({
       where: props?.aula
         ? {
