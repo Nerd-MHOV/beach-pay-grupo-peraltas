@@ -3,7 +3,6 @@
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
 import { Address, Athlete } from "@prisma/client";
-import { randomUUID } from "crypto";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 const cachedAthletes = unstable_cache(
@@ -214,6 +213,9 @@ export async function updateAthlete(
 export async function deleteAthlete(id: string) {
   const athlete = await db.athlete.delete({
     where: { id },
+  });
+  if (athlete.address_id) await db.address.delete({
+    where: { id: athlete.address_id },
   });
   revalidateTag("delete-athlete");
   return athlete;
