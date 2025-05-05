@@ -101,7 +101,7 @@ const SidebarMenuCalendar = ({
               .map((filter) => (
                 <div className="flex items-center " key={filter}>
                   <Checkbox
-                    id="evento1"
+                    id={`evento-${filter}`}
                     checked={filterEvents[filter]}
                     onCheckedChange={(checked) =>
                       setFilterEvents((prev) => ({
@@ -111,7 +111,10 @@ const SidebarMenuCalendar = ({
                     }
                     className="mr-2 data-[state=checked]:bg-[#95cf9a] data-[state=checked]:border-[#95cf9a]"
                   />
-                  <label htmlFor="evento1" className="text-md font-medium">
+                  <label
+                    htmlFor={`evento-${filter}`}
+                    className="text-md font-medium"
+                  >
                     {filter}
                   </label>
                 </div>
