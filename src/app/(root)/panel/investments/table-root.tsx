@@ -36,7 +36,7 @@ const TableRoot = ({
         <DialogGroupInvestmentAthlete
           trigger={
             <Button size="sm" variant="ghost">
-              <Plus /> Novo Investimento do Torneio
+              <Plus /> Vincular Torneio
             </Button>
           }
           athlete={athlete}
