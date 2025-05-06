@@ -17,7 +17,7 @@ import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 
-export type AthleteTable = Member & {
+export type MemberTable = Member & {
   age: number;
 };
 
@@ -49,7 +49,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
     enableHiding: false,
     label: " ",
     cell: ({ row }) => {
-      const athlete = row.original;
+      const member = row.original;
 
       return (
         <DropdownMenu>
@@ -61,40 +61,44 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(athlete.pix_key)}
+              onClick={() => navigator.clipboard.writeText(member.pix_key)}
             >
               Copy Chave PIX
             </DropdownMenuItem>
+            {member.is_athlete && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <DialogGroupInvestmentAthlete
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                      >
+                        Declarar Grupo de Investimento
+                      </Button>
+                    }
+                    athlete={member}
+                  />
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <DialogInvestmentAthlete
+                    athlete={member}
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                      >
+                        Declarar Investimento
+                      </Button>
+                    }
+                  />
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <DialogGroupInvestmentAthlete
-                trigger={
-                  <Button
-                    variant="ghost"
-                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
-                  >
-                    Declarar Grupo de Investimento
-                  </Button>
-                }
-                athlete={athlete}
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <DialogInvestmentAthlete
-                athlete={athlete}
-                trigger={
-                  <Button
-                    variant="ghost"
-                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
-                  >
-                    Declarar Investimento
-                  </Button>
-                }
-              />
-            </DropdownMenuItem>
-            {/* <DropdownMenuSeparator /> */}
-            <DropdownMenuItem asChild>
-              <Link href={`/panel/athletes/${athlete.id}`}>Detalhes</Link>
+              <Link href={`/panel/members/${member.id}`}>Detalhes</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

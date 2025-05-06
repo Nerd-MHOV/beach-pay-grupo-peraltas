@@ -22,6 +22,7 @@ import {
 export function Combobox({
   items,
   selected,
+  // @ts-ignore
   onSelect,
   placeholder,
   disabled,

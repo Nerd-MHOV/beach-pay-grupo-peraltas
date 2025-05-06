@@ -22,7 +22,7 @@ const TableTournamentDescription = ({
 }: {
   tournament: NonNullable<Awaited<ReturnType<typeof getTournamentById>>>;
 }) => {
-  const datamap = tournament.investment_group
+  const datamap = tournament.investment_tournament
     .reduce(
       (acc, curr) => {
         const newacc = acc;

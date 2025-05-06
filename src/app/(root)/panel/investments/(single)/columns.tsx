@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Arena,
-  Athlete,
+  Member,
   Investment,
-  InvestmentGroup,
+  InvestmentTournament,
   InvestmentType,
   Tournament,
 } from "@prisma/client";
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/tooltip";
 import DialogInvestmentAthlete from "./dialog-investment-athlete";
 import Link from "next/link";
-import DialogGroupInvestmentAthlete from "../(group)/dialog-group-investment-athlete";
+import DialogGroupInvestmentAthlete from "../(tournament)/dialog-investment-tournament";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
@@ -34,11 +34,11 @@ import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn
 type InvestmentColumns = ExtendedColumnDef<
   {
     athlete_name: string;
-    athlete: Athlete;
+    athlete: Member;
     investment_type: string;
-    investment_group:
+    investment_tournament:
       | ({
-          pair: Athlete | null;
+          pair: Member | null;
           tournament:
             | ({
                 arena: Arena;
@@ -47,7 +47,7 @@ type InvestmentColumns = ExtendedColumnDef<
           investments: ({
             investment_type: InvestmentType;
           } & Investment)[];
-        } & InvestmentGroup)
+        } & InvestmentTournament)
       | null;
   } & Investment,
   undefined
@@ -119,7 +119,7 @@ export const columns: InvestmentColumns[] = [
     ),
     label: "Grupo",
     cell: ({ row }) => {
-      const investmentGroup = row.original.investment_group;
+      const investmentGroup = row.original.investment_tournament;
       if (!investmentGroup)
         return (
           <span>
@@ -216,15 +216,15 @@ export const columns: InvestmentColumns[] = [
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <Link href={`/panel/athletes/${row.original.athlete_id}`}>
+            <Link href={`/panel/members/${row.original.athlete_id}`}>
               <DropdownMenuItem>Atleta</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
 
-            {row.original.investment_group && (
+            {row.original.investment_tournament && (
               <DropdownMenuItem asChild>
                 <DialogGroupInvestmentAthlete
-                  investmentGroup={row.original.investment_group}
+                  investmentTournament={row.original.investment_tournament}
                   trigger={
                     <Button
                       variant="ghost"

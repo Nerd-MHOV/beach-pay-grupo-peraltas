@@ -74,7 +74,7 @@ const cachedTournamentById = unstable_cache(
             address: true,
           }
         },
-        investment_group: {
+        investment_tournament: {
           include: {
             investments: {
               where: {

@@ -7,7 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import FormInvestmentAthlete from "./form-investment-athlete";
-import { Athlete, Investment } from "@prisma/client";
+import { Member, Investment } from "@prisma/client";
 import React, { JSX } from "react";
 import { format } from "date-fns";
 
@@ -18,7 +18,7 @@ const DialogInvestmentAthlete = ({
   onCreateInvestment,
   clean = false,
 }: {
-  athlete?: Athlete;
+  athlete?: Member;
   investment?: Investment;
   trigger?: JSX.Element;
   onCreateInvestment?: (investment: Investment) => void;

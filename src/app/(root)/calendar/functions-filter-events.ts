@@ -1,12 +1,12 @@
 import { EventInput } from "@fullcalendar/core/index.js";
 import { FilterEventsProps } from "./calendar-client-component";
-import { Athlete, User } from "@prisma/client";
+import { Member, User } from "@prisma/client";
 
 export const FilterdEvents = (
   currentUserId: string,
   events: EventInput[],
   filters: FilterEventsProps,
-  teachers: (Athlete & {
+  teachers: (Member & {
     user: Omit<User, "passwd">;
     is_teacher: true;
   })[]

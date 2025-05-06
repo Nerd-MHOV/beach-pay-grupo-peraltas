@@ -15,8 +15,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getInvestmentsType } from "../../investment-types/actions";
 import DialogCreateInvestmentType from "../../investment-types/dialog-create-investment-type";
-import { getAthletes } from "../../athletes/actions";
-import { Athlete, Investment } from "@prisma/client";
+import { getMembers } from "@/app/(root)/panel/members/actions";
+import { Member, Investment } from "@prisma/client";
 import MoneyInput from "@/components/money-Input";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
@@ -44,7 +44,7 @@ const FormInvestmentAthlete = ({
 }: {
   onCreateInvestment?: (investment: Investment) => void;
   investment?: Investment;
-  athlete?: Athlete;
+  athlete?: Member;
   clean?: boolean;
 }) => {
   const { toast } = useToast();
@@ -53,8 +53,8 @@ const FormInvestmentAthlete = ({
   );
 
   const { data: athletes } = useQuery({
-    queryKey: ["athletes"],
-    queryFn: async () => await getAthletes(),
+    queryKey: ["members"],
+    queryFn: async () => await getMembers(),
   });
 
   const { data: investmentTypes, refetch: refetchInvestmentTypes } = useQuery({
@@ -75,7 +75,7 @@ const FormInvestmentAthlete = ({
       const created = await createInvestmentAthlete({
         ...values,
         proof: file,
-        investment_group_id: null,
+        investment_tournament_id: null,
         ...(athlete ? { athlete_id: athlete.id } : {}),
       });
       onCreateInvestment(created);
@@ -115,7 +115,7 @@ const FormInvestmentAthlete = ({
         id: investment?.id || "",
         ...values,
         proof: file,
-        investment_group_id: null,
+        investment_tournament_id: investment?.investment_tournament_id || null,
       });
       toast({
         title: "Investimento Atualizado",

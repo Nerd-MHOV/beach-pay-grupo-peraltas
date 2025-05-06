@@ -1,7 +1,7 @@
 "use server";
 import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { Investment, InvestmentGroup } from "@prisma/client";
+import { Investment, InvestmentTournament } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getInvestments = async (athlete_id?: string) => {
@@ -18,7 +18,7 @@ const cachedInvestments = unstable_cache(
     return db.investment.findMany({
       where: athlete_id ? { athlete_id: athlete_id } : {},
       include: {
-        investment_group: {
+        investment_tournament: {
           include: {
             pair: true,
             tournament: {
@@ -54,25 +54,25 @@ const cachedInvestments = unstable_cache(
       "create-investment",
       "update-investment",
       "delete-investment",
-      "delete-group-investment",
-      "update-group-investment",
-      "create-group-investment",
+      "delete-investment-tournament",
+      "update-investment-tournament",
+      "create-investment-tournament",
     ],
   }
 );
 
-export const getInvestmentGroups = async () => {
+export const getInvestmentTournaments = async () => {
   const session = await verifySession();
-  return await cachedGroupInvestments(session?.userId || "");
+  return await cachedInvestmentTournament(session?.userId || "");
 }
 
-const cachedGroupInvestments = unstable_cache(
+const cachedInvestmentTournament = unstable_cache(
   async (userId: string, athlete_id?: string) => {
     const user = await db.user.findFirst({ where: { id: userId } });
     if (!user) {
       return [];
     }
-    return db.investmentGroup.findMany({
+    return db.investmentTournament.findMany({
       where: athlete_id ? { athlete_id } : {},
       include: {
         pair: true,
@@ -100,12 +100,12 @@ const cachedGroupInvestments = unstable_cache(
       },
     });
   },
-  [`group-investment`],
+  [`investment-tournament`],
   {
     tags: [
-      "create-group-investment",
-      "update-group-investment",
-      "delete-group-investment",
+      "create-investment-tournament",
+      "update-investment-tournament",
+      "delete-investment-tournament",
       "update-investment",
       "delete-investment",
     ],
@@ -132,7 +132,7 @@ const cachedInvestmentById = unstable_cache(
         },
       },
       include: {
-        investment_group: {
+        investment_tournament: {
           include: {
             pair: true,
             tournament: {
@@ -207,21 +207,21 @@ export async function deleteInvestmentAthlete(investment: Investment) {
   return deleted;
 }
 
-export async function deleteGroupInvestment(group: InvestmentGroup) {
-  const deleted = await db.investmentGroup.delete({
+export async function deleteInvestmentTournament(investment: InvestmentTournament) {
+  const deleted = await db.investmentTournament.delete({
     where: {
-      id: group.id,
+      id: investment.id,
     },
   });
-  revalidateTag("delete-group-investment");
+  revalidateTag("delete-investment-tournament");
   return deleted;
 }
 
-export async function createGroupInvetimentAthlete(
-  data: Omit<InvestmentGroup, "id" | "created_at" | "updated_at">,
+export async function createInvestmentTournamentAthlete(
+  data: Omit<InvestmentTournament, "id" | "created_at" | "updated_at">,
   investments: { id: string }[]
 ) {
-  const investment_group = await db.investmentGroup.create({
+  const investmentTournament = await db.investmentTournament.create({
     data: {
       ...data,
       investments: {
@@ -229,15 +229,15 @@ export async function createGroupInvetimentAthlete(
       },
     },
   });
-  revalidateTag("create-group-investment");
-  return investment_group;
+  revalidateTag("create-investment-tournament");
+  return investmentTournament;
 }
 
-export async function updateGroupInvestmentAthlete(
-  data: Omit<InvestmentGroup, "created_at" | "updated_at">,
+export async function updateInvestmentTournament(
+  data: Omit<InvestmentTournament, "created_at" | "updated_at">,
   investments: { id: string }[]
 ) {
-  const groupInvestment = await db.investmentGroup.update({
+  const investmentTournament = await db.investmentTournament.update({
     where: {
       id: data.id,
     },
@@ -248,8 +248,8 @@ export async function updateGroupInvestmentAthlete(
       },
     },
   });
-  revalidateTag("update-group-investment");
-  return groupInvestment;
+  revalidateTag("update-investment-tournament");
+  return investmentTournament;
 }
 
 export async function updateInvestmentProof(
@@ -271,7 +271,7 @@ export async function updateInvestmentProof(
     },
   });
   revalidateTag("update-investment");
-  revalidateTag("update-group-investment");
+  revalidateTag("update-investment-tournament");
 }
 
 export async function saveProof(file: File, name: string) {

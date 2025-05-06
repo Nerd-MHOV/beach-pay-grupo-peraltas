@@ -1,13 +1,16 @@
 import React from "react";
 
 import TableRoot from "./table-root";
-import { getInvestmentGroups, getInvestments } from "./actions";
+import { getInvestmentTournaments, getInvestments } from "./actions";
 
 const InvestmentData = async () => {
-  const investmentGroups = await getInvestmentGroups();
+  const investmentTournament = await getInvestmentTournaments();
   const investments = await getInvestments();
   return (
-    <TableRoot investmentGroup={investmentGroups} investments={investments} />
+    <TableRoot
+      investmentTournament={investmentTournament}
+      investments={investments}
+    />
   );
 };
 

@@ -14,7 +14,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { getAthletes } from "../../panel/athletes/actions";
+import { getMembers } from "@/app/(root)/panel/members/actions";
 import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
@@ -75,9 +75,9 @@ const FormLessonCalendar = ({
   const { toast } = useToast();
   const query = useQueryClient();
   const { data: athletes, isPending: isPendingAthletes } = useQuery({
-    queryKey: ["athletes"],
+    queryKey: ["members"],
     queryFn: async () => {
-      const data = await getAthletes({
+      const data = await getMembers({
         student: true,
       });
       return data;

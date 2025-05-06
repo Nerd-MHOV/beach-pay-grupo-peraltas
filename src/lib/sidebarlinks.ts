@@ -14,9 +14,9 @@ export const SidebarLinks = [
     role: ["admin", "operational", "teacher"]
   },
   {
-    link: "/panel/athletes",
+    link: "/panel/members",
     icon: Dumbbell,
-    title: "Atletas",
+    title: "Membros",
     role: ["admin", "operational"]
   },
   {

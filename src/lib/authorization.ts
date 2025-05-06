@@ -23,8 +23,8 @@ const AdminPages = [
 
 const OperationalPages = [
   "/panel",
-  "/panel/athletes",
-  "/panel/athletes/*",
+  "/panel/members",
+  "/panel/members/*",
   "/panel/investments",
   "/panel/investments/*",
   "/panel/investments",

@@ -1,26 +1,26 @@
 "use client";
-import { Athlete } from "@prisma/client";
+import { Member } from "@prisma/client";
 import DialogInvestmentAthlete from "./(single)/dialog-investment-athlete";
-import DialogGroupInvestmentAthlete from "./(group)/dialog-group-investment-athlete";
+import DialogGroupInvestmentAthlete from "./(tournament)/dialog-investment-tournament";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import TableGroupInvestments from "./(group)/table-group-investments";
-import { getInvestmentGroups, getInvestments } from "./actions";
+import TableInvestmentTournament from "./(tournament)/table-investment-tournament";
+import { getInvestmentTournaments, getInvestments } from "./actions";
 import TableInvestments from "./(single)/table-investments";
 
 const TableRoot = ({
   athlete,
-  investmentGroup,
+  investmentTournament,
   investments,
 }: {
-  athlete?: Athlete;
-  investmentGroup: Awaited<ReturnType<typeof getInvestmentGroups>>;
+  athlete?: Member;
+  investmentTournament: Awaited<ReturnType<typeof getInvestmentTournaments>>;
   investments: Awaited<ReturnType<typeof getInvestments>>;
 }) => {
-  const [showGroup, setShowGroup] = useState<boolean>(false);
+  const [showTournament, setShowTournament] = useState<boolean>(false);
   const description = athlete ? `Investimentos em ${athlete.name}` : undefined;
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
@@ -36,26 +36,26 @@ const TableRoot = ({
         <DialogGroupInvestmentAthlete
           trigger={
             <Button size="sm" variant="ghost">
-              <Plus /> Novo Grupo de Investimento
+              <Plus /> Novo Investimento do Torneio
             </Button>
           }
           athlete={athlete}
         />
         <div className="flex items-center space-x-2">
-          <Label htmlFor="table-mode">Único</Label>
+          <Label htmlFor="table-mode">Investimento</Label>
           <Switch
             id="table-mode"
-            onCheckedChange={setShowGroup}
-            checked={showGroup}
+            onCheckedChange={setShowTournament}
+            checked={showTournament}
           />
-          <Label htmlFor="table-mode">Grupo</Label>
+          <Label htmlFor="table-mode">Torneio</Label>
         </div>
       </div>
 
-      {showGroup ? (
-        <TableGroupInvestments
+      {showTournament ? (
+        <TableInvestmentTournament
           pdfDescription={description}
-          groupInvestments={investmentGroup}
+          investmentTournaments={investmentTournament}
         />
       ) : (
         <TableInvestments

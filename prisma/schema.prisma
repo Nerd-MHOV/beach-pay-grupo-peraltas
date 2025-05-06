@@ -51,7 +51,7 @@ model User {
   email      String
   role       UserRole @default(operational)
   teacher_id String?  @unique
-  teacher    Athlete? @relation(fields: [teacher_id, name], references: [id, name])
+  teacher    Member?  @relation(fields: [teacher_id, name], references: [id, name])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -60,7 +60,7 @@ model User {
   @@map("user")
 }
 
-model Athlete {
+model Member {
   id            String   @id @default(cuid())
   name          String   @unique
   birthday      DateTime
@@ -73,40 +73,41 @@ model Athlete {
   is_student    Boolean  @default(false)
   is_associated Boolean  @default(false)
   is_teacher    Boolean  @default(false)
+  is_athlete    Boolean  @default(false)
   tier          Tier     @default(D)
 
   user    User?
-  address Address? @relation(fields: [address_id], references: [id])
+  address Address? @relation(fields: [address_id], references: [id], onDelete: Cascade)
 
-  created_at               DateTime              @default(now())
-  updated_at               DateTime              @updatedAt
-  investments              Investment[]
-  investment_group_athlete InvestmentGroup[]     @relation("athlete_investment_group")
-  investment_group_pair    InvestmentGroup[]     @relation("pair_investment_group")
-  teacher_availability     TeacherAvailability[]
-  lesson                   Lesson[]
-  lesson_attendance        LessonAttendance[]
+  created_at                    DateTime               @default(now())
+  updated_at                    DateTime               @updatedAt
+  investments                   Investment[]
+  investment_tournament_athlete InvestmentTournament[] @relation("athlete_investment_tournament")
+  investment_tournament_pair    InvestmentTournament[] @relation("pair_investment_tournament")
+  teacher_availability          TeacherAvailability[]
+  lesson                        Lesson[]
+  lesson_attendance             LessonAttendance[]
 
   @@unique([id, name])
-  @@map("athlete")
+  @@map("member")
 }
 
 model Investment {
-  id                  String    @id @default(cuid())
-  investment_type_id  String
-  athlete_id          String
-  value               Float
-  description         String
-  date                DateTime
-  paid                DateTime?
-  proof               String?
-  investment_group_id String?
-  created_at          DateTime  @default(now())
-  updated_at          DateTime  @updatedAt
+  id                       String    @id @default(cuid())
+  investment_type_id       String
+  athlete_id               String
+  value                    Float
+  description              String
+  date                     DateTime
+  paid                     DateTime?
+  proof                    String?
+  investment_tournament_id String?
+  created_at               DateTime  @default(now())
+  updated_at               DateTime  @updatedAt
 
-  athlete          Athlete          @relation(fields: [athlete_id], references: [id])
-  investment_type  InvestmentType   @relation(fields: [investment_type_id], references: [id])
-  investment_group InvestmentGroup? @relation(fields: [investment_group_id], references: [id])
+  athlete               Member                @relation(fields: [athlete_id], references: [id])
+  investment_type       InvestmentType        @relation(fields: [investment_type_id], references: [id])
+  investment_tournament InvestmentTournament? @relation(fields: [investment_tournament_id], references: [id])
 
   @@map("investment")
 }
@@ -124,25 +125,24 @@ model InvestmentType {
   @@map("investment_type")
 }
 
-model InvestmentGroup {
+model InvestmentTournament {
   id            String  @id @default(cuid())
   athlete_id    String
   pair_id       String?
-  tournament_id String?
-  podium        String?
+  tournament_id String
+  podium        String
   description   String?
-  pair_amount   Int?
+  pair_amount   Int
   km            Float?
-  km_racional   Float?
 
   investments Investment[]
-  athlete     Athlete      @relation(fields: [athlete_id], references: [id], name: "athlete_investment_group")
-  pair        Athlete?     @relation(fields: [pair_id], references: [id], name: "pair_investment_group")
+  athlete     Member       @relation(fields: [athlete_id], references: [id], name: "athlete_investment_tournament")
+  pair        Member?      @relation(fields: [pair_id], references: [id], name: "pair_investment_tournament")
   tournament  Tournament?  @relation(fields: [tournament_id], references: [id])
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
 
-  @@map("investment_group")
+  @@map("investment_tournament")
 }
 
 model Arena {
@@ -150,7 +150,7 @@ model Arena {
   name       String
   address_id String @unique
 
-  address Address @relation(fields: [address_id], references: [id])
+  address Address @relation(fields: [address_id], references: [id], onDelete: Cascade)
 
   tournaments Tournament[]
   created_at  DateTime     @default(now())
@@ -168,10 +168,10 @@ model Tournament {
   description String?
   arena_id    String
 
-  arena            Arena             @relation(fields: [arena_id], references: [id])
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @updatedAt
-  investment_group InvestmentGroup[]
+  arena                 Arena                  @relation(fields: [arena_id], references: [id])
+  created_at            DateTime               @default(now())
+  updated_at            DateTime               @updatedAt
+  investment_tournament InvestmentTournament[]
 
   @@unique([name, arena_id, date_from, date_to])
   @@map("tournament")
@@ -202,8 +202,8 @@ model Address {
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
-  arena   Arena?
-  athlete Athlete?
+  arena  Arena?
+  member Member?
 
   @@map("address")
 }
@@ -217,7 +217,7 @@ model TeacherAvailability {
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
-  teacher Athlete  @relation(fields: [teacher_id], references: [id])
+  teacher Member   @relation(fields: [teacher_id], references: [id])
   lessons Lesson[]
 
   @@map("teacher_availability")
@@ -237,8 +237,8 @@ model Lesson {
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
 
-  teacher Athlete @relation(fields: [teacher_id], references: [id])
-  courts  Courts  @relation(fields: [courts_id], references: [id])
+  teacher Member @relation(fields: [teacher_id], references: [id])
+  courts  Courts @relation(fields: [courts_id], references: [id])
 
   attendances          LessonAttendance[]
   teacher_availability TeacherAvailability @relation(fields: [teacher_availability_id], references: [id])
@@ -253,8 +253,8 @@ model LessonAttendance {
   did_attend Boolean             @default(false)
   reason     ReasonsToNotAttend?
 
-  lesson  Lesson  @relation(fields: [lesson_id], references: [id])
-  student Athlete @relation(fields: [student_id], references: [id])
+  lesson  Lesson @relation(fields: [lesson_id], references: [id])
+  student Member @relation(fields: [student_id], references: [id])
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())

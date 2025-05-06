@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { $Enums, Athlete, User } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
 import { createUser, updateUser } from "./actions";
 import {
   Select,

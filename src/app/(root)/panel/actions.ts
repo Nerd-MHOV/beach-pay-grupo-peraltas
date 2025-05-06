@@ -65,7 +65,7 @@ export async function getDashboard(data?: {
     },
   });
 
-  const totalSubscriptions = await db.athlete.count({
+  const totalSubscriptions = await db.member.count({
     where: {
       created_at: {
         gte: data?.date?.from,
@@ -213,7 +213,7 @@ export async function getDashboard(data?: {
       Promise.all(
         results.map(async (result) => {
           return {
-            athlete: await db.athlete.findUnique({
+            athlete: await db.member.findUnique({
               where: { id: result.athlete_id },
               include: {
                 investments: {

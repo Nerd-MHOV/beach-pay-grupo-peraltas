@@ -58,7 +58,7 @@ export const columns: dashboardColumnsDef[] = [
     cell: ({ row }) => {
       return (
         <Link
-          href={`/panel/athletes/${row.original.athlete_id}`}
+          href={`/panel/members/${row.original.athlete_id}`}
           className={buttonVariants({
             variant: "ghost",
             className: "h-8 w-8",

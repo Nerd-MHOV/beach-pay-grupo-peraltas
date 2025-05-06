@@ -8,7 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import React from "react";
-import FormCreateInvestmentType from "./form-create-investment-type";
 import { InvestmentType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";

@@ -9,7 +9,7 @@ import brLocale from "@fullcalendar/core/locales/pt-br";
 import SidebarMenuCalendar from "./sidebar-menu-calendar";
 import DialogEventCalendar from "./dialog-event-calendar";
 import { EventInput } from "@fullcalendar/core/index.js";
-import { $Enums, Athlete, LessonStatus, User } from "@prisma/client";
+import { $Enums, Member, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
 
@@ -49,7 +49,7 @@ export type SetFilterEventsProps = React.Dispatch<
 interface CalendarClientComponentProps {
   currentUserId: string;
   events: (EventInput & { extendedProps: FormFieldProps })[];
-  teachers: (Athlete & { user: Omit<User, "passwd">; is_teacher: true })[];
+  teachers: (Member & { user: Omit<User, "passwd">; is_teacher: true })[];
 }
 const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   currentUserId,

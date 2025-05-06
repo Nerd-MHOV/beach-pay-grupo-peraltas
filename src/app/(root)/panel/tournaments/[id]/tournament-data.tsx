@@ -16,7 +16,7 @@ const TournmanetData = async ({ id }: { id: string }) => {
   }
 
   const TotalInvestments = Number(
-    tournament.investment_group.reduce(
+    tournament.investment_tournament.reduce(
       (acc, curr) =>
         acc + curr.investments.reduce((acci, curri) => acci + curri.value, 0),
       0
@@ -26,7 +26,7 @@ const TournmanetData = async ({ id }: { id: string }) => {
     currency: "BRL",
   });
 
-  const participants: string[] = tournament.investment_group.reduce(
+  const participants: string[] = tournament.investment_tournament.reduce(
     (acc: string[], curr) => {
       if (!acc.includes(curr.athlete_id)) {
         return [...acc, curr.athlete_id];

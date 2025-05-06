@@ -7,24 +7,24 @@ import { useRouter } from "next/navigation";
 
 const TableToggle = () => {
   const router = useRouter();
-  const [showGroup, setShowGroup] = useState<boolean>(false);
+  const [showTournament, setShowTournament] = useState<boolean>(false);
 
   const handleToggleChange = (checked: boolean) => {
-    setShowGroup(checked);
-    router.push(`?group=${checked}`, {
+    setShowTournament(checked);
+    router.push(`?tournament=${checked}`, {
       scroll: false,
     });
   };
 
   return (
     <div className="flex items-center space-x-2">
-      <Label htmlFor="table-mode">Único</Label>
+      <Label htmlFor="table-mode">Investimento</Label>
       <Switch
         id="table-mode"
         onCheckedChange={handleToggleChange}
-        checked={showGroup}
+        checked={showTournament}
       />
-      <Label htmlFor="table-mode">Grupo</Label>
+      <Label htmlFor="table-mode">Torneio</Label>
     </div>
   );
 };
