@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cmabcrsl5000bqw1q7os3fazr",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "time_start": "2025-05-06 20:00:00.000",
+    "time_end": "2025-05-06 21:00:00.000",
+    "courts_id": "courtseed3",
+    "updated_at": "2025-05-05 17:26:53.554",
+    "created_at": "2025-05-05 17:26:53.554",
+    "status": "scheduled",
+    "tier": "C",
+    "teacher_availability_id": "cmabcq9da0009qw1qd2ts1nwg"
+  },
+  {
+    "id": "cmabcw9m6000jqw1q2ww2hanb",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "time_start": "2025-05-07 20:00:00.000",
+    "time_end": "2025-05-07 21:00:00.000",
+    "courts_id": "courtseed3",
+    "updated_at": "2025-05-05 17:30:22.253",
+    "created_at": "2025-05-05 17:30:22.253",
+    "status": "scheduled",
+    "tier": "D",
+    "teacher_availability_id": "cmabcv6mg000hqw1quqp3e0gy"
+  },
+  {
+    "id": "cmabcxyam000qqw1qd3v3yltg",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "time_start": "2025-05-07 19:00:00.000",
+    "time_end": "2025-05-07 20:00:00.000",
+    "courts_id": "courtseed3",
+    "updated_at": "2025-05-05 17:31:40.893",
+    "created_at": "2025-05-05 17:31:40.893",
+    "status": "scheduled",
+    "tier": "D",
+    "teacher_availability_id": "cmabcwqv3000oqw1q2z2938id"
+  },
+  {
+    "id": "cmabczcsr000vqw1qgkozab1a",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "time_start": "2025-05-07 21:00:00.000",
+    "time_end": "2025-05-07 22:00:00.000",
+    "courts_id": "courtseed3",
+    "updated_at": "2025-05-05 17:32:46.346",
+    "created_at": "2025-05-05 17:32:46.346",
+    "status": "scheduled",
+    "tier": "D",
+    "teacher_availability_id": "cmabcylf3000tqw1q9j7qpogr"
+  },
+  {
+    "id": "cmabcnc9o0003qw1qecpijinm",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "time_start": "2025-05-07 10:00:00.000",
+    "time_end": "2025-05-07 11:00:00.000",
+    "courts_id": "courtseed3",
+    "updated_at": "2025-05-05 17:35:22.653",
+    "created_at": "2025-05-05 17:23:25.786",
+    "status": "scheduled",
+    "tier": "D",
+    "teacher_availability_id": "cmabcmbcj0001qw1qa3hufvve"
+  }
+]

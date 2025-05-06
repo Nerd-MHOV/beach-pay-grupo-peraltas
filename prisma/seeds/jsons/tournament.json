@@ -1,0 +1,72 @@
+[
+  {
+    "id": "cma49e14h002psb1p9ldojgbj",
+    "name": "Desafio dos Gigantes / Arena Bariri",
+    "date_from": "2025-01-18 03:00:00.000",
+    "date_to": "2025-01-18 03:00:00.000",
+    "description": "Torneio a parte ",
+    "arena_id": "cma49cw1b002msb1ps464040x",
+    "created_at": "2025-04-30 18:17:49.349",
+    "updated_at": "2025-04-30 18:17:49.349"
+  },
+  {
+    "id": "cma4aoqi3003fsb1prcr64n34",
+    "name": "Arena NRT",
+    "date_from": "2025-01-13 03:00:00.000",
+    "date_to": "2025-01-13 03:00:00.000",
+    "description": "Helena",
+    "arena_id": "cma4a2l5i002usb1pgk3da5ui",
+    "created_at": "2025-04-30 18:54:08.425",
+    "updated_at": "2025-04-30 19:12:43.725"
+  },
+  {
+    "id": "cma4chmi00044sb1p8pwc0z5l",
+    "name": "Arena Beach Ribeirão",
+    "date_from": "2025-01-17 03:00:00.000",
+    "date_to": "2025-01-17 03:00:00.000",
+    "description": "Helena",
+    "arena_id": "cma4a39rv002wsb1papypbe92",
+    "created_at": "2025-04-30 19:44:35.878",
+    "updated_at": "2025-04-30 19:44:35.878"
+  },
+  {
+    "id": "cma4cz4bq004gsb1pt4ot43ml",
+    "name": "Makai Beach Tennis Jaú",
+    "date_from": "2025-01-25 03:00:00.000",
+    "date_to": "2025-01-25 03:00:00.000",
+    "description": "Makai",
+    "arena_id": "cma4a47ub002ysb1ptq9zp7k8",
+    "created_at": "2025-04-30 19:58:12.092",
+    "updated_at": "2025-04-30 19:58:12.092"
+  },
+  {
+    "id": "cma4cztkd004msb1p0upfvtke",
+    "name": "Arena Bariri Beach Tennis",
+    "date_from": "2025-01-18 03:00:00.000",
+    "date_to": "2025-01-18 03:00:00.000",
+    "description": "Bariri",
+    "arena_id": "cma49cw1b002msb1ps464040x",
+    "created_at": "2025-04-30 19:58:44.842",
+    "updated_at": "2025-04-30 19:58:44.842"
+  },
+  {
+    "id": "cma4dcamj004ysb1p89cbxnkf",
+    "name": "Play Beach Tennis Araraquara",
+    "date_from": "2025-02-01 03:00:00.000",
+    "date_to": "2025-02-01 03:00:00.000",
+    "description": "Porta\nLeo\nBi\nBetti\nRicardo\nHelena\nDuda\nGui",
+    "arena_id": "cma4a52sv0030sb1pozcpo001",
+    "created_at": "2025-04-30 20:08:26.825",
+    "updated_at": "2025-04-30 20:08:26.825"
+  },
+  {
+    "id": "cma6uyvop007esb1pob3mm1o5",
+    "name": "One academy Baran",
+    "date_from": "2025-02-03 03:00:00.000",
+    "date_to": "2025-02-03 03:00:00.000",
+    "description": "Helena",
+    "arena_id": "cma4a5t460032sb1p49wvcmdu",
+    "created_at": "2025-05-02 13:57:26.375",
+    "updated_at": "2025-05-02 13:57:26.375"
+  }
+]

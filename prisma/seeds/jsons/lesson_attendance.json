@@ -1,0 +1,101 @@
+[
+  {
+    "id": "cmabcrsl5000cqw1qvdjwkbw1",
+    "lesson_id": "cmabcrsl5000bqw1q7os3fazr",
+    "student_id": "cma421e5o0016sb1pip2e8jmr",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:26:53.554",
+    "created_at": "2025-05-05 17:26:53.554",
+    "reason": null
+  },
+  {
+    "id": "cmabcrsl5000dqw1qa3dq22eq",
+    "lesson_id": "cmabcrsl5000bqw1q7os3fazr",
+    "student_id": "cma41sme2000ysb1p5tlerj4d",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:26:53.554",
+    "created_at": "2025-05-05 17:26:53.554",
+    "reason": null
+  },
+  {
+    "id": "cmabcw9m6000kqw1qr4cccc70",
+    "lesson_id": "cmabcw9m6000jqw1q2ww2hanb",
+    "student_id": "cma3yasym000ksb1p6n1098e4",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:30:22.253",
+    "created_at": "2025-05-05 17:30:22.253",
+    "reason": null
+  },
+  {
+    "id": "cmabcw9m6000lqw1qflrcmtqh",
+    "lesson_id": "cmabcw9m6000jqw1q2ww2hanb",
+    "student_id": "cma47esv50022sb1pa5mjig76",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:30:22.253",
+    "created_at": "2025-05-05 17:30:22.253",
+    "reason": null
+  },
+  {
+    "id": "cmabcw9m6000mqw1qhzyc91mw",
+    "lesson_id": "cmabcw9m6000jqw1q2ww2hanb",
+    "student_id": "cma41qtjz000wsb1pqtjkuqk8",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:30:22.253",
+    "created_at": "2025-05-05 17:30:22.253",
+    "reason": null
+  },
+  {
+    "id": "cmabcxyam000rqw1q15v68csl",
+    "lesson_id": "cmabcxyam000qqw1qd3v3yltg",
+    "student_id": "cma47cg5e0020sb1pyrzhpvod",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:31:40.893",
+    "created_at": "2025-05-05 17:31:40.893",
+    "reason": null
+  },
+  {
+    "id": "cmabczcsr000wqw1q7f6q8btg",
+    "lesson_id": "cmabczcsr000vqw1qgkozab1a",
+    "student_id": "cma47agjp001ysb1pshuvf6qo",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:32:46.346",
+    "created_at": "2025-05-05 17:32:46.346",
+    "reason": null
+  },
+  {
+    "id": "cmabczcsr000xqw1q60e94rnu",
+    "lesson_id": "cmabczcsr000vqw1qgkozab1a",
+    "student_id": "cma3ydepr000msb1p011s3n04",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:32:46.346",
+    "created_at": "2025-05-05 17:32:46.346",
+    "reason": null
+  },
+  {
+    "id": "cmabd2pef0010qw1qwhljppah",
+    "lesson_id": "cmabcnc9o0003qw1qecpijinm",
+    "student_id": "cma3xsxsy000csb1p4mm0bjjg",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:35:22.647",
+    "created_at": "2025-05-05 17:35:22.647",
+    "reason": null
+  },
+  {
+    "id": "cmabd2pef0011qw1q7iiog5uy",
+    "lesson_id": "cmabcnc9o0003qw1qecpijinm",
+    "student_id": "cma3xk5b90004sb1po4w8r26m",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:35:22.647",
+    "created_at": "2025-05-05 17:35:22.647",
+    "reason": null
+  },
+  {
+    "id": "cmabd2pef0012qw1qkzrln62g",
+    "lesson_id": "cmabcnc9o0003qw1qecpijinm",
+    "student_id": "cmabd28p9000yqw1q6wpzgxgz",
+    "did_attend": false,
+    "updated_at": "2025-05-05 17:35:22.647",
+    "created_at": "2025-05-05 17:35:22.647",
+    "reason": null
+  }
+]

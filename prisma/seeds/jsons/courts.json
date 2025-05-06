@@ -1,0 +1,82 @@
+[
+  {
+    "id": "courtseed4",
+    "name": "Quadra 4",
+    "number": 4,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed2",
+    "name": "Quadra 2",
+    "number": 2,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed1",
+    "name": "Quadra 1",
+    "number": 1,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed3",
+    "name": "Quadra 3",
+    "number": 3,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed6",
+    "name": "Quadra 6",
+    "number": 6,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed5",
+    "name": "Quadra 5",
+    "number": 5,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed7",
+    "name": "Quadra 7",
+    "number": 7,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed8",
+    "name": "Quadra 8",
+    "number": 8,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed9",
+    "name": "Quadra 9",
+    "number": 9,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  },
+  {
+    "id": "courtseed10",
+    "name": "Quadra 10",
+    "number": 10,
+    "is_single": false,
+    "created_at": "2025-04-15 18:50:17.225",
+    "updated_at": "2025-04-15 18:50:17.225"
+  }
+]

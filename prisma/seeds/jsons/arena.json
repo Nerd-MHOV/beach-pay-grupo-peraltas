@@ -1,0 +1,93 @@
+[
+  {
+    "id": "cma49cw1b002msb1ps464040x",
+    "name": "Arena Bariri Beach Tennis",
+    "address_id": "cma49cw1c002nsb1p1tgch3h6",
+    "created_at": "2025-04-30 18:16:56.111",
+    "updated_at": "2025-04-30 18:16:56.111"
+  },
+  {
+    "id": "cma49th70002qsb1pud2e2p0z",
+    "name": "Arena Sports Jahu",
+    "address_id": "cma49th70002rsb1pj1b9hbyc",
+    "created_at": "2025-04-30 18:29:50.027",
+    "updated_at": "2025-04-30 18:29:50.027"
+  },
+  {
+    "id": "cma4a1tbo002ssb1psfu0ikpd",
+    "name": "Praia Clube Bariri",
+    "address_id": "cma4a1tbo002tsb1p9cjvzzoy",
+    "created_at": "2025-04-30 18:36:18.935",
+    "updated_at": "2025-04-30 18:36:18.935"
+  },
+  {
+    "id": "cma4a2l5i002usb1pgk3da5ui",
+    "name": "Arena NRT Beach Tennis",
+    "address_id": "cma4a2l5i002vsb1p642u003b",
+    "created_at": "2025-04-30 18:36:55.061",
+    "updated_at": "2025-04-30 18:36:55.061"
+  },
+  {
+    "id": "cma4a39rv002wsb1papypbe92",
+    "name": "Arena Beach Ribeirão",
+    "address_id": "cma4a39rv002xsb1pm4ta2mah",
+    "created_at": "2025-04-30 18:37:26.969",
+    "updated_at": "2025-04-30 18:37:26.969"
+  },
+  {
+    "id": "cma4a47ub002ysb1ptq9zp7k8",
+    "name": "Makai Beach Tennis Jaú",
+    "address_id": "cma4a47ub002zsb1pdh7vhgjz",
+    "created_at": "2025-04-30 18:38:11.122",
+    "updated_at": "2025-04-30 18:38:11.122"
+  },
+  {
+    "id": "cma4a52sv0030sb1pozcpo001",
+    "name": "Play Beach Tennis Araraquara",
+    "address_id": "cma4a52sw0031sb1p6hq4a94m",
+    "created_at": "2025-04-30 18:38:51.246",
+    "updated_at": "2025-04-30 18:38:51.246"
+  },
+  {
+    "id": "cma4a5t460032sb1p49wvcmdu",
+    "name": "André Baran Academy Campinas",
+    "address_id": "cma4a5t460033sb1p7042kl7v",
+    "created_at": "2025-04-30 18:39:25.346",
+    "updated_at": "2025-04-30 18:39:25.346"
+  },
+  {
+    "id": "cma4abnbr0034sb1pqac5si5t",
+    "name": "HAKA BEACH SPORTS",
+    "address_id": "cma4abnbr0035sb1p0rs29n5u",
+    "created_at": "2025-04-30 18:43:57.781",
+    "updated_at": "2025-04-30 18:43:57.781"
+  },
+  {
+    "id": "cma4ac8rw0036sb1peoygnob0",
+    "name": "Arena Winner Americana",
+    "address_id": "cma4ac8rw0037sb1pybkrn7in",
+    "created_at": "2025-04-30 18:44:25.579",
+    "updated_at": "2025-04-30 18:44:25.579"
+  },
+  {
+    "id": "cma4ad2550038sb1phv2e3ul1",
+    "name": "ARENA 241 - Beach Club",
+    "address_id": "cma4ad2550039sb1pr09derin",
+    "created_at": "2025-04-30 18:45:03.638",
+    "updated_at": "2025-04-30 18:45:03.638"
+  },
+  {
+    "id": "cma4adnue003asb1pr308v6ep",
+    "name": "Beach Tennis Casa da Mina",
+    "address_id": "cma4adnuf003bsb1p6x2f7mtc",
+    "created_at": "2025-04-30 18:45:31.764",
+    "updated_at": "2025-04-30 18:45:31.764"
+  },
+  {
+    "id": "cma4aeinq003csb1pmy3clnyo",
+    "name": "ARENA DECK SPORTS",
+    "address_id": "cma4aeinq003dsb1psgzmh2yo",
+    "created_at": "2025-04-30 18:46:11.701",
+    "updated_at": "2025-04-30 18:46:11.701"
+  }
+]

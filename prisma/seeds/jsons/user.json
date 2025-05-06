@@ -1,0 +1,79 @@
+[
+  {
+    "id": "cm8ywx0o20002pd1qp8f327pg",
+    "name": "Glaciele Miguel",
+    "user": "glaciele",
+    "passwd": "$2a$10$V05mPsJeyOkKRXDy5sAqrufEyrher3y/LFJ7/ewVsEgHTAbkhTV2a",
+    "email": "glaciele@peraltas.com.br",
+    "role": "admin",
+    "teacher_id": null,
+    "created_at": "2025-04-01 19:50:06.977",
+    "updated_at": "2025-04-01 19:52:29.103"
+  },
+  {
+    "id": "cm9d2pdws0001owyluixxizeb",
+    "name": "Matheus Henrique",
+    "user": "admin",
+    "passwd": "$2a$10$ywlGOi6oYjahq93q5sCH/.5RQo5KzkZ3XiQEoIq3Smnk3o8AHXV3C",
+    "email": "matheus.henrique4245@gmail.com",
+    "role": "admin",
+    "teacher_id": null,
+    "created_at": "2025-04-11 17:40:54.998",
+    "updated_at": "2025-04-11 20:00:09.166"
+  },
+  {
+    "id": "cma3xlk8k0007sb1pwhw40kpt",
+    "name": "Leonardo Saqui",
+    "user": "leonardo",
+    "passwd": "$2a$10$3TV0C3363eFVNkmwyI0k3.sTBCW15D5voaU/NgTaK4gfw3fcI9.aG",
+    "email": "sac@beach.com.br",
+    "role": "teacher",
+    "teacher_id": "cma3v3zl30000sb1pz7k47r9n",
+    "created_at": "2025-04-30 12:47:45.331",
+    "updated_at": "2025-04-30 12:47:59.603"
+  },
+  {
+    "id": "cma3xncs00009sb1pi3vbgeba",
+    "name": "Diego Porta",
+    "user": "porta",
+    "passwd": "$2a$10$62DQNC149AGFfaha5OfKleXF7Rdl1WYX.8Gxt5CFIHO19XdONAFSa",
+    "email": "sac@beach.com.br",
+    "role": "teacher",
+    "teacher_id": "cma3xefyy0002sb1p179s2otk",
+    "created_at": "2025-04-30 12:49:08.975",
+    "updated_at": "2025-04-30 12:49:15.825"
+  },
+  {
+    "id": "cm90ao5rr0000mk1rcf8acl23",
+    "name": "Tamires Zanette",
+    "user": "tamires",
+    "passwd": "$2a$10$xD9rQLYTSKSknO1jDEBNGuoUbtKwTf7bI5WpX8ATpR5mZ2N2pR2jy",
+    "email": "tamires@beach.com.br",
+    "role": "operational",
+    "teacher_id": null,
+    "created_at": "2025-04-02 19:02:54.519",
+    "updated_at": "2025-05-02 19:42:06.309"
+  },
+  {
+    "id": "cmabedvw80014qw1qfdca2b1c",
+    "name": "Elisangela Traina",
+    "user": "Elisangela Traina",
+    "passwd": "$2a$10$UtV43bkYuNAIG/yCgNuVQ.WOMuQhejKrtEe6ItXNavPiqEbjqEWsS",
+    "email": "aux.adm01@peraltas.com.br",
+    "role": "operational",
+    "teacher_id": null,
+    "created_at": "2025-05-05 18:12:03.895",
+    "updated_at": "2025-05-05 18:12:03.895"
+  },
+  {
+    "id": "cmabeeu380016qw1q48zfagsr",
+    "name": "Ana Claudia Ferreira da Silva",
+    "user": "Ana Claudia",
+    "passwd": "$2a$10$6x.ibu9ntgaYFyMJn6MUQ.i4CmzpZKM0c8tgi1ES10gwjGsh78s7S",
+    "email": "atendimento@grupoperaltas.com.br",
+    "role": "admin",
+    "teacher_id": null,
+    "created_at": "2025-05-05 18:12:48.206",
+    "updated_at": "2025-05-05 18:12:48.206"
+  }
+]
