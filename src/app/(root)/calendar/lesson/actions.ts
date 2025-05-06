@@ -1,5 +1,4 @@
 "use server";
-
 import db from "@/core/infra/db";
 import { Lesson, ReasonsToNotAttend } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
@@ -50,7 +49,7 @@ export const getLessonById = unstable_cache(
 )
 
 export async function createLesson(
-  data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status"> & {
+  data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status" | "cancellation_reason"> & {
     attendance_ids: string[];
   },
 ) {
@@ -145,6 +144,35 @@ export async function closeLesson(props: {
     }
   })
 
+  revalidateTag("update-lesson");
+  return lesson;
+}
+
+export async function cancelLesson(
+  id: string,
+  cancellation_reason: ReasonsToNotAttend,
+) {
+  const lesson = await db.lesson.update({
+    where: {
+      id
+    },
+    data: {
+      status: "canceled",
+      updated_at: new Date(),
+      cancellation_reason,
+      attendances: {
+        updateMany: {
+          where: {
+            lesson_id: id,
+          },
+          data: {
+            reason: cancellation_reason,
+            did_attend: false,
+          }
+        }
+      }
+    }
+  })
   revalidateTag("update-lesson");
   return lesson;
 }

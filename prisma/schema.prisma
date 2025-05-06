@@ -224,13 +224,14 @@ model TeacherAvailability {
 }
 
 model Lesson {
-  id                      String       @id @default(cuid())
+  id                      String              @id @default(cuid())
   teacher_id              String
   time_start              DateTime
   time_end                DateTime
   courts_id               String
-  tier                    Tier         @default(D)
-  status                  LessonStatus @default(scheduled)
+  tier                    Tier                @default(D)
+  status                  LessonStatus        @default(scheduled)
+  cancellation_reason     ReasonsToNotAttend?
   teacher_availability_id String
 
   updated_at DateTime @updatedAt
