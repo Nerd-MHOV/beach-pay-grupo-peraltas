@@ -55,7 +55,7 @@ export default function LoginForm() {
         <Button
           disabled={isPending}
           isLoading={isPending}
-          loadingText="carragando"
+          loadingText="carregando"
           variant="default"
           className="bg-green-600 hover:bg-green-700"
         >
