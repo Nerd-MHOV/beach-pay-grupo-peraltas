@@ -36,23 +36,27 @@ const MemberData = async ({ id }: { id: string }) => {
         </Header.Content>
       </Header.Root>
 
-      <DashboardAthlete athlete={member} />
+      {member.is_athlete && (
+        <>
+          <DashboardAthlete athlete={member} />
+          <Separator className="my-8" />
+        </>
+      )}
 
       {member.is_teacher && (
         <>
-          <Separator className="my-8" />
           <DashboardTeacher member={member} />
+          <Separator className="my-8" />
         </>
       )}
 
       {member.is_student && (
         <>
-          <Separator className="my-8" />
           <DashboardStudent member={member} />
+          <Separator className="my-8" />
         </>
       )}
 
-      <Separator className="my-8" />
       <div className="bg-white p-7 rounded-xl shadow-lg">
         <FormMember member={member} />
       </div>

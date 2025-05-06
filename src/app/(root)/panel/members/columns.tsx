@@ -60,13 +60,15 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(member.pix_key)}
-            >
-              Copy Chave PIX
-            </DropdownMenuItem>
             {member.is_athlete && (
               <>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigator.clipboard.writeText(member.pix_key || "")
+                  }
+                >
+                  Copy Chave PIX
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <DialogGroupInvestmentAthlete
