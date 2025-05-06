@@ -44,7 +44,7 @@ const TableTournamentDescription = ({
               0
             ),
             subRows: curr.investments,
-            pix_key: curr.athlete.pix_key,
+            pix_key: curr.athlete.pix_key || "",
           });
         }
 

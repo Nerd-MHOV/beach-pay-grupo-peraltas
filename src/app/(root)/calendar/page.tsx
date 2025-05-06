@@ -5,7 +5,7 @@ import CalendarClientComponent, {
 } from "./calendar-client-component";
 import { getAvailability } from "./availability/actions";
 import { getMembers } from "@/app/(root)/panel/members/actions";
-import { Athlete, User } from "@prisma/client";
+import { Member, User } from "@prisma/client";
 import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
@@ -18,7 +18,7 @@ const ColorStatusLesson = {
 
 const Page = async () => {
   const me = await verifySession(false);
-  const teachers = (await getMembers({ teacher: true })) as (Athlete & {
+  const teachers = (await getMembers({ teacher: true })) as (Member & {
     user: Omit<User, "passwd">;
     is_teacher: true;
   })[];
