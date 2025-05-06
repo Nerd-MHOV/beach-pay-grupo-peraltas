@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,15 +10,16 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { closeLesson, getLessonById } from "./actions";
+import { cancelLesson, closeLesson, getLessonById } from "./actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Combobox } from "@/components/combobox";
 import { reasonOptions } from "./reason-options";
 import { ReasonsToNotAttend } from "@prisma/client";
+import DropdownMenuCancelLesson from "./dropdown-menu-cancel-lesosn";
 
 const schema = z.object({
   attendance_relation: z.array(
@@ -107,7 +109,7 @@ const FormLessonClosure = ({
                   {form
                     .getValues("attendance_relation")
                     ?.map((att_field, index) => (
-                      <>
+                      <Fragment key={att_field.student_id}>
                         <div
                           key={att_field.student_id}
                           className="flex items-center gap-2 p-2"
@@ -155,7 +157,7 @@ const FormLessonClosure = ({
                           />
                         </div>
                         <Separator />
-                      </>
+                      </Fragment>
                     ))}
                 </div>
               </FormControl>
@@ -165,13 +167,19 @@ const FormLessonClosure = ({
         />
 
         <div className="flex w-full justify-end mt-5 gap-2">
+          <DropdownMenuCancelLesson
+            id={lesson.id}
+            onClosure={() => {
+              onClosure?.();
+            }}
+          />
           <Button
             isLoading={form.formState.isSubmitting}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            Confirmar
+            Fechar Aula
           </Button>
         </div>
       </form>
