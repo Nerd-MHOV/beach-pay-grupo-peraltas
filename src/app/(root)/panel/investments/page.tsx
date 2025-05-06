@@ -1,13 +1,9 @@
 import React, { Suspense } from "react";
 import { Header } from "@/components/Header";
-import TableRoot from "./table-root";
 import LoadingData from "@/components/LoadingData";
-import { getInvestmentGroups, getInvestments } from "./actions";
+import InvestmentData from "./investment-data";
 
-const Page = async () => {
-  const investmentGroups = await getInvestmentGroups();
-  const investments = await getInvestments();
-
+const Page = () => {
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
       <Header.Root>
@@ -15,10 +11,7 @@ const Page = async () => {
       </Header.Root>
 
       <Suspense fallback={<LoadingData message="Buscando Investimentos" />}>
-        <TableRoot
-          investmentGroup={investmentGroups}
-          investments={investments}
-        />
+        <InvestmentData />
       </Suspense>
     </div>
   );
