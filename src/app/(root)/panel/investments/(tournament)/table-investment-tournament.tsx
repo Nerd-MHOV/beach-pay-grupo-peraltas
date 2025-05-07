@@ -18,6 +18,7 @@ const TableInvestmentTournament = ({
       data={investmentTournaments.map((invTourn) => ({
         ...invTourn,
         athlete: invTourn.athlete.name,
+        investment_tournament_name: invTourn.tournament?.name,
       }))}
     />
   );

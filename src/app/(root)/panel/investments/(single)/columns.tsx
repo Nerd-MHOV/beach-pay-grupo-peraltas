@@ -36,6 +36,7 @@ type InvestmentColumns = ExtendedColumnDef<
     athlete_name: string;
     athlete: Member;
     investment_type: string;
+    investment_tournament_name: string;
     investment_tournament:
       | ({
           pair: Member | null;
@@ -43,7 +44,8 @@ type InvestmentColumns = ExtendedColumnDef<
             | ({
                 arena: Arena;
               } & Tournament)
-            | null;
+            | null
+            | undefined;
           investments: ({
             investment_type: InvestmentType;
           } & Investment)[];
@@ -113,14 +115,14 @@ export const columns: InvestmentColumns[] = [
     label: "Descrição",
   },
   {
-    accessorKey: "investmentGroup",
+    accessorKey: "investment_tournament_name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Grupo"} />
+      <DataTableColumnHeader column={column} title={"Torneio"} />
     ),
-    label: "Grupo",
+    label: "Torneio",
     cell: ({ row }) => {
-      const investmentGroup = row.original.investment_tournament;
-      if (!investmentGroup)
+      const investmentTournament = row.original.investment_tournament;
+      if (!investmentTournament)
         return (
           <span>
             <CircleMinus className=" text-yellow-800 p-0.5 rounded" />
@@ -131,39 +133,40 @@ export const columns: InvestmentColumns[] = [
           <Tooltip>
             <TooltipTrigger>
               {" "}
-              <span>
+              <p className="flex items-center ">
                 <CircleCheck className=" text-green-800 p-0.5 rounded" />
-              </span>
+                {investmentTournament?.tournament?.name}
+              </p>
             </TooltipTrigger>
             <TooltipContent>
               <div className="flex flex-col gap-2">
                 <span className="font-medium">
-                  {investmentGroup.description}
+                  {investmentTournament.description}
                 </span>
 
                 <ul>
                   <li>
-                    <b>Torneio:</b> {investmentGroup?.tournament?.name}
+                    <b>Torneio:</b> {investmentTournament?.tournament?.name}
                   </li>
                   <li>
-                    <b>Arena:</b> {investmentGroup?.tournament?.arena.name}
+                    <b>Arena:</b> {investmentTournament?.tournament?.arena.name}
                   </li>
                   <li>
-                    <b>KM:</b> {investmentGroup.km}
+                    <b>KM:</b> {investmentTournament.km}
                   </li>
                   <li>
-                    <b>Duplas:</b> {investmentGroup.pair_amount}
+                    <b>Duplas:</b> {investmentTournament.pair_amount}
                   </li>
                   <li>
-                    <b>Colocação:</b> {investmentGroup.podium}
+                    <b>Colocação:</b> {investmentTournament.podium}
                   </li>
                   <li>
-                    <b>Dupla:</b> {investmentGroup?.pair?.name}
+                    <b>Dupla:</b> {investmentTournament?.pair?.name}
                   </li>
                 </ul>
                 <span className="font-medium mt-2">
                   <ol>
-                    {investmentGroup.investments.map((investment) => (
+                    {investmentTournament.investments.map((investment) => (
                       <li key={investment.id}>
                         {investment.investment_type.name} -{" "}
                         {Number(investment.value).toLocaleString("pt-BR", {

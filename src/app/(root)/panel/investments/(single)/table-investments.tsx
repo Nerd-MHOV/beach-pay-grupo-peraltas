@@ -20,6 +20,8 @@ const TableInvestments = ({
           ...investment,
           athlete_name: investment.athlete.name,
           investment_type: investment.investment_type.name,
+          investment_tournament_name:
+            investment.investment_tournament?.tournament?.name || "",
         };
       })}
     />

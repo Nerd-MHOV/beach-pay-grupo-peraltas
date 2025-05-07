@@ -19,6 +19,7 @@ import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn
 
 type InvestmentColumns = ExtendedColumnDef<
   {
+    investment_tournament_name?: string;
     athlete: string;
     investments: Investment[];
   } & InvestmentTournament,
@@ -30,6 +31,7 @@ export const columnsGroup: InvestmentColumns[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Status"} />
     ),
+
     label: "Status",
     accessorKey: "paid",
     cell: ({ row }) => {
@@ -52,12 +54,20 @@ export const columnsGroup: InvestmentColumns[] = [
       );
     },
   },
+
   {
     accessorKey: "athlete",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Atleta"} />
     ),
     label: "Atleta",
+  },
+  {
+    accessorKey: "investment_tournament_name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Torneio"} />
+    ),
+    label: "Torneio",
   },
   {
     accessorKey: "value",
