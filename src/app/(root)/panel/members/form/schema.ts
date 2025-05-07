@@ -1,5 +1,6 @@
 import { cpfValidator } from "@/lib/utils";
 import { Tier } from "@prisma/client";
+import { isDate } from "date-fns";
 import { z } from "zod";
 
 export const formSchema = z
@@ -14,18 +15,15 @@ export const formSchema = z
           "O nome é obrigatório e deve ter no mínimo 2 caracteres.",
       }),
     cpf: z
-      .string({
-        message: "O CPF é obrigatório e deve ter 11 dígitos.",
-      })
-      .length(11, {
-        message: "O CPF deve ter 11 dígitos.",
-      })
-      .regex(/^\d+$/, {
+      .string()
+      .regex(/^[0-9]*$/, {
         message: "O CPF deve conter apenas números.",
       })
-      .refine((value) => cpfValidator(value), {
-        message: "O CPF é inválido.",
-      }),
+      .refine((val) => !val || val.length === 11, {
+        message: "O CPF deve ter 11 dígitos.",
+      })
+      .optional()
+      .nullable(),
     tier: z.nativeEnum(Tier, {
       required_error: "Selecione o nível",
     }),
@@ -39,6 +37,9 @@ export const formSchema = z
       .max(14, {
         message: "Número invalido (ddd) 99999-9999.",
       }),
+    email: z.string().email({
+      message: "Email inválido.",
+    }).optional().nullable(),
     responsible: z
       .string()
       .max(255)
@@ -46,30 +47,15 @@ export const formSchema = z
       .nullable()
       .transform((v) => v ?? ""),
     birthday: z.date(),
-    date_start: z.date(),
-    pix_key: z
-      .string({
-        message: "Informe a chave PIX",
-      })
-      .min(2)
-      .max(255),
-    is_associated: z
-      .boolean()
-      .optional()
-      .transform((v) => v ?? false),
-    is_student: z
-      .boolean()
-      .optional()
-      .transform((v) => v ?? false),
-    is_teacher: z
-      .boolean()
-      .optional()
-      .transform((v) => v ?? false),
-    is_athlete: z
-      .boolean()
-      .optional()
-      .transform((v) => v ?? false),
-    // Novo campo para selecionar usuário do sistema, obrigatório se is_teacher for true
+
+
+    date_start: z.date().nullable(),
+    pix_key: z.string().nullable(),
+    is_associated: z.boolean().optional().transform((v) => v ?? false),
+
+    is_student: z.boolean().optional().transform((v) => v ?? false),
+    is_teacher: z.boolean().optional().transform((v) => v ?? false),
+    is_athlete: z.boolean().optional().transform((v) => v ?? false),
     teacher_user_id: z.string().nullable(),
     street: z.string().optional().nullable(),
     number: z.string().optional().nullable(),
@@ -98,6 +84,22 @@ export const formSchema = z
         message:
           "Selecione um usuário do sistema se for professor.",
         path: ["teacher_user_id"],
+      });
+    }
+
+    if (data.is_associated && !data.date_start) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A data de início é obrigatória para associados.",
+        path: ["date_start"],
+      });
+    }
+
+    if (data.is_athlete && !data.pix_key) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A chave PIX é obrigatória para atletas.",
+        path: ["pix_key"],
       });
     }
   });

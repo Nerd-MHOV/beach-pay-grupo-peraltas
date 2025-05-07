@@ -70,6 +70,7 @@ model Member {
   pix_key       String?
   cpf           String?
   address_id    String?   @unique
+  email         String?
   is_student    Boolean   @default(false)
   is_associated Boolean   @default(false)
   is_teacher    Boolean   @default(false)

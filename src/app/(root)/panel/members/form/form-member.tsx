@@ -58,8 +58,9 @@ const FormMember = ({
       responsible: values.responsible,
       birthday: values.birthday,
       date_start: values.date_start,
+      email: values.email || null,
       pix_key: values.pix_key,
-      cpf: values.cpf,
+      cpf: values.cpf || null,
       is_student: values.is_student,
       is_associated: values.is_associated,
       is_teacher: values.is_teacher,
@@ -99,11 +100,12 @@ const FormMember = ({
     defaultValues: {
       name: member?.name ?? "",
       responsible: member?.responsible ?? "",
-      cpf: member?.cpf ?? "",
+      cpf: member?.cpf || null,
       pix_key: member?.pix_key ?? "",
       phone: member?.phone ?? "",
-      birthday: member?.birthday ?? new Date(),
-      date_start: member?.date_start ?? new Date(),
+      birthday: member?.birthday ? new Date(member.birthday) : new Date(),
+      date_start: member?.date_start ? new Date(member.date_start) : null,
+      email: member?.user?.email ?? null,
       is_student: member?.is_student ?? false,
       is_associated: member?.is_associated ?? false,
       is_teacher: member?.is_teacher ?? false,
@@ -142,33 +144,42 @@ const FormMember = ({
             placeholder="Nome Completo do Responsável"
           />
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-2">
-            <CpfInput name="cpf" form={form} label="CPF*" placeholder="CPF" />
+        <div className="grid md:grid-cols-10 grid-cols-2 gap-2">
+          <div className="md:col-span-3 col-span-2">
+            <CpfInput name="cpf" form={form} label="CPF" placeholder="CPF" />
           </div>
-          <FormField
-            control={form.control}
-            name="tier"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Classificação*</FormLabel>
-                <FormControl>
-                  <Combobox
-                    placeholder="Selecione"
-                    items={Object.values(Tier).map((tier) => ({
-                      label: tier,
-                      value: tier,
-                    }))}
-                    selected={field.value}
-                    onSelect={(value) => {
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="md:col-span-4">
+            <CalendarPickerInput
+              form={form}
+              name="birthday"
+              label="Data de Nascimento*"
+            />
+          </div>
+          <div className="md:col-span-3">
+            <FormField
+              control={form.control}
+              name="tier"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Classificação*</FormLabel>
+                  <FormControl>
+                    <Combobox
+                      placeholder="Selecione"
+                      items={Object.values(Tier).map((tier) => ({
+                        label: tier,
+                        value: tier,
+                      }))}
+                      selected={field.value}
+                      onSelect={(value) => {
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-2">
           <FormField
@@ -185,24 +196,10 @@ const FormMember = ({
             )}
           />
           <SimpleInput
-            name="pix_key"
+            name="email"
             form={form}
-            label="Chave PIX*"
-            placeholder="Chave PIX"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
-          <CalendarPickerInput
-            form={form}
-            name="birthday"
-            label="Data de Nascimento*"
-          />
-
-          <CalendarPickerInput
-            form={form}
-            name="startDate"
-            label="Data de Início*"
+            label="Email"
+            placeholder="Email"
           />
         </div>
 
@@ -212,6 +209,22 @@ const FormMember = ({
           <CheckboxInput form={form} name="is_student" label="Aluno" />
           <CheckboxInput form={form} name="is_teacher" label="Professor" />
         </div>
+
+        {form.getValues("is_athlete") && (
+          <SimpleInput
+            name="pix_key"
+            form={form}
+            label="Chave PIX do Atleta*"
+            placeholder="Chave PIX"
+          />
+        )}
+        {form.getValues("is_associated") && (
+          <CalendarPickerInput
+            form={form}
+            name="date_start"
+            label="Data de associação*"
+          />
+        )}
         {form.getValues("is_teacher") && (
           <FormField
             control={form.control}

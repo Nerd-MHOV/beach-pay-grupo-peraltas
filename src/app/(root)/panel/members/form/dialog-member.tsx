@@ -22,7 +22,7 @@ const DialogMember = async ({ trigger }: { trigger?: React.JSX.Element }) => {
     <Dialog>
       <DialogTrigger asChild>{child}</DialogTrigger>
 
-      <DialogContent className="max-h-screen overflow-auto">
+      <DialogContent className="max-h-[98vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Adicionar Membro</DialogTitle>
           <DialogDescription>Informe os dados do membro.</DialogDescription>
