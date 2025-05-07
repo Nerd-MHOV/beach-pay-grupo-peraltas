@@ -57,6 +57,7 @@ const cachedMembers = unstable_cache(
       "delete-member",
       "create-investment",
       "update-investment",
+      "delete-investment",
     ],
   }
 );

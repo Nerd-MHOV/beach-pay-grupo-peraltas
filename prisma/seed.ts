@@ -11,6 +11,7 @@ import { TeacherAvailabilitySeedFn } from "./seeds/teacherAvailability.seed";
 import { InvestmentTypeSeedFn } from "./seeds/investmentType.seed";
 import { InvestmentSeedFn } from "./seeds/investment.seed";
 import { TournamentSeedFn } from "./seeds/tournament.seed";
+import { FixedValuesSeedFn } from "./seeds/fixedValues.seed";
 
 const prismaClient = new PrismaClient();
 
@@ -27,6 +28,7 @@ const seedData = [
   TeacherAvailabilitySeedFn,
   LessonSeedFn,
   LessonAttendanceSeedFn,
+  FixedValuesSeedFn,
 ]
 async function main() {
   console.log("Start seeding ...");

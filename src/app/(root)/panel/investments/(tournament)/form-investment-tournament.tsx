@@ -27,11 +27,19 @@ import useFormInvestmentTournament from "./use-form-investment-tournament";
 import { getMembers } from "@/app/(root)/panel/members/actions";
 import { getTournaments } from "../../tournaments/actions";
 import { useQuery } from "@tanstack/react-query";
-import { createInvestmentAthlete, updateInvestmentAthlete } from "../actions";
+import {
+  createInvestmentAthlete,
+  deleteInvestmentAthlete,
+  updateInvestmentAthlete,
+} from "../actions";
 import { getInvestmentsType } from "../../investment-types/actions";
 import DialogDeleteInvestmentTournament from "./dialog-delete-investment-tournament";
 import LoadingData from "@/components/LoadingData";
 import ProofFormField from "./fields/proof";
+import { getFixedValues } from "../../investment-types/fixed-values/actions";
+import { debounce } from "lodash";
+import DialogRemoveInvestmentFromList from "./dialog-remove-investment-from-list";
+import { toast } from "@/hooks/use-toast";
 
 const FormInvestmentTournament = ({
   athlete,
@@ -64,6 +72,14 @@ const FormInvestmentTournament = ({
     queryFn: getTournaments,
   });
 
+  const { data: fixedValueKM } = useQuery({
+    queryKey: ["fixedValueKM"],
+    queryFn: async () => {
+      const fixedValues = await getFixedValues();
+      return fixedValues.find((fv) => fv.id === "km")?.value || 0;
+    },
+  });
+
   const form = useForm<z.infer<typeof formSchemaInvestmentTournament>>({
     resolver: zodResolver(formSchemaInvestmentTournament),
     defaultValues: {
@@ -90,58 +106,68 @@ const FormInvestmentTournament = ({
     },
   });
 
-  const upsertFuel = async () => {
-    const km = form.getValues().km;
-    //TODO: km_racional is not created yet;
-    const km_racional = 0.6;
-    const fuelTypeID = (await getInvestmentsType()).find(
-      (type) => type.name === "Combustível"
-    )?.id;
-    const athlete_id = form.getValues().athlete_id;
-    if (!km || !km_racional || !fuelTypeID || !athlete_id) return;
-    const newValue = km * km_racional;
-    const investments = athletes.find(
-      (find) => find.id === form.getValues().athlete_id
-    )?.investments;
+  const debouncedUpsertFuel = debounce(
+    async () => {
+      const km = form.getValues().km;
+      const km_racional = fixedValueKM || 0;
+      const fuelTypeID = (await getInvestmentsType()).find(
+        (type) => type.name === "Combústivel"
+      )?.id;
+      const athlete_id = form.getValues().athlete_id;
+      if (!km || !km_racional || !fuelTypeID || !athlete_id) return;
+      const newValue = km * km_racional;
+      const investments = athletes.find(
+        (find) => find.id === form.getValues().athlete_id
+      )?.investments;
 
-    const hasFuelInvestment = investments
-      ?.filter((investment) =>
-        form.getValues().investments.includes(investment.id)
-      )
-      .find((inv) => inv.investment_type_id === fuelTypeID);
-    if (hasFuelInvestment) {
-      // update
-      await updateInvestmentAthlete({
-        id: hasFuelInvestment.id,
-        athlete_id: hasFuelInvestment.athlete_id,
-        investment_type_id: hasFuelInvestment.investment_type_id,
-        date: new Date(hasFuelInvestment.date),
-        description: hasFuelInvestment.description,
-        paid: hasFuelInvestment.paid ? new Date(hasFuelInvestment.paid) : null,
-        proof: hasFuelInvestment.proof,
-        investment_tournament_id: hasFuelInvestment.investment_tournament_id,
-        value: newValue,
-      });
-      refetchAthletes();
-    } else {
-      //create
+      const hasFuelInvestment = investments
+        ?.filter((investment) =>
+          form.getValues().investments.includes(investment.id)
+        )
+        .find((inv) => inv.investment_type_id === fuelTypeID);
+      if (hasFuelInvestment) {
+        // update
+        await updateInvestmentAthlete({
+          id: hasFuelInvestment.id,
+          athlete_id: hasFuelInvestment.athlete_id,
+          investment_type_id: hasFuelInvestment.investment_type_id,
+          date: new Date(hasFuelInvestment.date),
+          description: hasFuelInvestment.description,
+          paid: hasFuelInvestment.paid
+            ? new Date(hasFuelInvestment.paid)
+            : null,
+          proof: hasFuelInvestment.proof,
+          investment_tournament_id: hasFuelInvestment.investment_tournament_id,
+          value: newValue,
+        });
+        refetchAthletes();
+      } else {
+        //create
 
-      const created = await createInvestmentAthlete({
-        athlete_id: athlete_id,
-        investment_type_id: fuelTypeID,
-        value: newValue,
-        date: new Date(),
-        description: "Combustível - Gerado por km/km-racional",
-        paid: null,
-        proof: null,
-        investment_tournament_id: null,
-      });
-      await refetchAthletes();
-      form.setValue("investments", [
-        ...form.getValues().investments,
-        created.id,
-      ]);
-    }
+        const created = await createInvestmentAthlete({
+          athlete_id: athlete_id,
+          investment_type_id: fuelTypeID,
+          value: newValue,
+          date: new Date(),
+          description: "Combustível - Gerado automaticamente",
+          paid: null,
+          proof: null,
+          investment_tournament_id: null,
+        });
+        await refetchAthletes();
+        form.setValue("investments", [
+          ...form.getValues().investments,
+          created.id,
+        ]);
+      }
+    },
+    500,
+    { leading: false, trailing: true }
+  ); // Executa apenas a última chamada
+
+  const upsertFuel = () => {
+    // garante que no caso de digitar rapido que a função não seja chamada mais de uma vez ( se atropelando )
+    debouncedUpsertFuel();
   };
 
   const { createGroupInvestmentAthleteFn, updateGroupInvestmentAthleteFn } =
@@ -371,85 +397,6 @@ const FormInvestmentTournament = ({
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="investments"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Investimentos*</FormLabel>
-              <FormControl>
-                <div className="h-32 rounded-md border overflow-auto py-1">
-                  <div className="p-4">
-                    {field.value?.map((id, index) => {
-                      const investment = athletes
-                        .find((find) => find.id === form.getValues().athlete_id)
-                        ?.investments.find((find) => find.id === id);
-                      if (!investment) return null;
-                      return (
-                        <div key={index}>
-                          <div className="text-sm flex justify-between gap-2 items-center">
-                            <div className="relative flex flex-col flex-1">
-                              <p className="text-xs absolute top-2 right-2">
-                                {format(investment.date, "dd/MM/yy")}
-                              </p>
-                              <h1 className="font-bold">
-                                {investment?.investment_type.name}
-                              </h1>
-                              <h2 className="text-xs font-semibold">
-                                +
-                                {investment.value.toLocaleString("pt-BR", {
-                                  style: "currency",
-                                  currency: "BRL",
-                                })}
-                              </h2>
-                              <p className="text-xs mt-2 text-gray-500">
-                                {investment.description}
-                              </p>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              {investmentTournament && (
-                                <DialogInvestmentAthlete
-                                  investment={investment}
-                                  trigger={
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      type="button"
-                                    >
-                                      Editar
-                                    </Button>
-                                  }
-                                />
-                              )}
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                type="button"
-                                className="bg-red-100 text-red-800"
-                                onClick={() => {
-                                  const array = field.value?.filter(
-                                    (_, i) => i !== index
-                                  );
-                                  field.onChange(array);
-                                  setTotal(array);
-                                }}
-                              >
-                                Remover
-                              </Button>
-                            </div>
-                          </div>
-                          <Separator className="my-2" />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -532,6 +479,107 @@ const FormInvestmentTournament = ({
             )}
           />
         </div>
+        <FormField
+          control={form.control}
+          name="investments"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="h-32 rounded-md border overflow-auto py-1">
+                  <div className="p-4">
+                    {field.value?.map((id, index) => {
+                      const investment = athletes
+                        .find((find) => find.id === form.getValues().athlete_id)
+                        ?.investments.find((find) => find.id === id);
+                      if (!investment) return null;
+                      return (
+                        <div key={index}>
+                          <div className="text-sm flex justify-between gap-2 items-center">
+                            <div className="relative flex flex-col flex-1">
+                              <p className="text-xs absolute top-2 right-2">
+                                {format(investment.date, "dd/MM/yy")}
+                              </p>
+                              <h1 className="font-bold">
+                                {investment?.investment_type.name}
+                              </h1>
+                              <h2 className="text-xs font-semibold">
+                                +
+                                {investment.value.toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </h2>
+                              <p className="text-xs mt-2 text-gray-500">
+                                {investment.description}
+                              </p>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {investmentTournament && (
+                                <DialogInvestmentAthlete
+                                  investment={investment}
+                                  trigger={
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      type="button"
+                                    >
+                                      Editar
+                                    </Button>
+                                  }
+                                />
+                              )}
+                              <DialogRemoveInvestmentFromList
+                                onClickDelete={async () => {
+                                  try {
+                                    await deleteInvestmentAthlete(investment);
+                                    await refetchAthletes();
+                                    field.onChange(
+                                      field.value.filter((item) => item !== id)
+                                    );
+                                    setTotal(
+                                      field.value.filter((item) => item !== id)
+                                    );
+                                    toast({
+                                      title: "Investimento excluído",
+                                      description:
+                                        "O investimento foi excluido permanentemente.",
+                                    });
+                                  } catch {
+                                    toast({
+                                      title: "Erro ao excluir investimento",
+                                      description:
+                                        "Ocorreu um erro ao excluir o investimento.",
+                                      variant: "destructive",
+                                    });
+                                  }
+                                }}
+                                onClickUnlink={() => {
+                                  field.onChange(
+                                    field.value.filter((item) => item !== id)
+                                  );
+                                  setTotal(
+                                    field.value.filter((item) => item !== id)
+                                  );
+                                  toast({
+                                    title: "Investimento desvinculado",
+                                    description:
+                                      "O investimento foi desvinculado do torneio.",
+                                  });
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <Separator className="my-2" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid grid-cols-2 gap-4">
           <CalendarPickerInput form={form} name="paid" label="Pago em:" />

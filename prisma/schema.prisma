@@ -265,3 +265,14 @@ model LessonAttendance {
   @@unique([lesson_id, student_id])
   @@map("lesson_attendance")
 }
+
+model FixedValues {
+  id    String @id @default(cuid())
+  name  String @unique
+  value Float
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("fixed_values")
+}

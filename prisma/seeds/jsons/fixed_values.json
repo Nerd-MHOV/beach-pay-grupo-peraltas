@@ -1,0 +1,11 @@
+[
+  { "id": "km", "name": "km", "value": 0.6 },
+  { "id": "association", "name": "Associação", "value": 90 },
+  {
+    "id": "association_student",
+    "name": "Associação para alunos",
+    "value": 70
+  },
+  { "id": "lesson", "name": "Aula", "value": 180 },
+  { "id": "lesson_associated", "name": "Aula para Associados", "value": 170 }
+]
