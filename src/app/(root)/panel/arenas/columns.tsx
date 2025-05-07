@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import DialogCreateArena from "./dialog-create-arena";
+import DialogCreateArena from "./dialog-arena";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";

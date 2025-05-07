@@ -19,7 +19,7 @@ import { Combobox } from "@/components/combobox";
 import { createTournament, updateTournament } from "./actions";
 import { getArenas } from "../arenas/actions";
 import { format, isDate } from "date-fns";
-import DialogCreateArena from "../arenas/dialog-create-arena";
+import DialogCreateArena from "../arenas/dialog-arena";
 import {
   Popover,
   PopoverContent,

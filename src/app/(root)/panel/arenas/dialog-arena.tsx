@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import React from "react";
-import FormCreateArena from "./form-create-arena";
+import FormCreateArena from "./form-arena";
 import { Address, Arena } from "@prisma/client";
 
 const DialogCreateArena = ({

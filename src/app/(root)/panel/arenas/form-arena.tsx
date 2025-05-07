@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Address, Arena } from "@prisma/client";
 import AddressForm from "@/components/address-form";
 import { useQueryClient } from "@tanstack/react-query";
+import SimpleInput from "@/components/simple-input";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 const formSchema = z.object({
   name: z
@@ -26,6 +28,24 @@ const formSchema = z.object({
     })
     .min(2)
     .max(255),
+  phone: z
+    .string({
+      message: "O telefone é obrigatório (ddd) 99999-9999.",
+    })
+    .min(13, {
+      message: "Número invalido (ddd) 99999-9999.",
+    })
+    .max(14, {
+      message: "Número invalido (ddd) 99999-9999.",
+    })
+    .optional(),
+  email: z
+    .string()
+    .email({
+      message: "Email inválido.",
+    })
+    .optional()
+    .nullable(),
   street: z.string().optional().nullable(),
   number: z.string().optional().nullable(),
   complement: z.string().optional().nullable(),
@@ -105,6 +125,8 @@ const FormCreateArena = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const filteredValues = {
       name: values.name,
+      phone: values.phone || null,
+      email: values.email || null,
       address: {
         street: values.street || null,
         number: values.number || null,
@@ -137,6 +159,8 @@ const FormCreateArena = ({
     defaultValues: arena
       ? {
           name: arena.name,
+          phone: arena.phone || undefined,
+          email: arena.email || undefined,
           street: arena.address.street,
           number: arena.address.number,
           neighborhood: arena.address.neighborhood,
@@ -169,6 +193,27 @@ const FormCreateArena = ({
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-2">
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Celular</FormLabel>
+                <FormControl>
+                  <PhoneInput defaultCountry="BR" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <SimpleInput
+            name="email"
+            form={form}
+            label="Email"
+            placeholder="Email"
+          />
+        </div>
         <AddressForm form={form} />
         <div className="flex w-full justify-end mt-5">
           <Button
