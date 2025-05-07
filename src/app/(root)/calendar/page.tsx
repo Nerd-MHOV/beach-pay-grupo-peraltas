@@ -9,6 +9,7 @@ import { Member, User } from "@prisma/client";
 import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
+import { format } from "date-fns";
 
 const ColorStatusLesson = {
   canceled: "#763fa2",
@@ -25,6 +26,7 @@ const Page = async () => {
   const TeacherAvailability = await getAvailability();
   const lessons = await getLessons();
   const tournaments = await getTournaments();
+
   const events: (EventInput & {
     extendedProps: FormFieldProps;
   })[] = [
@@ -33,7 +35,9 @@ const Page = async () => {
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
       borderColor:
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
-      title: `${availability.teacher.name}`,
+      title: `${format(availability.time_start, "HH:mm")}-${
+        availability.teacher.name
+      }`,
       start: availability.time_start,
       end: availability.time_end,
       id: availability.id,
@@ -47,13 +51,12 @@ const Page = async () => {
         teacher_id: availability.teacher_id,
       },
     })),
-
     ...lessons.map((lesson) => ({
       backgroundColor: ColorStatusLesson[lesson.status] || "#7289d4",
       borderColor: ColorStatusLesson[lesson.status] || "#7289d4",
-      title: `${lesson.attendances.length.toString().padStart(2, "0")} - ${
-        lesson.teacher.name
-      }`,
+      title: `${format(lesson.time_start, "HH:mm")}-${lesson.tier}${
+        lesson.attendances.length
+      }-${lesson.teacher.name}`,
       start: lesson.time_start,
       end: lesson.time_end,
       id: lesson.id,

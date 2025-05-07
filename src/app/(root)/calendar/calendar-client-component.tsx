@@ -12,6 +12,12 @@ import { EventInput } from "@fullcalendar/core/index.js";
 import { $Enums, Member, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import HoverCardEventCalendar from "./hover-card-event-calendar";
 
 export type FormFieldProps = {
   formSelected: "availability" | "class" | "tournament";
@@ -149,6 +155,16 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
             dayMaxEvents={true}
             eventDisplay="block"
             displayEventTime={false}
+            eventContent={(arg) => {
+              return arg.event.extendedProps.formSelected !== "class" ? (
+                <div className="event-title">{arg.event.title}</div>
+              ) : (
+                <HoverCardEventCalendar
+                  id={arg.event.extendedProps.id}
+                  title={arg.event.title}
+                />
+              );
+            }}
           />
         </div>
       </div>
