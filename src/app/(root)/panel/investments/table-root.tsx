@@ -10,6 +10,7 @@ import { useState } from "react";
 import TableInvestmentTournament from "./(tournament)/table-investment-tournament";
 import { getInvestmentTournaments, getInvestments } from "./actions";
 import TableInvestments from "./(single)/table-investments";
+import { Separator } from "@/components/ui/separator";
 
 const TableRoot = ({
   athlete,
@@ -41,8 +42,9 @@ const TableRoot = ({
           }
           athlete={athlete}
         />
+        <Separator orientation="vertical" className="w-5" />
         <div className="flex items-center space-x-2">
-          <Label htmlFor="table-mode">Investimento</Label>
+          <Label htmlFor="table-mode">Único</Label>
           <Switch
             id="table-mode"
             onCheckedChange={setShowTournament}

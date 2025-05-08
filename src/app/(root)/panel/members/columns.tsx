@@ -45,6 +45,70 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
     label: "Idade",
   },
   {
+    accessorKey: "phone",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Número" />
+    ),
+    label: "Número",
+    cell: ({ row }) => {
+      const member = row.original;
+      return member.phone
+        .replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, "($2) $3-$4")
+        .replace(/\+/g, "");
+    },
+  },
+  {
+    accessorKey: "tier",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Classificação" />
+    ),
+    label: "Classificação",
+  },
+  {
+    accessorKey: "is_associated",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Associado" />
+    ),
+    label: "Associado",
+    cell: ({ row }) => {
+      const member = row.original;
+      return member.is_associated ? "Sim" : "Não";
+    },
+  },
+  {
+    accessorKey: "is_student",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Aluno" />
+    ),
+    label: "Aluno",
+    cell: ({ row }) => {
+      const member = row.original;
+      return member.is_student ? "Sim" : "Não";
+    },
+  },
+  {
+    accessorKey: "is_athlete",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Atleta" />
+    ),
+    label: "Atleta",
+    cell: ({ row }) => {
+      const member = row.original;
+      return member.is_athlete ? "Sim" : "Não";
+    },
+  },
+  {
+    accessorKey: "is_teacher",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Professor" />
+    ),
+    label: "Professor",
+    cell: ({ row }) => {
+      const member = row.original;
+      return member.is_teacher ? "Sim" : "Não";
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
     label: " ",

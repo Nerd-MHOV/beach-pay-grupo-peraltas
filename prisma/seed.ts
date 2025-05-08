@@ -17,10 +17,11 @@ import { BaselpSeedFn } from "./seeds/BASELP";
 const prismaClient = new PrismaClient();
 
 const seedData = [
-  // CourtsSeedFn,
+  FixedValuesSeedFn,
+  CourtsSeedFn,
   // AddressSeedFn,
   // MemberSeedFn,
-  // UserSeedFn,
+  UserSeedFn,
   // ArenaSeedFn,
   // TournamentSeedFn,
   // InvestmentTypeSeedFn,
@@ -29,9 +30,8 @@ const seedData = [
   // TeacherAvailabilitySeedFn,
   // LessonSeedFn,
   // LessonAttendanceSeedFn,
-  // FixedValuesSeedFn,
-  BaselpSeedFn,
 ]
+// BaselpSeedFn,
 async function main() {
   console.log("Start seeding ...");
   console.log("Seeding users ...");
