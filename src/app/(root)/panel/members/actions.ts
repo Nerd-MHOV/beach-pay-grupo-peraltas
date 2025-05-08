@@ -178,32 +178,35 @@ export async function updateMember(
   }, "created_at" | "updated_at" | "address_id">
 ) {
   const { teacher_user_id, ...rest } = data;
+  console.log("data", data);
   const member = await db.member.update({
     where: { id: data.id },
     data: {
       ...rest,
       updated_at: new Date(),
 
-      ...(data.teacher_user_id && data.is_teacher ? {
+      ...(teacher_user_id && rest.is_teacher ? {
         user: {
           connect: {
-            id: data.teacher_user_id,
+            id: teacher_user_id,
           }
         }
       } : {}),
 
-      address: {
-        upsert: {
-          where: { id: data.address.id },
+      ...(rest.address.id ? {
+        address: {
           update: {
-            ...data.address,
+            ...rest.address,
             updated_at: new Date(),
-          },
-          create: {
-            ...data.address,
           }
         }
-      }
+      } : {
+        address: {
+          create: {
+            ...rest.address,
+          }
+        }
+      }),
     },
   })
   revalidateTag("update-user");

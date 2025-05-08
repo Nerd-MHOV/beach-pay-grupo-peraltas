@@ -12,23 +12,25 @@ import { InvestmentTypeSeedFn } from "./seeds/investmentType.seed";
 import { InvestmentSeedFn } from "./seeds/investment.seed";
 import { TournamentSeedFn } from "./seeds/tournament.seed";
 import { FixedValuesSeedFn } from "./seeds/fixedValues.seed";
+import { BaselpSeedFn } from "./seeds/BASELP";
 
 const prismaClient = new PrismaClient();
 
 const seedData = [
-  CourtsSeedFn,
-  AddressSeedFn,
-  MemberSeedFn,
-  UserSeedFn,
-  ArenaSeedFn,
-  TournamentSeedFn,
-  InvestmentTypeSeedFn,
-  InvestmentTournamentSeedFn,
-  InvestmentSeedFn,
-  TeacherAvailabilitySeedFn,
-  LessonSeedFn,
-  LessonAttendanceSeedFn,
-  FixedValuesSeedFn,
+  // CourtsSeedFn,
+  // AddressSeedFn,
+  // MemberSeedFn,
+  // UserSeedFn,
+  // ArenaSeedFn,
+  // TournamentSeedFn,
+  // InvestmentTypeSeedFn,
+  // InvestmentTournamentSeedFn,
+  // InvestmentSeedFn,
+  // TeacherAvailabilitySeedFn,
+  // LessonSeedFn,
+  // LessonAttendanceSeedFn,
+  // FixedValuesSeedFn,
+  BaselpSeedFn,
 ]
 async function main() {
   console.log("Start seeding ...");
