@@ -33,7 +33,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { reasonOptions } from "./reason-options";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -165,7 +164,7 @@ const FormLessonCalendar = ({
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    if (lesson?.status !== "scheduled") {
+    if (lesson?.status === "canceled" || lesson?.status === "completed") {
       toast({
         title: "Aula FECHADA.",
         description: "Essa aula já foi fechada, não pode ser atualizada.",
@@ -230,7 +229,10 @@ const FormLessonCalendar = ({
             <FormItem>
               <FormLabel>Data*</FormLabel>
               <DateTimeRangePicker
-                disabled={lesson?.status !== "scheduled"}
+                disabled={
+                  lesson?.status === "canceled" ||
+                  lesson?.status === "completed"
+                }
                 value={field.value}
                 onChange={(value) => {
                   field.onChange(value);
@@ -252,7 +254,10 @@ const FormLessonCalendar = ({
                 <FormLabel>Professor*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={lesson?.status !== "scheduled"}
+                    disabled={
+                      lesson?.status === "canceled" ||
+                      lesson?.status === "completed"
+                    }
                     placeholder="Selecione a Professor"
                     items={(
                       availabilities.map((av) => av.teacher).flat() || []
@@ -283,7 +288,10 @@ const FormLessonCalendar = ({
                     <FormLabel>Quadra*</FormLabel>
                     <FormControl>
                       <Combobox
-                        disabled={lesson?.status !== "scheduled"}
+                        disabled={
+                          lesson?.status === "canceled" ||
+                          lesson?.status === "completed"
+                        }
                         placeholder="Selecione a Quadra"
                         items={courts.map((courts) => ({
                           label: courts.name,
@@ -307,7 +315,10 @@ const FormLessonCalendar = ({
                 <FormLabel>Classificação*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={lesson?.status !== "scheduled"}
+                    disabled={
+                      lesson?.status === "canceled" ||
+                      lesson?.status === "completed"
+                    }
                     placeholder="Selecione"
                     items={Object.values(Tier).map((tier) => ({
                       label: tier,
@@ -329,7 +340,8 @@ const FormLessonCalendar = ({
           />
         </div>
 
-        {lesson?.status !== "scheduled" && lesson?.id ? (
+        {(lesson?.status === "canceled" || lesson?.status === "completed") &&
+        lesson?.id ? (
           <ListAttendance id={lesson.id} />
         ) : (
           <>
