@@ -26,6 +26,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeacherUsers } from "../../users/actions";
 import CheckboxInput from "@/components/checkbox-input";
 import AddressForm from "@/components/address-form";
+import DialogDeleteMember from "../[id]/dialog-delete-member";
 
 const FormMember = ({
   member,
@@ -104,8 +105,8 @@ const FormMember = ({
       pix_key: member?.pix_key ?? "",
       phone: member?.phone ?? "",
       birthday: member?.birthday ? new Date(member.birthday) : new Date(),
-      date_start: member?.date_start ? new Date(member.date_start) : null,
-      email: member?.user?.email ?? null,
+      date_start: member?.date_start ? new Date(member.date_start) : undefined,
+      email: member?.user?.email ?? undefined,
       is_student: member?.is_student ?? false,
       is_associated: member?.is_associated ?? false,
       is_teacher: member?.is_teacher ?? false,
@@ -265,7 +266,9 @@ const FormMember = ({
 
         <AddressForm form={form} />
 
-        <div className="flex w-full justify-end pt-5">
+        <div className="flex w-full gap-2 items-center justify-end pt-5">
+          {member && <DialogDeleteMember member={member} />}
+
           <Button
             isLoading={form.formState.isSubmitting}
             onClick={(e) => {

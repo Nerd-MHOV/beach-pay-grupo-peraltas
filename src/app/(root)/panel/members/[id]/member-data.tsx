@@ -9,6 +9,7 @@ import DashboardAthlete from "./dashboard-athlete";
 import { Separator } from "@/components/ui/separator";
 import DashboardTeacher from "./dashboard-teacher";
 import DashboardStudent from "./dashboard-student";
+import HeaderRootMember from "./header-root-member";
 
 const MemberData = async ({ id }: { id: string }) => {
   const member = await getMemberById(id);
@@ -19,22 +20,7 @@ const MemberData = async ({ id }: { id: string }) => {
 
   return (
     <div className="px-2 sm:px-10 py-3 relative grid grid-cols gap-5">
-      <Header.Root>
-        <Header.Title subtitle={member.responsible ?? undefined}>
-          {member.name}
-        </Header.Title>
-        <Header.Content>
-          <div className="flex flex-col justify-end items-end space-x-2">
-            <span className="text-sm text-gray-400">
-              criado em: {format(member.created_at, "dd/MM/yyyy HH:ii")}
-            </span>
-            <span className="text-sm text-gray-400">
-              última atualização:{" "}
-              {format(member.updated_at, "dd/MM/yyyy HH:ii")}
-            </span>
-          </div>
-        </Header.Content>
-      </Header.Root>
+      <HeaderRootMember member={member} />
 
       {member.is_athlete && (
         <>

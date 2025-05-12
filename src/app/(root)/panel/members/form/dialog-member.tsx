@@ -10,8 +10,15 @@ import {
 import { Plus } from "lucide-react";
 import React from "react";
 import FormMember from "./form-member";
+import { Member } from "@prisma/client";
 
-const DialogMember = async ({ trigger }: { trigger?: React.JSX.Element }) => {
+const DialogMember = async ({
+  trigger,
+  member,
+}: {
+  trigger?: React.JSX.Element;
+  member?: Member;
+}) => {
   const child = trigger || (
     <Button size="sm">
       <Plus />
@@ -27,7 +34,7 @@ const DialogMember = async ({ trigger }: { trigger?: React.JSX.Element }) => {
           <DialogTitle>Adicionar Membro</DialogTitle>
           <DialogDescription>Informe os dados do membro.</DialogDescription>
         </DialogHeader>
-        <FormMember />
+        <FormMember member={member} />
       </DialogContent>
     </Dialog>
   );

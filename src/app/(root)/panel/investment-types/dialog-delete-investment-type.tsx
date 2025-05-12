@@ -6,12 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import React from "react";
 import { InvestmentType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { deleteInvestmentType } from "./actions";
 import { toast } from "@/hooks/use-toast";
 

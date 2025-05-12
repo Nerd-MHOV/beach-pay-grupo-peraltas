@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Member } from "@prisma/client";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Trash2 } from "lucide-react";
 import { deleteMember } from "../actions";
 
@@ -22,7 +22,6 @@ const DialogDeleteMember = ({ member }: { member: Member }) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          size="sm"
           variant="outline"
           className="bg-red-200 text-red-800 hover:bg-red-300"
         >

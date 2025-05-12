@@ -6,9 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Investment, InvestmentTournament } from "@prisma/client";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -16,6 +16,8 @@ import DialogGroupInvestmentAthlete from "./dialog-investment-tournament";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
+import DashboardAthlete from "../../members/[id]/dashboard-athlete";
+import DrawerMemberContents from "../../members/[id]/modals/drawer-member-contents";
 
 type InvestmentColumns = ExtendedColumnDef<
   {
@@ -121,9 +123,20 @@ export const columnsGroup: InvestmentColumns[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/panel/members/${row.original.athlete_id}`}>
-              <DropdownMenuItem>Atleta</DropdownMenuItem>
-            </Link>
+            <DropdownMenuItem asChild>
+              <DrawerMemberContents
+                trigger={
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                  >
+                    Investimentos
+                  </Button>
+                }
+                id={row.original.athlete_id}
+                content={(member) => <DashboardAthlete athlete={member} />}
+              />
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
 
             <DropdownMenuItem asChild>

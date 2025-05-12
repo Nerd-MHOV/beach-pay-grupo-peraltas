@@ -16,6 +16,12 @@ import Link from "next/link";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
+import DrawerMemberContents from "./[id]/modals/drawer-member-contents";
+import DashboardAthlete from "./[id]/dashboard-athlete";
+import DashboardTeacher from "./[id]/dashboard-teacher";
+import DashboardStudent from "./[id]/dashboard-student";
+import DialogMember from "./form/dialog-member";
+import FormMember from "./form/form-member";
 
 export type MemberTable = Member & {
   age: number;
@@ -160,11 +166,97 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
                     }
                   />
                 </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigator.clipboard.writeText(member.pix_key || "")
+                  }
+                >
+                  Copy Chave PIX
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <DrawerMemberContents
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                      >
+                        Investimentos
+                      </Button>
+                    }
+                    id={member.id}
+                    content={(member) => <DashboardAthlete athlete={member} />}
+                  />
+                </DropdownMenuItem>
               </>
+            )}
+
+            {member.is_student && (
+              <DropdownMenuItem asChild>
+                <DrawerMemberContents
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                    >
+                      Aluno
+                    </Button>
+                  }
+                  id={member.id}
+                  content={(member) => <DashboardStudent member={member} />}
+                />
+              </DropdownMenuItem>
+            )}
+
+            {member.is_teacher && (
+              <DropdownMenuItem asChild>
+                <DrawerMemberContents
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                    >
+                      Professor
+                    </Button>
+                  }
+                  id={member.id}
+                  content={(member) => <DashboardTeacher member={member} />}
+                />
+              </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`/panel/members/${member.id}`}>Detalhes</Link>
+              {/* <DialogMember
+                trigger={
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                  >
+                    Editar
+                  </Button>
+                }
+                member={member}
+              /> */}
+              <DropdownMenuItem asChild>
+                <DrawerMemberContents
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      className="w-full text-start justify-start cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0"
+                    >
+                      Detalhes
+                    </Button>
+                  }
+                  id={member.id}
+                  content={(member) => (
+                    <div className="bg-white p-7 rounded-xl shadow-lg">
+                      <FormMember member={member} />
+                    </div>
+                  )}
+                />
+              </DropdownMenuItem>
+              {/* <Link href={`/panel/members/${member.id}`}>Detalhes</Link> */}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -5,9 +5,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { InvestmentType } from "@prisma/client";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateInvestmentType from "./dialog-create-investment-type";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";

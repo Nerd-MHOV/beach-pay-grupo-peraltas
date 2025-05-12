@@ -4,8 +4,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import React from "react";
 import FormUser from "./form-user";
 import { $Enums, User } from "@prisma/client";
