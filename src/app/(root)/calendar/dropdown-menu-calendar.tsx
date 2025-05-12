@@ -43,11 +43,12 @@ export function DropdownMenuCalendar({
           <DropdownMenuItem
             onClick={() => {
               setDialogOpen(true);
-              setFormFields({
+              setFormFields((prev) => ({
+                ...prev,
                 formSelected: "availability",
                 selectedDate: undefined,
                 id: undefined,
-              });
+              }));
             }}
           >
             Disponibilidade
@@ -56,11 +57,12 @@ export function DropdownMenuCalendar({
           <DropdownMenuItem
             onClick={() => {
               setDialogOpen(true);
-              setFormFields({
+              setFormFields((prev) => ({
+                ...prev,
                 formSelected: "class",
                 selectedDate: undefined,
                 id: undefined,
-              });
+              }));
             }}
           >
             Aula
@@ -68,11 +70,12 @@ export function DropdownMenuCalendar({
           <DropdownMenuItem
             onClick={() => {
               setDialogOpen(true);
-              setFormFields({
+              setFormFields((prev) => ({
+                ...prev,
                 formSelected: "tournament",
                 selectedDate: undefined,
                 id: undefined,
-              });
+              }));
             }}
           >
             Torneios
