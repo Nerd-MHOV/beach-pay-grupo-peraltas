@@ -1,25 +1,20 @@
 import type { MetadataRoute } from "next";
 
-export default function manifetbackup(): MetadataRoute.Manifest {
+export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "BeachPay",
     short_name: "BeachPay",
     description: "BeachPay - O seu aplicativo de gestão do beach tennis",
-    start_url: "/",
-    display: "standalone",
-    background_color: "#222f3e",
-    theme_color: "#222f3e",
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#ffffff',
+    theme_color: '#000000',
     icons: [
       {
-        src: "/favicon.ico",
-        sizes: "192x192",
-        type: "image/x-icon",
+        src: "/images/GP.png",
+        sizes: "510x648",
+        type: "image/png",
       },
-      // {
-      //   src: "/images/GP.png",
-      //   sizes: "512x512",
-      //   type: "image/png",
-      // },
     ],
   };
 }
