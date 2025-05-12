@@ -119,7 +119,12 @@ const FormLessonCalendar = ({
   const createLessonFn = async (
     data: Omit<
       Lesson,
-      "id" | "created_at" | "updated_at" | "status" | "cancellation_reason"
+      | "id"
+      | "created_at"
+      | "updated_at"
+      | "status"
+      | "cancellation_reason"
+      | "observation"
     > & {
       attendance_ids: string[];
     }
@@ -143,7 +148,11 @@ const FormLessonCalendar = ({
   const updateLessonFn = async (
     data: Omit<
       Lesson,
-      "created_at" | "updated_at" | "status" | "cancellation_reason"
+      | "created_at"
+      | "updated_at"
+      | "status"
+      | "cancellation_reason"
+      | "observation"
     > & {
       attendance_ids: string[];
     }

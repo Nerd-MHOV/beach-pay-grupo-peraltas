@@ -49,7 +49,7 @@ export const getLessonById = unstable_cache(
 )
 
 export async function createLesson(
-  data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status" | "cancellation_reason"> & {
+  data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status" | "cancellation_reason" | "observation"> & {
     attendance_ids: string[];
   },
 ) {
@@ -118,6 +118,7 @@ export async function deleteLesson(
 export async function closeLesson(props: {
   id: string,
   attendance_relation: { student_id: string, presence: boolean, reason?: ReasonsToNotAttend }[],
+  observation?: string,
 }) {
 
 
@@ -140,6 +141,7 @@ export async function closeLesson(props: {
     where: { id: props.id },
     data: {
       status: "completed",
+      observation: props.observation,
       updated_at: new Date(),
     }
   })

@@ -236,6 +236,7 @@ model Lesson {
   status                  LessonStatus        @default(scheduled)
   cancellation_reason     ReasonsToNotAttend?
   teacher_availability_id String
+  observation             String?
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())

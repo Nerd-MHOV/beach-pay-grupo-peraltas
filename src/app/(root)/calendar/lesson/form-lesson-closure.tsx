@@ -20,6 +20,7 @@ import { Combobox } from "@/components/combobox";
 import { reasonOptions } from "./reason-options";
 import { ReasonsToNotAttend } from "@prisma/client";
 import DropdownMenuCancelLesson from "./dropdown-menu-cancel-lesosn";
+import { Textarea } from "@/components/ui/textarea";
 
 const schema = z.object({
   attendance_relation: z.array(
@@ -40,6 +41,7 @@ const schema = z.object({
         }
       })
   ),
+  observation: z.string().optional(),
 });
 const FormLessonClosure = ({
   lesson,
@@ -55,6 +57,7 @@ const FormLessonClosure = ({
       await closeLesson({
         id: lesson.id,
         attendance_relation: data.attendance_relation,
+        observation: data.observation,
       });
       toast({
         title: "Aula encerrada com sucesso",
@@ -160,6 +163,27 @@ const FormLessonClosure = ({
                       </Fragment>
                     ))}
                 </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="observation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Observação</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="resize-none"
+                  value={field.value}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  rows={3}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
