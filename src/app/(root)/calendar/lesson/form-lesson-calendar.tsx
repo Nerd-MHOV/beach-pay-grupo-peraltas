@@ -55,7 +55,9 @@ const schema = z.object({
 const FormLessonCalendar = ({
   lesson,
   onClosure,
+  currentUserRole,
 }: {
+  currentUserRole: $Enums.UserRole;
   onClosure?: () => void;
   lesson?: {
     status?: LessonStatus;
@@ -220,6 +222,10 @@ const FormLessonCalendar = ({
       ...lesson,
       attendance: lesson?.attendance,
     },
+    disabled:
+      lesson?.status === "canceled" ||
+      lesson?.status === "completed" ||
+      currentUserRole === "teacher",
   });
 
   return (
@@ -238,10 +244,7 @@ const FormLessonCalendar = ({
             <FormItem>
               <FormLabel>Data*</FormLabel>
               <DateTimeRangePicker
-                disabled={
-                  lesson?.status === "canceled" ||
-                  lesson?.status === "completed"
-                }
+                disabled={field.disabled}
                 value={field.value}
                 onChange={(value) => {
                   field.onChange(value);
@@ -263,10 +266,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Professor*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={
-                      lesson?.status === "canceled" ||
-                      lesson?.status === "completed"
-                    }
+                    disabled={field.disabled}
                     placeholder="Selecione a Professor"
                     items={(
                       availabilities.map((av) => av.teacher).flat() || []
@@ -297,10 +297,7 @@ const FormLessonCalendar = ({
                     <FormLabel>Quadra*</FormLabel>
                     <FormControl>
                       <Combobox
-                        disabled={
-                          lesson?.status === "canceled" ||
-                          lesson?.status === "completed"
-                        }
+                        disabled={field.disabled}
                         placeholder="Selecione a Quadra"
                         items={courts.map((courts) => ({
                           label: courts.name,
@@ -324,10 +321,7 @@ const FormLessonCalendar = ({
                 <FormLabel>Classificação*</FormLabel>
                 <FormControl>
                   <Combobox
-                    disabled={
-                      lesson?.status === "canceled" ||
-                      lesson?.status === "completed"
-                    }
+                    disabled={field.disabled}
                     placeholder="Selecione"
                     items={Object.values(Tier).map((tier) => ({
                       label: tier,
@@ -366,6 +360,7 @@ const FormLessonCalendar = ({
                     <FormControl>
                       <Combobox
                         placeholder="Selecione o Aluno"
+                        disabled={field.disabled}
                         items={
                           athletes
                             .filter(
@@ -440,6 +435,7 @@ const FormLessonCalendar = ({
                                     size="sm"
                                     variant="outline"
                                     type="button"
+                                    disabled={field.disabled}
                                     className="bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-900"
                                     onClick={() => {
                                       const array = field.value?.filter(

@@ -19,7 +19,7 @@ import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createAvailability, updateAvailability } from "./actions";
-import { TeacherAvailability } from "@prisma/client";
+import { $Enums, TeacherAvailability } from "@prisma/client";
 import DialogDeleteAvailabilityCalendar from "./dialog-delete-availability-calendar";
 
 const schema = z.object({
@@ -37,6 +37,7 @@ const schema = z.object({
 });
 const FormAvailabilityCalendar = ({
   availability,
+  currentUserRole,
 }: {
   availability?: {
     id?: string;
@@ -46,6 +47,7 @@ const FormAvailabilityCalendar = ({
       to: Date;
     };
   };
+  currentUserRole: $Enums.UserRole;
 }) => {
   const { toast } = useToast();
   const query = useQueryClient();
@@ -121,6 +123,7 @@ const FormAvailabilityCalendar = ({
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: availability,
+    disabled: currentUserRole === "teacher",
   });
   return (
     <Form {...form}>
@@ -149,6 +152,7 @@ const FormAvailabilityCalendar = ({
                     }))}
                     selected={field.value}
                     onSelect={(value) => field.onChange(value)}
+                    disabled={field.disabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -166,6 +170,7 @@ const FormAvailabilityCalendar = ({
               <DateTimeRangePicker
                 value={field.value}
                 onChange={(value) => field.onChange(value)}
+                disabled={field.disabled}
               />
               <FormMessage />
             </FormItem>

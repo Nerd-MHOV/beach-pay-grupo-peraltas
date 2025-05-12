@@ -48,9 +48,8 @@ export const formSchema = z
       .transform((v) => v ?? ""),
     birthday: z.date(),
 
-
-    date_start: z.date().nullable(),
-    pix_key: z.string().nullable(),
+    date_start: z.date().optional().nullable(),
+    pix_key: z.string().optional().nullable(),
     is_associated: z.boolean().optional().transform((v) => v ?? false),
 
     is_student: z.boolean().optional().transform((v) => v ?? false),

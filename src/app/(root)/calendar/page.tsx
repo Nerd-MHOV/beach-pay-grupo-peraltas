@@ -42,6 +42,7 @@ const Page = async () => {
       end: availability.time_end,
       id: availability.id,
       extendedProps: {
+        currentUserRole: me?.userRole ?? "teacher",
         id: availability.id,
         formSelected: "availability" as const,
         selectedDate: {
@@ -61,6 +62,7 @@ const Page = async () => {
       end: lesson.time_end,
       id: lesson.id,
       extendedProps: {
+        currentUserRole: me?.userRole ?? "teacher",
         id: lesson.id,
         formSelected: "class" as const,
         selectedDate: {
@@ -86,6 +88,7 @@ const Page = async () => {
       end: tournament.date_to,
       id: tournament.id,
       extendedProps: {
+        currentUserRole: me?.userRole ?? "teacher",
         id: tournament.id,
         formSelected: "tournament" as const,
         selectedDate: {
@@ -103,6 +106,7 @@ const Page = async () => {
     <div className="px-2 md:px-10 py-3 mb-20 relative grid grid-cols gap-5">
       <CalendarClientComponent
         currentUserId={me?.userId || ""}
+        currentUserRole={me?.userRole ?? "teacher"}
         teachers={teachers}
         events={events}
       />

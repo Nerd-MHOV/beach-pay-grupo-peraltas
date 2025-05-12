@@ -30,7 +30,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { Tournament } from "@prisma/client";
+import { $Enums, Tournament } from "@prisma/client";
 
 const formSchema = z.object({
   name: z
@@ -63,9 +63,11 @@ const formSchema = z.object({
 const FormTournament = ({
   tournament,
   onCreateTournament = () => {},
+  currentUserRole,
 }: {
   tournament?: Partial<Tournament>;
   onCreateTournament?: (tournament: Tournament) => void;
+  currentUserRole?: $Enums.UserRole;
 }) => {
   const { toast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -136,6 +138,7 @@ const FormTournament = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    disabled: currentUserRole === "teacher",
     defaultValues: {
       ...(tournament
         ? {
@@ -180,6 +183,7 @@ const FormTournament = ({
               <FormLabel>Arena*</FormLabel>
               <FormControl>
                 <Combobox
+                  disabled={field.disabled}
                   placeholder="Selecione a Arena"
                   items={(arenas || []).map((arena) => ({
                     label: arena.name + " - " + arena.address.city_state,
@@ -222,6 +226,7 @@ const FormTournament = ({
                         "w-full pl-3 text-left font-normal",
                         !field.value && "text-muted-foreground"
                       )}
+                      disabled={field.disabled}
                     >
                       {field.value && isDate(field.value.from) ? (
                         field.value.to && isDate(field.value.to) ? (

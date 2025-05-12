@@ -63,6 +63,7 @@ const FormEventCalendar = ({
               id: formFields.id,
               date: formFields.selectedDate,
             }}
+            currentUserRole={formFields.currentUserRole}
           />
         )}
         {formFields.formSelected === "class" && (
@@ -76,6 +77,7 @@ const FormEventCalendar = ({
               tier: formFields.tier,
               status: formFields.status,
             }}
+            currentUserRole={formFields.currentUserRole}
             onClosure={() => {
               close?.();
             }}
@@ -83,6 +85,7 @@ const FormEventCalendar = ({
         )}
         {formFields.formSelected === "tournament" && (
           <FormTournament
+            currentUserRole={formFields.currentUserRole}
             tournament={{
               arena_id: formFields.arena_id,
               id: formFields.id,

@@ -12,11 +12,6 @@ import { EventInput } from "@fullcalendar/core/index.js";
 import { $Enums, Member, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import HoverCardEventCalendar from "./hover-card-event-calendar";
 
 export type FormFieldProps = {
@@ -25,6 +20,7 @@ export type FormFieldProps = {
     from: Date;
     to: Date;
   };
+  currentUserRole: $Enums.UserRole;
   id?: string;
   teacher_id?: string;
   court_id?: string;
@@ -54,21 +50,24 @@ export type SetFilterEventsProps = React.Dispatch<
 
 interface CalendarClientComponentProps {
   currentUserId: string;
+  currentUserRole: $Enums.UserRole;
   events: (EventInput & { extendedProps: FormFieldProps })[];
   teachers: (Member & { user: Omit<User, "passwd">; is_teacher: true })[];
 }
 const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   currentUserId,
+  currentUserRole,
   events,
   teachers,
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [formFields, setFormFields] = React.useState<FormFieldProps>({
     formSelected: "class",
+    currentUserRole,
   });
   // Estado para os filtros dos eventos
   const initialFilterState: FilterEventsProps = {
-    "Minha Disponibilidade": true,
+    "Minha Disponibilidade": false,
     Torneios: true,
     "Aulas agendas": true,
     "Aulas canceladas": true,
@@ -108,6 +107,7 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
             }}
             select={(selectedDate) => {
               setFormFields({
+                currentUserRole,
                 formSelected: formFields.formSelected,
                 selectedDate: {
                   from: selectedDate.start,
