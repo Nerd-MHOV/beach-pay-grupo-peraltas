@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createAvailability, updateAvailability } from "./actions";
 import { TeacherAvailability } from "@prisma/client";
+import DialogDeleteAvailabilityCalendar from "./dialog-delete-availability-calendar";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -171,7 +172,10 @@ const FormAvailabilityCalendar = ({
           )}
         />
 
-        <div className="flex w-full justify-end mt-5">
+        <div className="flex w-full justify-end gap-2 mt-5">
+          {availability?.id && (
+            <DialogDeleteAvailabilityCalendar id={availability.id} />
+          )}
           <Button
             isLoading={form.formState.isSubmitting}
             onClick={(e) => {

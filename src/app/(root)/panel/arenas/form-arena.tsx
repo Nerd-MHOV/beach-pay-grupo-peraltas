@@ -52,16 +52,18 @@ const formSchema = z.object({
   neighborhood: z.string().optional().nullable(),
   city_state: z.string(),
   zip_code: z
-    .string({
-      message: "O CEP é obrigatório e deve ter 8 dígitos.",
-    })
-    .length(8, {
-      message: "O CEP deve ter 8 dígitos.",
-    })
-    .regex(/^\d+$/, {
-      message: "O CEP deve conter apenas números.",
-    })
-    .optional()
+    .preprocess(
+      (val) => (typeof val === "string" ? val.replace(/-/g, "") : val),
+      z
+        .string()
+        .regex(/^[0-9]*$/, {
+          message: "O CEP deve conter apenas números.",
+        })
+        .refine((val) => !val || val.length === 8, {
+          message: "O CEP deve ter 8 dígitos.",
+        })
+        .optional()
+    )
     .nullable(),
 });
 

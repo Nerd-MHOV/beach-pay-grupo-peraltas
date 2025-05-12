@@ -56,6 +56,9 @@ export const getAvailabilityById = unstable_cache(
       where: {
         id,
       },
+      include: {
+        lessons: true,
+      }
     });
     return availability;
   },
@@ -104,6 +107,7 @@ export async function deleteAvailability(id: string) {
     where: {
       id,
     },
+
   })
   revalidateTag("delete-availability");
   return availability;
