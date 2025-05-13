@@ -72,6 +72,13 @@ body {
   }
 }
 
+/* html2pdf */
+@layer base {
+  img {
+    display: initial;
+  }
+}
+
 /* FULLCALENDAR */
 
 .fc-button {

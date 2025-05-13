@@ -4,8 +4,28 @@ import { Lesson, ReasonsToNotAttend } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getLessons = unstable_cache(
-  async () => {
+  async (props?: {
+    period?: {
+      from: Date;
+      to: Date;
+    }
+    teacher_id?: string;
+  }) => {
+    console.log(props);
     const lessons = await db.lesson.findMany({
+      where: {
+        ...(props?.period ? {
+          time_start: {
+            gte: props.period.from,
+          },
+          time_end: {
+            lte: props.period.to,
+          }
+        } : {}),
+        ...(props?.teacher_id ? {
+          teacher_id: props.teacher_id,
+        } : {})
+      },
       include: {
         attendances: {
           include: {
