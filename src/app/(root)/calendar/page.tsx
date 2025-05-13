@@ -10,6 +10,9 @@ import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
 import { format } from "date-fns";
+import ExportWeekTeacherLessons from "./export-week-teacher-lessons";
+import { ptBR } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
 
 const ColorStatusLesson = {
   canceled: "#763fa2",
@@ -35,9 +38,11 @@ const Page = async () => {
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
       borderColor:
         availability.teacher?.user?.id === me?.userId ? "#D2d2d2" : "#95cf9a",
-      title: `${format(availability.time_start, "HH:mm")}-${
-        availability.teacher.name
-      }`,
+      title: `${formatInTimeZone(
+        availability.time_start,
+        "America/Sao_Paulo",
+        "HH:mm"
+      )}-${availability.teacher.name}`,
       start: availability.time_start,
       end: availability.time_end,
       id: availability.id,
@@ -55,9 +60,14 @@ const Page = async () => {
     ...lessons.map((lesson) => ({
       backgroundColor: ColorStatusLesson[lesson.status] || "#7289d4",
       borderColor: ColorStatusLesson[lesson.status] || "#7289d4",
-      title: `${format(lesson.time_start, "HH:mm")}-${lesson.tier}${
-        lesson.attendances.length
-      }-${lesson.teacher.name}`,
+      title: `${formatInTimeZone(
+        lesson.time_start,
+        "America/Sao_Paulo",
+        "HH:mm",
+        {
+          locale: ptBR,
+        }
+      )}-${lesson.tier}${lesson.attendances.length}-${lesson.teacher.name}`,
       start: lesson.time_start,
       end: lesson.time_end,
       id: lesson.id,
@@ -110,6 +120,7 @@ const Page = async () => {
         teachers={teachers}
         events={events}
       />
+      <ExportWeekTeacherLessons />
     </div>
   );
 };
