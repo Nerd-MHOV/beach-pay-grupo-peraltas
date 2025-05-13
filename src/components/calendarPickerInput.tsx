@@ -66,6 +66,7 @@ const CalendarPickerInput = ({
                   field.onChange(value);
                   setIsCalendarOpen(false);
                 }}
+                defaultMonth={field.value as Date}
                 autoFocus
                 showOutsideDays={false}
                 captionLayout="dropdown"

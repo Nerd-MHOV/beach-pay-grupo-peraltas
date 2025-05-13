@@ -256,6 +256,7 @@ const FormTournament = ({
                     onSelect={(value) => {
                       field.onChange(value);
                     }}
+                    defaultMonth={field.value?.from}
                     autoFocus
                     showOutsideDays={false}
                     captionLayout="dropdown"
