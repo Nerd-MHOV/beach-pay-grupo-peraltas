@@ -14,6 +14,7 @@ import React from "react";
 import { getLessons } from "./lesson/actions";
 
 const handleOnClick = async () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const html2pdf = require("html2pdf.js");
   const element = document.getElementById("pdf-week-lessons-teacher");
   html2pdf(element, {
