@@ -44,7 +44,7 @@ const PDFWeekLessonsTeacher = ({
         });
       })
     ),
-  ];
+  ].sort((a, b) => a.localeCompare(b));
 
   if (dataLessons.length === 0) return;
 
