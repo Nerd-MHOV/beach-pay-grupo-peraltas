@@ -10,14 +10,19 @@ import HoverCardLessonData from "./lesson/hover-card-lesson-data";
 const HoverCardEventCalendar = ({
   id,
   title,
+  prev,
 }: {
   id: string;
   title: string;
+  prev?: React.ReactNode;
 }) => {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <div className="event-title">{title}</div>
+        <div className="event-title flex items-center gap-2">
+          {prev}
+          {title}
+        </div>
       </HoverCardTrigger>
       <Portal>
         <HoverCardContent className="" side="top">

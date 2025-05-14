@@ -13,9 +13,15 @@ import { $Enums, Member, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
 import HoverCardEventCalendar from "./hover-card-event-calendar";
+import { Check } from "lucide-react";
+import { EventImpl } from "@fullcalendar/core/internal";
+import { Checkbox } from "@/components/ui/checkbox";
+import DropdownMenuCopyEvent from "./dropdown-menu-copy-event";
+import { Button } from "@/components/ui/button";
 
+export type EventType = "availability" | "class" | "tournament";
 export type FormFieldProps = {
-  formSelected: "availability" | "class" | "tournament";
+  formSelected: EventType;
   selectedDate?: {
     from: Date;
     to: Date;
@@ -61,6 +67,12 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   teachers,
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [selectedEvents, setSelectEvent] = React.useState<
+    {
+      event_id: string;
+      event_type: EventType;
+    }[]
+  >([]);
   const [formFields, setFormFields] = React.useState<FormFieldProps>({
     formSelected: "class",
     currentUserRole,
@@ -82,6 +94,28 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   const [filterEvents, setFilterEvents] =
     React.useState<FilterEventsProps>(initialFilterState);
 
+  const handleSelectEvent = (event: {
+    event_id: string;
+    event_type: EventType;
+  }) => {
+    if (event.event_type === "tournament") return;
+    setSelectEvent((prevSelectedEvents) => {
+      const isSelected = prevSelectedEvents.some(
+        (selectedEvent) =>
+          selectedEvent.event_type === event.event_type &&
+          selectedEvent.event_id === event.event_id
+      );
+      if (isSelected) {
+        return prevSelectedEvents.filter(
+          (selectedEvent) =>
+            selectedEvent.event_type !== event.event_type ||
+            selectedEvent.event_id !== event.event_id
+        );
+      } else {
+        return [...prevSelectedEvents, event];
+      }
+    });
+  };
   return (
     <>
       <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg flex md:flex-row flex-col justify-start items-start gap-8 w-full overflow-hidden">
@@ -137,8 +171,17 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
               eventChange.revert();
             }}
             eventClick={(eventChange) => {
-              setDialogOpen(true);
-              setFormFields(eventChange.event.extendedProps as FormFieldProps);
+              if (eventChange.jsEvent.shiftKey) {
+                handleSelectEvent({
+                  event_id: eventChange.event.id,
+                  event_type: eventChange.event.extendedProps.formSelected,
+                });
+              } else {
+                setDialogOpen(true);
+                setFormFields(
+                  eventChange.event.extendedProps as FormFieldProps
+                );
+              }
             }}
             events={FilterdEvents(
               currentUserId,
@@ -157,9 +200,19 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
             displayEventTime={false}
             eventContent={(arg) => {
               return arg.event.extendedProps.formSelected !== "class" ? (
-                <div className="event-title">{arg.event.title}</div>
+                <div className="event-title flex items-center gap-2">
+                  {selectedEvents.some(
+                    (selectedEvent) => selectedEvent.event_id === arg.event.id
+                  ) && <Checkbox checked />}
+                  {arg.event.title}
+                </div>
               ) : (
                 <HoverCardEventCalendar
+                  prev={
+                    selectedEvents.some(
+                      (selectedEvent) => selectedEvent.event_id === arg.event.id
+                    ) && <Checkbox checked />
+                  }
                   id={arg.event.extendedProps.id}
                   title={arg.event.title}
                 />
@@ -168,6 +221,16 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
           />
         </div>
       </div>
+      {selectedEvents.length > 0 && currentUserRole !== "teacher" && (
+        <div className="fixed bottom-6 right-10 z-50 ">
+          <DropdownMenuCopyEvent
+            events={selectedEvents}
+            clear={() => {
+              setSelectEvent([]);
+            }}
+          />
+        </div>
+      )}
       <DialogEventCalendar
         open={dialogOpen}
         setOpen={setDialogOpen}
