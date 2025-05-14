@@ -47,7 +47,6 @@ const PDFWeekLessonsTeacher = ({
 
   if (dataLessons.length === 0) return;
 
-
   return (
     <div id="pdf-week-lessons-teacher">
       <div className="flex items-center justify-between">
@@ -56,8 +55,11 @@ const PDFWeekLessonsTeacher = ({
             Horário de aulas: {dataLessons[0].teacher.name}
           </h1>
           <h2 className="text-lg px-2 font-bold">
-            Aulas da semana: {dataDate?.from?.getDate()} à {dataDate?.to?.getDate()} de {format(dataDate?.to || new Date(), "LLL, y", {
-              locale: ptBR})}
+            Aulas da semana: {dataDate?.from?.getDate()} à{" "}
+            {dataDate?.to?.getDate()} de{" "}
+            {format(dataDate?.to || new Date(), "LLL, y", {
+              locale: ptBR,
+            })}
           </h2>
         </div>
         <Button
@@ -102,7 +104,10 @@ const PDFWeekLessonsTeacher = ({
                       className="border-collapse border border-slate-200"
                     >
                       {lesson.attendances.map((student, indexStudent) => (
-                        <div key={indexStudent} className="text-sm">
+                        <div
+                          key={`${lesson.time_start}-${indexStudent}`}
+                          className="text-sm"
+                        >
                           {student.student.name}
                         </div>
                       ))}
@@ -110,7 +115,10 @@ const PDFWeekLessonsTeacher = ({
                   );
                 }
                 return (
-                  <TableCell className="border-collapse border border-slate-200"></TableCell>
+                  <TableCell
+                    key={indexDay}
+                    className="border-collapse border border-slate-200"
+                  ></TableCell>
                 );
               })}
             </TableRow>
