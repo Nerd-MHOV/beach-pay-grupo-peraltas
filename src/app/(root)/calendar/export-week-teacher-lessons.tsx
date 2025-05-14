@@ -150,12 +150,13 @@ const ExportWeekTeacherLessons = () => {
     resolver: zodResolver(schemaForm),
     defaultValues: {
       range: {
-        from: new Date(),
-        to: new Date(),
+        from: startOfWeek(new Date(), { weekStartsOn: 0 }), // Domingo
+        to: endOfWeek(new Date(), { weekStartsOn: 0 }), // Sábado
       },
       teacher_id: "",
     },
   });
+
   return (
     <div className="bg-background p-0 md:p-7 rounded-xl shadow-lg  gap-8 w-full overflow-hidden">
       <h1 className="py-4 text-2xl font-extrabold px-2">Exportar Aulas</h1>
