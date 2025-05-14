@@ -81,10 +81,10 @@ const PDFWeekLessonsTeacher = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {times.map((time, index) => (
+          {times.map((time, indexTime) => (
             <TableRow
-              key={index}
-              className={index % 2 === 0 ? "" : "bg-slate-50"}
+              key={indexTime}
+              className={indexTime % 2 === 0 ? "" : "bg-slate-50"}
             >
               <TableCell>{time}</TableCell>
               {weekString.map((day, indexDay) => {
