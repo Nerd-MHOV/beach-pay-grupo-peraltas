@@ -37,6 +37,13 @@ const HoverCardLessonData = ({ id }: { id: string }) => {
           </span>
         ))}
       </div>
+
+      <Separator className="my-2" />
+      <div className="text-sm">
+        <span className="font-bold">Observação:</span>
+
+        <span className="block">{lesson.observation}</span>
+      </div>
     </div>
   );
 };
