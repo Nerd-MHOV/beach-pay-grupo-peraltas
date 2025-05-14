@@ -59,7 +59,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal",
               !value && "text-muted-foreground"
             )}
           >
@@ -162,7 +162,7 @@ const ExportWeekTeacherLessons = () => {
       <h1 className="py-4 text-2xl font-extrabold px-2">Exportar Aulas</h1>
       <Form {...form}>
         <form
-          className="w-full flex gap-2"
+          className="w-full grid md:grid-cols-3 gap-2"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -172,6 +172,7 @@ const ExportWeekTeacherLessons = () => {
               <FormItem>
                 <FormControl>
                   <DatePickerWithRange
+                    className="w-full"
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                   />
