@@ -11,7 +11,6 @@ export const getLessons = unstable_cache(
     }
     teacher_id?: string;
   }) => {
-    console.log(props);
     const lessons = await db.lesson.findMany({
       where: {
         ...(props?.period ? {

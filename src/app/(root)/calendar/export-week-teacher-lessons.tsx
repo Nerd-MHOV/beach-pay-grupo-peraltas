@@ -207,7 +207,7 @@ const ExportWeekTeacherLessons = () => {
         </form>
       </Form>
 
-      <PDFWeekLessonsTeacher dataLessons={dataLessons} dataDate={dataDate}  />
+      <PDFWeekLessonsTeacher dataLessons={dataLessons} dataDate={dataDate} />
     </div>
   );
 };

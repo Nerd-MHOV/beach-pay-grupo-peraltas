@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Download } from "lucide-react";
+import { Circle, Download } from "lucide-react";
 import React from "react";
 import { getLessons } from "./lesson/actions";
 import { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
 
 const handleOnClick = async () => {
   /* eslint-disable @typescript-eslint/no-require-imports */
@@ -101,14 +102,22 @@ const PDFWeekLessonsTeacher = ({
                   return (
                     <TableCell
                       key={indexDay}
-                      className="border-collapse border border-slate-200"
+                      className="border-collapse border border-slate-200 "
                     >
                       {lesson.attendances.map((student, indexStudent) => (
                         <div
                           key={`${lesson.time_start}-${indexStudent}`}
-                          className="text-sm"
+                          className={cn(
+                            "text-sm mb-1",
+                            lesson.status !== "scheduled" && student.did_attend
+                              ? "text-green-700"
+                              : "",
+                            lesson.status !== "scheduled" && !student.did_attend
+                              ? "text-red-900"
+                              : ""
+                          )}
                         >
-                          {student.student.name}
+                          - {student.student.name}
                         </div>
                       ))}
                     </TableCell>
