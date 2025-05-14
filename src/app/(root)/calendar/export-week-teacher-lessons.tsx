@@ -109,6 +109,8 @@ const ExportWeekTeacherLessons = () => {
   const [dataLessons, setDataLessons] = React.useState<
     Awaited<ReturnType<typeof getLessons>>
   >([]);
+  const [dataDate, setDataDate] = React.useState<DateRange | undefined>();
+
   const { toast } = useToast();
   const { data: teachers = [] } = useQuery({
     queryKey: ["teachers"],
@@ -134,6 +136,7 @@ const ExportWeekTeacherLessons = () => {
         description: `Foram encontradas ${response.length} aulas`,
       });
       setDataLessons(response);
+      setDataDate(data.range);
     } catch (error) {
       toast({
         title: "Erro ao buscar aulas",
@@ -204,7 +207,7 @@ const ExportWeekTeacherLessons = () => {
         </form>
       </Form>
 
-      <PDFWeekLessonsTeacher dataLessons={dataLessons} />
+      <PDFWeekLessonsTeacher dataLessons={dataLessons} dataDate={dataDate}  />
     </div>
   );
 };

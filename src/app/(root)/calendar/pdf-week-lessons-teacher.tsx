@@ -12,6 +12,7 @@ import { ptBR } from "date-fns/locale";
 import { Download } from "lucide-react";
 import React from "react";
 import { getLessons } from "./lesson/actions";
+import { DateRange } from "react-day-picker";
 
 const handleOnClick = async () => {
   /* eslint-disable @typescript-eslint/no-require-imports */
@@ -29,8 +30,10 @@ const handleOnClick = async () => {
 const weekString = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
 const PDFWeekLessonsTeacher = ({
   dataLessons,
+  dataDate,
 }: {
   dataLessons: Awaited<ReturnType<typeof getLessons>>;
+  dataDate: DateRange | undefined;
 }) => {
   const times = [
     ...new Set(
@@ -44,15 +47,17 @@ const PDFWeekLessonsTeacher = ({
 
   if (dataLessons.length === 0) return;
 
+
   return (
     <div id="pdf-week-lessons-teacher">
       <div className="flex items-center justify-between">
         <div className="flex flex-col py-4">
           <h1 className=" text-2xl font-extrabold px-2">
-            Horário de aulas: Leonado Saqui
+            Horário de aulas: {dataLessons[0].teacher.name}
           </h1>
           <h2 className="text-lg px-2 font-bold">
-            Aulas da semana: 15 à 20 de nov 2025
+            Aulas da semana: {dataDate?.from?.getDate()} à {dataDate?.to?.getDate()} de {format(dataDate?.to || new Date(), "LLL, y", {
+              locale: ptBR})}
           </h2>
         </div>
         <Button
