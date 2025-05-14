@@ -15,7 +15,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { deleteLesson, getLessonById } from "./actions";
 
-const DialogDeleteLessonCalendar = ({ id }: { id: string }) => {
+const DialogDeleteLessonCalendar = ({
+  id,
+  onDelete,
+}: {
+  id: string;
+  onDelete?: () => void;
+}) => {
   const { toast } = useToast();
   const { data: lesson, isPending } = useQuery({
     queryKey: ["lesson", id],
@@ -25,13 +31,14 @@ const DialogDeleteLessonCalendar = ({ id }: { id: string }) => {
 
   const has_attempts = (lesson?.attendances?.length || 0) > 0;
 
-  const onDelete = async () => {
+  const handleDeleteLesson = async () => {
     try {
       await deleteLesson(id);
       toast({
         title: "Aula Excluida!",
         description: "Aula foi apagada.",
       });
+      onDelete?.();
     } catch (error) {
       toast({
         title: "Erro ao deletar aula",
@@ -70,7 +77,7 @@ const DialogDeleteLessonCalendar = ({ id }: { id: string }) => {
             <Button
               variant="destructive"
               disabled={has_attempts}
-              onClick={onDelete}
+              onClick={handleDeleteLesson}
             >
               Deletar
             </Button>

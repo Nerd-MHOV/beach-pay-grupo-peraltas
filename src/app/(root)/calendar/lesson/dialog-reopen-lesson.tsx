@@ -14,7 +14,13 @@ import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { deleteLesson, updateLesson } from "./actions";
 
-const DialogReopenLessonCalendar = ({ id }: { id: string }) => {
+const DialogReopenLessonCalendar = ({
+  id,
+  onReopen,
+}: {
+  id: string;
+  onReopen?: () => void;
+}) => {
   const { toast } = useToast();
 
   const onClick = async () => {
@@ -24,6 +30,7 @@ const DialogReopenLessonCalendar = ({ id }: { id: string }) => {
         title: "Aula Reaberta!",
         description: "Aula foi reaberta com sucesso.",
       });
+      onReopen?.();
     } catch (error) {
       toast({
         title: "Erro ao reabrir aula",

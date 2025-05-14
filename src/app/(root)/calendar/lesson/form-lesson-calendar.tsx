@@ -464,7 +464,12 @@ const FormLessonCalendar = ({
 
             <div className="flex w-full justify-end mt-5 gap-2">
               {lesson?.id && currentUserRole === "admin" && (
-                <DialogDeleteLessonCalendar id={lesson.id} />
+                <DialogDeleteLessonCalendar
+                  id={lesson.id}
+                  onDelete={() => {
+                    onClosure?.();
+                  }}
+                />
               )}
 
               {lesson?.id && (
@@ -491,7 +496,12 @@ const FormLessonCalendar = ({
         {lesson?.id &&
           lesson?.status !== "scheduled" &&
           currentUserRole === "admin" && (
-            <DialogReopenLessonCalendar id={lesson.id} />
+            <DialogReopenLessonCalendar
+              id={lesson.id}
+              onReopen={() => {
+                onClosure?.();
+              }}
+            />
           )}
 
         {lesson?.status === "canceled" && (
