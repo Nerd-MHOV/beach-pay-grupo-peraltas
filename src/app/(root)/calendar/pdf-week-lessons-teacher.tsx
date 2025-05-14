@@ -82,22 +82,22 @@ const PDFWeekLessonsTeacher = ({
               className={index % 2 === 0 ? "" : "bg-slate-50"}
             >
               <TableCell>{time}</TableCell>
-              {weekString.map((day, index) => {
+              {weekString.map((day, indexDay) => {
                 const lesson = dataLessons.find(
                   (lesson) =>
                     format(lesson.time_start, "HH:mm", {
                       locale: ptBR,
                     }) === time &&
-                    new Date(lesson.time_start).getDay() === index
+                    new Date(lesson.time_start).getDay() === indexDay
                 );
                 if (lesson) {
                   return (
                     <TableCell
-                      key={index}
+                      key={indexDay}
                       className="border-collapse border border-slate-200"
                     >
-                      {lesson.attendances.map((student, index) => (
-                        <div key={index} className="text-sm">
+                      {lesson.attendances.map((student, indexStudent) => (
+                        <div key={indexStudent} className="text-sm">
                           {student.student.name}
                         </div>
                       ))}
