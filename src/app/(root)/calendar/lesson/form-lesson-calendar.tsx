@@ -33,6 +33,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import DialogDeleteLessonCalendar from "./dialog-delete-lesson";
+import DialogReopenLessonCalendar from "./dialog-reopen-lesson";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -461,6 +463,10 @@ const FormLessonCalendar = ({
             />
 
             <div className="flex w-full justify-end mt-5 gap-2">
+              {lesson?.id && currentUserRole === "admin" && (
+                <DialogDeleteLessonCalendar id={lesson.id} />
+              )}
+
               {lesson?.id && (
                 <DialogLessonClosure
                   id={lesson.id}
@@ -481,6 +487,12 @@ const FormLessonCalendar = ({
             </div>
           </>
         )}
+
+        {lesson?.id &&
+          lesson?.status !== "scheduled" &&
+          currentUserRole === "admin" && (
+            <DialogReopenLessonCalendar id={lesson.id} />
+          )}
 
         {lesson?.status === "canceled" && (
           <div className="flex flex-col gap-2">
