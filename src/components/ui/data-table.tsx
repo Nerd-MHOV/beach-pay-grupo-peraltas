@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
@@ -19,6 +20,7 @@ import {
   Row,
   SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 import { Input } from "./input";
 import { Button } from "./button";
@@ -53,6 +55,8 @@ export function DataTable<TData, TValue>({
   const [filter, setFilter] = useState("");
   const [expanded, setExpanded] = useState<true | Record<string, boolean>>({});
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const table = useReactTable({
     data,
     columns,
@@ -66,10 +70,14 @@ export function DataTable<TData, TValue>({
       globalFilter: filter,
       expanded: expanded,
       sorting: sorting,
+      columnFilters,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
     onExpandedChange: setExpanded,
     onGlobalFilterChange: setFilter,
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
   });
 
   const exportPdf = (rows: Row<TData>[]) => {
@@ -92,7 +100,7 @@ export function DataTable<TData, TValue>({
       .map(
         (column) =>
           (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
-          column.id,
+          column.id
       );
     const gatherTableData = (rows: Row<TData>[]) => {
       return rows.flatMap((row) => {
@@ -148,7 +156,7 @@ export function DataTable<TData, TValue>({
       .map(
         (column) =>
           (column.columnDef as ExtendedColumnDef<TData, undefined>).label ||
-          column.id,
+          column.id
       );
 
     const csvRows = gatherCsvData(rows);
@@ -181,7 +189,7 @@ export function DataTable<TData, TValue>({
             exportPdf(
               table.getIsSomeRowsSelected()
                 ? table.getSelectedRowModel().rows
-                : table.getPrePaginationRowModel().rows,
+                : table.getPrePaginationRowModel().rows
             )
           }
           variant={"ghost"}
@@ -195,7 +203,7 @@ export function DataTable<TData, TValue>({
             exportCsv(
               table.getIsSomeRowsSelected()
                 ? table.getSelectedRowModel().rows
-                : table.getPrePaginationRowModel().rows,
+                : table.getPrePaginationRowModel().rows
             )
           }
           variant={"ghost"}
@@ -215,7 +223,7 @@ export function DataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -234,7 +242,7 @@ export function DataTable<TData, TValue>({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext(),
+                          cell.getContext()
                         )}
                       </TableCell>
                     ))}

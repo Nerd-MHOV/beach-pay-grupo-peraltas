@@ -1,5 +1,11 @@
 import { Column } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronsUpDown,
+  EyeOff,
+  Filter,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,18 +16,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Combobox } from "@/components/combobox";
+import { useState } from "react";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
+  filterOptions?: {
+    label: string;
+    value: any;
+  }[];
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
+  filterOptions,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const [filterSelected, setFilterSelected] = useState<string | undefined>(
+    undefined
+  );
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
@@ -35,6 +51,7 @@ export function DataTableColumnHeader<TData, TValue>({
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
+            {column.getFilterValue() ? <Filter /> : null}
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
               <ArrowDown />
@@ -59,6 +76,24 @@ export function DataTableColumnHeader<TData, TValue>({
             <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />
             Hide
           </DropdownMenuItem>
+          {filterOptions && filterOptions.length > 0 && (
+            <DropdownMenuItem asChild>
+              <>
+                <Combobox
+                  placeholder="Filter"
+                  items={[...filterOptions]}
+                  selected={filterSelected || null}
+                  onSelect={(value) => {
+                    setFilterSelected(value);
+                    column.setFilterValue(
+                      filterOptions.find((f) => f.value === value)?.value ||
+                        undefined
+                    );
+                  }}
+                />
+              </>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

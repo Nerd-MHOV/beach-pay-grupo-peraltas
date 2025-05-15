@@ -27,6 +27,10 @@ export type MemberTable = Member & {
   age: number;
 };
 
+const filterBoolean = [
+  { label: "Sim", value: true },
+  { label: "Não", value: false },
+];
 export const columns: ExtendedColumnDef<Member, undefined>[] = [
   SelectComponentColumn as ExtendedColumnDef<Member, undefined>,
   {
@@ -73,7 +77,11 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   {
     accessorKey: "is_associated",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Associado" />
+      <DataTableColumnHeader
+        column={column}
+        title="Associado"
+        filterOptions={filterBoolean}
+      />
     ),
     label: "Associado",
     cell: ({ row }) => {
@@ -84,7 +92,11 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   {
     accessorKey: "is_student",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Aluno" />
+      <DataTableColumnHeader
+        column={column}
+        title="Aluno"
+        filterOptions={filterBoolean}
+      />
     ),
     label: "Aluno",
     cell: ({ row }) => {
@@ -95,7 +107,11 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   {
     accessorKey: "is_athlete",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Atleta" />
+      <DataTableColumnHeader
+        column={column}
+        title="Atleta"
+        filterOptions={filterBoolean}
+      />
     ),
     label: "Atleta",
     cell: ({ row }) => {
@@ -106,7 +122,11 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   {
     accessorKey: "is_teacher",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Professor" />
+      <DataTableColumnHeader
+        column={column}
+        title="Professor"
+        filterOptions={filterBoolean}
+      />
     ),
     label: "Professor",
     cell: ({ row }) => {
