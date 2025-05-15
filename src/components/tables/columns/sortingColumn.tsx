@@ -80,7 +80,7 @@ export function DataTableColumnHeader<TData, TValue>({
             <DropdownMenuItem asChild>
               <>
                 <Combobox
-                  placeholder="Filter"
+                  placeholder="Filtro"
                   items={[...filterOptions]}
                   selected={filterSelected || null}
                   onSelect={(value) => {
