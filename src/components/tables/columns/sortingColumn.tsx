@@ -25,6 +25,7 @@ interface DataTableColumnHeaderProps<TData, TValue>
   title: string;
   filterOptions?: {
     label: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any;
   }[];
 }
