@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Member } from "@prisma/client";
+import { $Enums, Member } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
 import DialogInvestmentAthlete from "../investments/(single)/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../investments/(tournament)/dialog-investment-tournament";
@@ -70,7 +70,14 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   {
     accessorKey: "tier",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Classificação" />
+      <DataTableColumnHeader
+        column={column}
+        title="Classificação"
+        filterOptions={Object.keys($Enums.Tier).map((tier) => ({
+          label: tier,
+          value: tier,
+        }))}
+      />
     ),
     label: "Classificação",
   },
