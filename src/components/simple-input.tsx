@@ -13,6 +13,7 @@ const SimpleInput = ({
   form,
   label,
   placeholder,
+  type = "text",
   name,
   disabled,
 }: {
@@ -20,6 +21,7 @@ const SimpleInput = ({
   form: UseFormReturn<any>;
   disabled?: boolean;
   label: string;
+  type?: React.HTMLInputTypeAttribute;
   placeholder: string;
   name: string;
 }) => {
@@ -31,7 +33,12 @@ const SimpleInput = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input disabled={disabled} placeholder={placeholder} {...field} />
+            <Input
+              disabled={disabled}
+              placeholder={placeholder}
+              type={type}
+              {...field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

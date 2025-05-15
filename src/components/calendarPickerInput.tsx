@@ -70,6 +70,7 @@ const CalendarPickerInput = ({
                 autoFocus
                 showOutsideDays={false}
                 captionLayout="dropdown"
+                locale={ptBR}
               />
             </PopoverContent>
           </Popover>

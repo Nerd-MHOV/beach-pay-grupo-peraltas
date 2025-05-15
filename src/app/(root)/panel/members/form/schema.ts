@@ -50,12 +50,16 @@ export const formSchema = z
 
     date_start: z.date().optional().nullable(),
     pix_key: z.string().optional().nullable(),
+    letzplay_id: z.string().optional().nullable(),
     is_associated: z.boolean().optional().transform((v) => v ?? false),
 
     is_student: z.boolean().optional().transform((v) => v ?? false),
     is_teacher: z.boolean().optional().transform((v) => v ?? false),
     is_athlete: z.boolean().optional().transform((v) => v ?? false),
     teacher_user_id: z.string().nullable(),
+    class_combined_value: z.number().optional().nullable(),
+    class_amount: z.number().optional().nullable(),
+    associated_combined_value: z.number().optional().nullable(),
     street: z.string().optional().nullable(),
     number: z.string().optional().nullable(),
     complement: z.string().optional().nullable(),
@@ -91,6 +95,32 @@ export const formSchema = z
         code: z.ZodIssueCode.custom,
         message: "A data de início é obrigatória para associados.",
         path: ["date_start"],
+      });
+    }
+
+    if (data.is_associated && (data.associated_combined_value === null || data.associated_combined_value === undefined)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "O valor combinado é obrigatório para associados.",
+        path: ["associated_combined_value"],
+      });
+    }
+
+    if (data.is_student && (data.class_combined_value === null || data.class_combined_value === undefined)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "O valor combinado é obrigatório para alunos.",
+        path: ["class_combined_value"],
+      });
+    }
+
+    if (data.is_student && !data.class_amount) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A quantidade de aulas é obrigatória para alunos.",
+        path: ["class_amount"],
       });
     }
 

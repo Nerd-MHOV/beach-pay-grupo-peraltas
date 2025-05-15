@@ -10,7 +10,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
 import CalendarPickerInput from "@/components/calendarPickerInput";
 import { Address, Member, Tier, User } from "@prisma/client";
@@ -21,12 +21,14 @@ import SimpleInput from "@/components/simple-input";
 import CpfInput from "@/components/cpf-input";
 import { Combobox } from "@/components/combobox";
 import DialogCreateUser from "../../users/dialog-user";
-import { Plus } from "lucide-react";
+import { Plus, Volleyball } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeacherUsers } from "../../users/actions";
 import CheckboxInput from "@/components/checkbox-input";
 import AddressForm from "@/components/address-form";
 import DialogDeleteMember from "../[id]/dialog-delete-member";
+import MoneyInput from "@/components/money-Input";
+import Link from "next/link";
 
 const FormMember = ({
   member,
@@ -48,12 +50,12 @@ const FormMember = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const filteredValues: Omit<
-      Member & {
-        address: Omit<Address, "id" | "created_at" | "updated_at">;
-        teacher_user_id?: string | null;
-      },
+      Member,
       "id" | "created_at" | "updated_at" | "address_id"
-    > = {
+    > & {
+      address: Omit<Address, "id" | "created_at" | "updated_at">;
+      teacher_user_id?: string | null;
+    } = {
       name: values.name,
       phone: values.phone,
       responsible: values.responsible,
@@ -68,6 +70,10 @@ const FormMember = ({
       is_athlete: values.is_athlete,
       teacher_user_id: values.teacher_user_id,
       tier: values.tier,
+      class_combined_value: values.class_combined_value || 0,
+      associated_combined_value: values.associated_combined_value || 0,
+      class_amount: values.class_amount || 0,
+      letzplay_id: values.letzplay_id || null,
       address: {
         street: values.street || null,
         number: values.number || null,
@@ -220,11 +226,37 @@ const FormMember = ({
           />
         )}
         {form.getValues("is_associated") && (
-          <CalendarPickerInput
-            form={form}
-            name="date_start"
-            label="Data de associação*"
-          />
+          <div className="grid grid-cols-2 w-full gap-2 ">
+            <CalendarPickerInput
+              form={form}
+              name="date_start"
+              label="Data de associação*"
+            />
+
+            <MoneyInput
+              form={form}
+              label="Mensalidade Associação"
+              placeholder="valor combinado*"
+              name="associated_combined_value"
+            />
+          </div>
+        )}
+        {form.getValues("is_student") && (
+          <div className="grid grid-cols-2 w-full gap-2 ">
+            <SimpleInput
+              form={form}
+              name="class_amount"
+              type="number"
+              label="Qtd de aulas por mês*"
+              placeholder="Qtd de aulas"
+            />
+            <MoneyInput
+              form={form}
+              label="Valor por Aula"
+              placeholder="valor combinado"
+              name="class_combined_value"
+            />
+          </div>
         )}
         {form.getValues("is_teacher") && (
           <FormField
@@ -265,9 +297,25 @@ const FormMember = ({
         )}
 
         <AddressForm form={form} />
-
+        <SimpleInput
+          name="letzplay_id"
+          form={form}
+          label="ID do Letzplay"
+          placeholder="ID do Letzplay"
+        />
         <div className="flex w-full gap-2 items-center justify-end pt-5">
-          {member && <DialogDeleteMember member={member} />}
+          {member && (
+            <>
+              <Link
+                href={`https://letzplay.me/places/brotas-bt/members/${member.letzplay_id}`}
+                className={buttonVariants({ variant: "outline" })}
+                target="_blank"
+              >
+                <Volleyball className="text-slate-600" />
+              </Link>
+              <DialogDeleteMember member={member} />
+            </>
+          )}
 
           <Button
             isLoading={form.formState.isSubmitting}

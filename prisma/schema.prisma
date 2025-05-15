@@ -61,21 +61,25 @@ model User {
 }
 
 model Member {
-  id            String    @id @default(cuid())
-  name          String    @unique
-  birthday      DateTime
-  phone         String
-  responsible   String?
-  date_start    DateTime?
-  pix_key       String?
-  cpf           String?
-  address_id    String?   @unique
-  email         String?
-  is_student    Boolean   @default(false)
-  is_associated Boolean   @default(false)
-  is_teacher    Boolean   @default(false)
-  is_athlete    Boolean   @default(false)
-  tier          Tier      @default(D)
+  id                        String    @id @default(cuid())
+  name                      String    @unique
+  birthday                  DateTime
+  phone                     String
+  responsible               String?
+  date_start                DateTime?
+  pix_key                   String?
+  cpf                       String?
+  address_id                String?   @unique
+  email                     String?
+  is_student                Boolean   @default(false)
+  is_associated             Boolean   @default(false)
+  is_teacher                Boolean   @default(false)
+  is_athlete                Boolean   @default(false)
+  tier                      Tier      @default(D)
+  class_amount              Int       @default(0)
+  class_combined_value      Float     @default(0)
+  associated_combined_value Float     @default(0)
+  letzplay_id               String?   @unique
 
   user    User?
   address Address? @relation(fields: [address_id], references: [id], onDelete: Cascade)
