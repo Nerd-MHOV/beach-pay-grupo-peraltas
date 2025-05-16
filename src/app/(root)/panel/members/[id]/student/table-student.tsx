@@ -51,7 +51,17 @@ const TableStudents = ({
         lesson: lesson.lesson,
       };
     })
-    .filter((lesson) => (filter ? lesson.status === filter : true));
+    .filter((lesson) => (filter ? lesson.status === filter : true))
+    .sort((a, b) => {
+      if (a.lesson.time_start > b.lesson.time_start) {
+        return -1;
+      }
+      if (a.lesson.time_start < b.lesson.time_start) {
+        return 1;
+      }
+      return 0;
+    });
+
   return (
     <div className="bg-white p-7 rounded-xl shadow-lg overflow-auto">
       <DataTable
