@@ -1,10 +1,13 @@
 import React, { Suspense } from "react";
-import { getMemberById } from "../actions";
+import { getMemberById } from "../../actions";
 import LoadingData from "@/components/LoadingData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarClock, ListChecks, Ban, CircleSlash } from "lucide-react";
-import { LineChartStudent } from "./charts/line-chart-student";
-import { getPresence } from "./functions/get-presence";
+import { LineChartStudent } from "../charts/line-chart-student";
+import { getPresence } from "../functions/get-presence";
+import TableStudents from "./table-student";
+import { StatusLessonColumns } from "./columns";
+import { cn } from "@/lib/utils";
 
 const DashboardStudent = ({
   member,
@@ -12,11 +15,24 @@ const DashboardStudent = ({
   member: NonNullable<Awaited<ReturnType<typeof getMemberById>>>;
 }) => {
   const presence = getPresence(member);
+  const [filterSelected, setFilterSelected] = React.useState<
+    StatusLessonColumns | undefined
+  >(undefined);
   return (
     <Suspense fallback={<LoadingData />}>
       <div className="grid gap-4 md:grid-cols-2 ">
         <div className="grid gap-4">
-          <Card className="bg-background border-none shadow-lg select-none">
+          <Card
+            className={cn(
+              "bg-background border-none shadow-lg select-none cursor-pointer",
+              filterSelected === "Feita" ? "bg-muted" : ""
+            )}
+            onClick={() =>
+              setFilterSelected((prev) =>
+                prev === "Feita" ? undefined : "Feita"
+              )
+            }
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Aulas</CardTitle>
               <ListChecks className="h-4 w-4 text-muted-foreground" />
@@ -29,7 +45,17 @@ const DashboardStudent = ({
             </CardContent>
           </Card>
 
-          <Card className="bg-background border-none shadow-lg select-none">
+          <Card
+            className={cn(
+              "bg-background border-none shadow-lg select-none cursor-pointer",
+              filterSelected === "Agendada" ? "bg-muted" : ""
+            )}
+            onClick={() =>
+              setFilterSelected((prev) =>
+                prev === "Agendada" ? undefined : "Agendada"
+              )
+            }
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Aulas</CardTitle>
               <CalendarClock className="h-4 w-4 text-muted-foreground" />
@@ -42,7 +68,17 @@ const DashboardStudent = ({
             </CardContent>
           </Card>
 
-          <Card className="bg-background border-none shadow-lg select-none">
+          <Card
+            className={cn(
+              "bg-background border-none shadow-lg select-none cursor-pointer",
+              filterSelected === "Sem Justificativa" ? "bg-muted" : ""
+            )}
+            onClick={() =>
+              setFilterSelected((prev) =>
+                prev === "Sem Justificativa" ? undefined : "Sem Justificativa"
+              )
+            }
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Faltas</CardTitle>
               <Ban className="h-4 w-4 text-muted-foreground" />
@@ -55,7 +91,17 @@ const DashboardStudent = ({
             </CardContent>
           </Card>
 
-          <Card className="bg-background border-none shadow-lg select-none">
+          <Card
+            className={cn(
+              "bg-background border-none shadow-lg select-none cursor-pointer",
+              filterSelected === "Com Justificativa" ? "bg-muted" : ""
+            )}
+            onClick={() =>
+              setFilterSelected((prev) =>
+                prev === "Com Justificativa" ? undefined : "Com Justificativa"
+              )
+            }
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Faltas</CardTitle>
               <CircleSlash className="h-4 w-4 text-muted-foreground" />
@@ -70,6 +116,7 @@ const DashboardStudent = ({
         </div>
         <LineChartStudent chartData={presence.sixMonths} />
       </div>
+      <TableStudents member={member} filter={filterSelected} />
     </Suspense>
   );
 };

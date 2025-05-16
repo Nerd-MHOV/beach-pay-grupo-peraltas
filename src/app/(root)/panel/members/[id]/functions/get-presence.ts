@@ -4,7 +4,7 @@ import { ptBR } from "date-fns/locale";
 import { subMonths, startOfMonth, endOfMonth, parseISO } from "date-fns";
 
 export const getPresence = (
-  athlete: NonNullable<Awaited<ReturnType<typeof getMemberById>>>
+  student: NonNullable<Awaited<ReturnType<typeof getMemberById>>>
 ) => {
   const now = new Date();
 
@@ -14,7 +14,7 @@ export const getPresence = (
     const start = startOfMonth(monthDate);
     const end = endOfMonth(monthDate);
 
-    const lessonsInMonth = athlete.lesson_attendance.filter((lesson) => {
+    const lessonsInMonth = student.lesson_attendance.filter((lesson) => {
       const date = lesson.lesson.time_start;
       // Considera somente aulas marcadas como "present" ou "absent"
       return date >= start && date <= end && lesson.lesson.status !== "scheduled";
@@ -32,12 +32,12 @@ export const getPresence = (
   }).reverse(); // para ficar em ordem cronológica
 
   // Totais gerais das aulas
-  const completedLessons = athlete.lesson_attendance.filter((lesson) => lesson.lesson.status === "completed").length;
-  const pendingLessons = athlete.lesson_attendance.filter((lesson) => lesson.lesson.status === "scheduled").length;
-  const absencesWithoutJustification = athlete.lesson_attendance.filter(
+  const completedLessons = student.lesson_attendance.filter((lesson) => lesson.lesson.status === "completed" && lesson.did_attend).length;
+  const pendingLessons = student.lesson_attendance.filter((lesson) => lesson.lesson.status === "scheduled").length;
+  const absencesWithoutJustification = student.lesson_attendance.filter(
     (lesson) => lesson.reason === "no_justification" && lesson.lesson.status !== "scheduled" && !lesson.did_attend
   ).length;
-  const absencesWithJustification = athlete.lesson_attendance.filter(
+  const absencesWithJustification = student.lesson_attendance.filter(
     (lesson) => lesson.reason !== "no_justification" && lesson.lesson.status !== "scheduled" && !lesson.did_attend
   ).length;
 

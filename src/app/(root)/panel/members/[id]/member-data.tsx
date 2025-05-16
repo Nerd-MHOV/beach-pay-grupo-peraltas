@@ -8,7 +8,7 @@ import { getMemberById } from "../actions";
 import DashboardAthlete from "./dashboard-athlete";
 import { Separator } from "@/components/ui/separator";
 import DashboardTeacher from "./dashboard-teacher";
-import DashboardStudent from "./dashboard-student";
+import DashboardStudent from "./student/dashboard-student";
 import HeaderRootMember from "./header-root-member";
 
 const MemberData = async ({ id }: { id: string }) => {

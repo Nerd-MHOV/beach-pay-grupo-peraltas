@@ -84,7 +84,11 @@ export async function getMemberById(id: string) {
       lesson: true,
       lesson_attendance: {
         include: {
-          lesson: true,
+          lesson: {
+            include: {
+              teacher: true,
+            },
+          },
         },
       },
       investments: {

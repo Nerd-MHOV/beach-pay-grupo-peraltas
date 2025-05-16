@@ -19,7 +19,7 @@ import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn
 import DrawerMemberContents from "./[id]/modals/drawer-member-contents";
 import DashboardAthlete from "./[id]/dashboard-athlete";
 import DashboardTeacher from "./[id]/dashboard-teacher";
-import DashboardStudent from "./[id]/dashboard-student";
+import DashboardStudent from "./[id]/student/dashboard-student";
 import DialogMember from "./form/dialog-member";
 import FormMember from "./form/form-member";
 
