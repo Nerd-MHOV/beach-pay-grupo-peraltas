@@ -85,6 +85,7 @@ const FormLessonClosure = ({
     resolver: zodResolver(schema),
     defaultValues: {
       attendance_relation: defaultAttendance,
+      observation: lesson.observation || "",
     },
   });
 
