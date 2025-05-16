@@ -13,11 +13,8 @@ import { $Enums, Member, LessonStatus, User } from "@prisma/client";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
 import HoverCardEventCalendar from "./hover-card-event-calendar";
-import { Check } from "lucide-react";
-import { EventImpl } from "@fullcalendar/core/internal";
 import { Checkbox } from "@/components/ui/checkbox";
 import DropdownMenuCopyEvent from "./dropdown-menu-copy-event";
-import { Button } from "@/components/ui/button";
 
 export type EventType = "availability" | "class" | "tournament";
 export type FormFieldProps = {
@@ -42,6 +39,7 @@ export type SetFormFieldProps = React.Dispatch<
 >;
 
 export interface FilterEventsProps {
+  "Somente Eu (Aulas)": boolean;
   "Minha Disponibilidade": boolean;
   Torneios: boolean;
   "Aulas agendas": boolean;
@@ -79,6 +77,7 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
   });
   // Estado para os filtros dos eventos
   const initialFilterState: FilterEventsProps = {
+    "Somente Eu (Aulas)": currentUserRole === "teacher",
     "Minha Disponibilidade": false,
     Torneios: true,
     "Aulas agendas": true,

@@ -9,6 +9,10 @@ import {
 
 export const noMatchFilterEventsOthers = [
   {
+    name: "Somente Eu (Aulas)",
+    color: "#C989F9", // data-[state=checked]:bg-[#C989F9] data-[state=checked]:border-[#C989F9]
+  },
+  {
     name: "Minha Disponibilidade",
     color: "#D2d2d2", // data-[state=checked]:bg-[#D2d2d2] data-[state=checked]:border-[#D2d2d2]
   },

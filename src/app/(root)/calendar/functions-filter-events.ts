@@ -43,7 +43,9 @@ export const FilterdEvents = (
           event.extendedProps?.status === "completed"
       )
       : [],
-  ]
+  ].filter(
+    (event) => filters["Somente Eu (Aulas)"] ? event.extendedProps?.teacher_id === currentTeacherId : true
+  );
 
   const tournaments = filters["Torneios"]
     ? events.filter(
