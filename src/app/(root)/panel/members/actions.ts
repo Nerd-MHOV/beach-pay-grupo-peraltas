@@ -31,6 +31,11 @@ const cachedMembers = unstable_cache(
           user: { omit: { passwd: true } }
         } : {}),
         address: true,
+        lesson_attendance: {
+          include: {
+            lesson: true,
+          }
+        },
         investments: {
           where: {
             investment_type: {

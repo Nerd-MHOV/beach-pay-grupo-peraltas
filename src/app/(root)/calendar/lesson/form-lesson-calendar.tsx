@@ -24,7 +24,12 @@ import { getAvailability } from "../availability/actions";
 import { getCourts } from "../courts/actions";
 import SimpleInput from "@/components/simple-input";
 import { Separator } from "@/components/ui/separator";
-import { AlertTriangle, X } from "lucide-react";
+import {
+  AlertTriangle,
+  ChartNoAxesCombined,
+  UserRoundCog,
+  X,
+} from "lucide-react";
 import DialogLessonClosure from "./dialog-lesson-closure";
 import ListAttendance from "./list-attendance";
 import { Portal } from "@radix-ui/react-portal";
@@ -35,6 +40,10 @@ import {
 } from "@/components/ui/hover-card";
 import DialogDeleteLessonCalendar from "./dialog-delete-lesson";
 import DialogReopenLessonCalendar from "./dialog-reopen-lesson";
+import DrawerMemberContents from "../../panel/members/[id]/modals/drawer-member-contents";
+import DashboardStudent from "../../panel/members/[id]/student/dashboard-student";
+import FormMember from "../../panel/members/form/form-member";
+import AlertsMemberList from "./alerts-member-list";
 
 const schema = z.object({
   teacher_id: z.string({
@@ -77,7 +86,7 @@ const FormLessonCalendar = ({
 }) => {
   const { toast } = useToast();
   const query = useQueryClient();
-  const { data: athletes, isPending: isPendingAthletes } = useQuery({
+  const { data: members, isPending: isPendingMembers } = useQuery({
     queryKey: ["members"],
     queryFn: async () => {
       const data = await getMembers({
@@ -350,7 +359,7 @@ const FormLessonCalendar = ({
           <ListAttendance id={lesson.id} />
         ) : (
           <>
-            {isPendingAthletes ? (
+            {isPendingMembers ? (
               <LoadingData message="Carregando Alunos..." />
             ) : (
               <FormField
@@ -364,7 +373,7 @@ const FormLessonCalendar = ({
                         placeholder="Selecione o Aluno"
                         disabled={field.disabled}
                         items={
-                          athletes
+                          members
                             .filter(
                               (ath) =>
                                 !(form.getValues("attendance") || []).includes(
@@ -398,40 +407,42 @@ const FormLessonCalendar = ({
                     <div className="h-32 rounded-md border overflow-auto py-1">
                       <div className="p-4">
                         {field.value?.map((id, index) => {
-                          const athlete = athletes.find(
-                            (find) => find.id === id
-                          );
-                          if (!athlete) return null;
+                          const member = members.find((find) => find.id === id);
+                          if (!member) return null;
                           return (
                             <div key={index}>
                               <div className="text-sm flex justify-between gap-2 items-center">
-                                <div className="flex-1">
-                                  <h1 className="font-bold">{athlete.name}</h1>
-                                </div>
-                                {athlete.tier !== form.getValues("tier") && (
-                                  <HoverCard>
-                                    <HoverCardTrigger>
-                                      <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                                    </HoverCardTrigger>
-                                    <Portal>
-                                      <HoverCardContent>
-                                        <div className="flex flex-col gap-2">
-                                          <h1 className="text-sm font-bold">
-                                            Classificação - Atenção!
-                                          </h1>
-                                          <p className="text-sm">
-                                            Você está adicionando um aluno que
-                                            não está classificado para essa
-                                            aula.
-                                          </p>
-                                          <span className="text-xs text-muted-foreground">
-                                            <b>Aluno tier {athlete.tier} </b>
-                                          </span>
+                                <div className="flex-1 flex gap-1 items-center">
+                                  <DrawerMemberContents
+                                    id={member.id}
+                                    trigger={
+                                      <Button
+                                        variant="outline"
+                                        size="icon"
+                                        disabled={field.disabled}
+                                      >
+                                        <UserRoundCog />
+                                      </Button>
+                                    }
+                                    content={(member) => (
+                                      <>
+                                        <DashboardStudent member={member} />
+
+                                        <div className="bg-white p-7 rounded-xl shadow-lg">
+                                          <FormMember member={member} />
                                         </div>
-                                      </HoverCardContent>
-                                    </Portal>
-                                  </HoverCard>
-                                )}
+                                      </>
+                                    )}
+                                  />
+
+                                  <h1 className="font-bold">{member.name}</h1>
+                                </div>
+                                <AlertsMemberList
+                                  member={member}
+                                  field={{
+                                    tier: form.getValues("tier"),
+                                  }}
+                                />
                                 <div className="flex flex-col gap-1">
                                   <Button
                                     size="sm"
