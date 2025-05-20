@@ -116,7 +116,7 @@ export const formSchema = z
       });
     }
 
-    if (data.is_student && !data.class_amount) {
+    if (data.is_student && (data.class_amount === null || data.class_amount === undefined)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "A quantidade de aulas é obrigatória para alunos.",

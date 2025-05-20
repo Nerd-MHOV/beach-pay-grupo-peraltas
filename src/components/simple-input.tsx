@@ -34,10 +34,16 @@ const SimpleInput = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Input
+              {...field}
               disabled={disabled}
               placeholder={placeholder}
               type={type}
-              {...field}
+              value={field.value}
+              onChange={(e) => {
+                let value: number | string = e.target.value;
+                if (type === "number") value = Number(value);
+                field.onChange(value);
+              }}
             />
           </FormControl>
           <FormMessage />
