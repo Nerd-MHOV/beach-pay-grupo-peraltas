@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Circle, Download } from "lucide-react";
+import { Circle, Download, Eye, EyeClosed } from "lucide-react";
 import React from "react";
 import { getLessons } from "./lesson/actions";
 import { DateRange } from "react-day-picker";
@@ -36,6 +36,7 @@ const PDFWeekLessonsTeacher = ({
   dataLessons: Awaited<ReturnType<typeof getLessons>>;
   dataDate: DateRange | undefined;
 }) => {
+  const [showComments, setShowComments] = React.useState(false);
   const times = [
     ...new Set(
       dataLessons.map((lesson) => {
@@ -63,13 +64,24 @@ const PDFWeekLessonsTeacher = ({
             })}
           </h2>
         </div>
-        <Button
-          onClick={handleOnClick}
-          variant={"ghost"}
-          data-html2canvas-ignore
-        >
-          <Download /> PDF
-        </Button>
+        <div>
+          <Button
+            onClick={() => {
+              setShowComments(!showComments);
+            }}
+            variant={"ghost"}
+            data-html2canvas-ignore
+          >
+            {showComments ? <Eye /> : <EyeClosed />} Comentarios
+          </Button>
+          <Button
+            onClick={handleOnClick}
+            variant={"ghost"}
+            data-html2canvas-ignore
+          >
+            <Download /> PDF
+          </Button>
+        </div>
       </div>
 
       <Table className="border-collapse border border-slate-200">
@@ -120,6 +132,11 @@ const PDFWeekLessonsTeacher = ({
                           - {student.student.name}
                         </div>
                       ))}
+                      {lesson.observation && showComments && (
+                        <div className="w-full p-1 text-sm text-slate-500 border border-slate-200 rounded-md bg-slate-100">
+                          {lesson.observation}
+                        </div>
+                      )}
                     </TableCell>
                   );
                 }
