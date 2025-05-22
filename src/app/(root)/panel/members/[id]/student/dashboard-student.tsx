@@ -85,7 +85,7 @@ const DashboardStudent = ({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {presence.lessons.absencesWithJustification}
+                {presence.lessons.absencesWithoutJustification}
               </div>
               <p className="text-xs text-muted-foreground">Sem justificativa</p>
             </CardContent>
@@ -108,7 +108,7 @@ const DashboardStudent = ({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {presence.lessons.absencesWithoutJustification}
+                {presence.lessons.absencesWithJustification}
               </div>
               <p className="text-xs text-muted-foreground">Com justificativa</p>
             </CardContent>
