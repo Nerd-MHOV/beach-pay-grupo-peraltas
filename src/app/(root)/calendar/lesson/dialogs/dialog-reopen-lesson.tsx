@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { deleteLesson, updateLesson } from "./actions";
+import { deleteLesson, updateLesson } from "../actions";
 
 const DialogReopenLessonCalendar = ({
   id,

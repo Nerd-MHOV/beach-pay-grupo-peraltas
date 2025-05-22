@@ -7,9 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import React from "react";
-import FormLessonClosure from "./form-lesson-closure";
+import FormLessonClosure from "../form-lesson-closure";
 import { useQuery } from "@tanstack/react-query";
-import { getLessonById } from "./actions";
+import { getLessonById } from "../actions";
 import LoadingData from "@/components/LoadingData";
 
 const DialogLessonClosure = ({

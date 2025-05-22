@@ -16,6 +16,7 @@ import DialogLesson from "./dialog-lesson";
 import { Lesson } from "@prisma/client";
 
 const StatusLessonColumnsObject = {
+  Reposição: "bg-green-200 text-green-800",
   Feita: "bg-green-200 text-green-800",
   Agendada: "bg-yellow-200 text-yellow-800",
   "Sem Justificativa": "bg-red-200 text-red-800",

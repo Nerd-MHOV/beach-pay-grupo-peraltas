@@ -69,17 +69,22 @@ export const getLessonById = unstable_cache(
 
 export async function createLesson(
   data: Omit<Lesson, "id" | "created_at" | "updated_at" | "status" | "cancellation_reason" | "observation"> & {
-    attendance_ids: string[];
+    attendances_object: {
+      id: string;
+      replacement: string | null;
+    }[];
   },
 ) {
-  const { attendance_ids, ...lessonData } = data;
+  console.log(data);
+  const { attendances_object, ...lessonData } = data;
   const lesson = await db.lesson.create({
     data: {
       ...lessonData,
       attendances: {
         createMany: {
-          data: attendance_ids.map(id => ({
-            student_id: id,
+          data: attendances_object.map(obj => ({
+            student_id: obj.id,
+            replacement_id: obj.replacement ?? undefined,
           }))
         }
       }
@@ -92,23 +97,24 @@ export async function createLesson(
 export async function updateLesson(
   data: Partial<Lesson> & {
     id: string;
-    attendance_ids?: string[];
+    attendances_object?: {
+      id: string;
+      replacement: string | null;
+    }[];
   },
 ) {
-  const { attendance_ids, ...lessonData } = data;
-  if (attendance_ids) {
+
+
+  const { attendances_object, id, ...lessonData } = data;
+  if (attendances_object) {
     await db.lessonAttendance.deleteMany({
       where: {
         lesson_id: data.id,
       }
     })
-    await db.lessonAttendance.createMany({
-      data: attendance_ids.map(id => ({
-        lesson_id: data.id,
-        student_id: id,
-      }))
-    })
+
   }
+  console.log(attendances_object);
   const lesson = await db.lesson.update({
     where: {
       id: data.id,
@@ -116,6 +122,14 @@ export async function updateLesson(
     data: {
       ...lessonData,
       updated_at: new Date(),
+      attendances: {
+        createMany: {
+          data: attendances_object?.map(obj => ({
+            student_id: obj.id,
+            replacement_id: obj.replacement ?? undefined,
+          })) ?? []
+        }
+      }
     }
   })
   revalidateTag("update-lesson");

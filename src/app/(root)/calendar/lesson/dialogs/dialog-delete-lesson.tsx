@@ -13,7 +13,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { deleteLesson, getLessonById } from "./actions";
+import { deleteLesson, getLessonById } from "../actions";
 
 const DialogDeleteLessonCalendar = ({
   id,

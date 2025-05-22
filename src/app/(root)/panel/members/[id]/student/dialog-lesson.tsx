@@ -1,4 +1,4 @@
-import FormLessonCalendar from "@/app/(root)/calendar/lesson/form-lesson-calendar";
+import FormLessonCalendar from "@/app/(root)/calendar/lesson/forms/lesson-calendar/form-lesson-calendar";
 import LoadingData from "@/components/LoadingData";
 import {
   Dialog,

@@ -40,31 +40,27 @@ const ListAttendance = ({
             {lesson?.attendances?.map((att_field, index) => (
               <React.Fragment key={index}>
                 <div className="flex items-center gap-2 p-2">
+                  <DrawerMemberContents
+                    id={att_field.student.id}
+                    trigger={
+                      <Button variant="outline" size="icon" disabled={disabled}>
+                        <UserRoundCog />
+                      </Button>
+                    }
+                    content={(member) => (
+                      <>
+                        <DashboardStudent member={member} />
+
+                        <div className="bg-white p-7 rounded-xl shadow-lg">
+                          <FormMember member={member} />
+                        </div>
+                      </>
+                    )}
+                  />
                   <label
                     htmlFor={`student-${att_field.student_id}`}
-                    className="flex-1"
+                    className="flex-1 ml-4"
                   >
-                    <DrawerMemberContents
-                      id={att_field.student.id}
-                      trigger={
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          disabled={disabled}
-                        >
-                          <UserRoundCog />
-                        </Button>
-                      }
-                      content={(member) => (
-                        <>
-                          <DashboardStudent member={member} />
-
-                          <div className="bg-white p-7 rounded-xl shadow-lg">
-                            <FormMember member={member} />
-                          </div>
-                        </>
-                      )}
-                    />
                     {att_field.student.name || "Aluno não identificado"}
                   </label>
                   {!att_field.did_attend && (

@@ -63,6 +63,7 @@ const cachedMembers = unstable_cache(
       "create-investment",
       "update-investment",
       "delete-investment",
+      "update-lesson", // for lessonAttendance
     ],
   }
 );

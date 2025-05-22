@@ -2,7 +2,7 @@ import { Toggle } from "@/components/ui/toggle";
 import React from "react";
 import FormAvailabilityCalendar from "./availability/form-availability-calendar";
 import { FormFieldProps, SetFormFieldProps } from "./calendar-client-component";
-import FormLessonCalendar from "./lesson/form-lesson-calendar";
+import FormLessonCalendar from "./lesson/forms/lesson-calendar/form-lesson-calendar";
 import FormTournament from "../panel/tournaments/form-tournament";
 
 const FormEventCalendar = ({
@@ -73,7 +73,7 @@ const FormEventCalendar = ({
               id: formFields.id,
               date: formFields.selectedDate,
               court_id: formFields.court_id,
-              attendance: formFields.attendance_ids,
+              attendance: formFields.attendances,
               tier: formFields.tier,
               status: formFields.status,
             }}

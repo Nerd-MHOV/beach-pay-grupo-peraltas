@@ -11,19 +11,22 @@ type StudentParamTable = NonNullable<Awaited<ReturnType<typeof getMemberById>>>;
 const getStatusLesson = (
   lesson: StudentParamTable["lesson_attendance"][number]
 ) => {
-  if (lesson.lesson.status === "completed" && lesson.did_attend) {
-    return "Feita";
+  switch (true) {
+    case lesson.lesson.status === "completed" &&
+      lesson.did_attend &&
+      !!lesson.replacement_id:
+      return "Reposição";
+    case lesson.lesson.status === "completed" && lesson.did_attend:
+      return "Feita";
+    case lesson.lesson.status === "scheduled":
+      return "Agendada";
+    case !lesson.did_attend && lesson.reason === "no_justification":
+      return "Sem Justificativa";
+    case !lesson.did_attend && lesson.reason !== "no_justification":
+      return "Com Justificativa";
+    default:
+      return "Indefinido";
   }
-  if (lesson.lesson.status === "scheduled") {
-    return "Agendada";
-  }
-  if (!lesson.did_attend && lesson.reason === "no_justification") {
-    return "Sem Justificativa";
-  }
-  if (!lesson.did_attend && lesson.reason !== "no_justification") {
-    return "Com Justificativa";
-  }
-  return "Indefinido";
 };
 const TableStudents = ({
   member,

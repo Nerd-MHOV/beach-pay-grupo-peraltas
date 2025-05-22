@@ -27,7 +27,10 @@ export type FormFieldProps = {
   id?: string;
   teacher_id?: string;
   court_id?: string;
-  attendance_ids?: string[];
+  attendances?: {
+    id: string;
+    replacement: string | null;
+  }[];
   tournament_name?: string;
   description?: string;
   arena_id?: string;

@@ -255,14 +255,18 @@ model Lesson {
 }
 
 model LessonAttendance {
-  id         String              @id @default(cuid())
-  lesson_id  String
-  student_id String
-  did_attend Boolean             @default(false)
-  reason     ReasonsToNotAttend?
+  id             String              @id @default(cuid())
+  lesson_id      String
+  student_id     String
+  did_attend     Boolean             @default(false)
+  reason         ReasonsToNotAttend?
+  replacement_id String?             @unique
 
   lesson  Lesson @relation(fields: [lesson_id], references: [id])
   student Member @relation(fields: [student_id], references: [id])
+
+  replacement LessonAttendance? @relation("replacement", fields: [replacement_id], references: [id])
+  replacedBy  LessonAttendance? @relation("replacement")
 
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())

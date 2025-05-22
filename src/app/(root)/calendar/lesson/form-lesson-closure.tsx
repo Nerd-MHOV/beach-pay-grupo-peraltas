@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Combobox } from "@/components/combobox";
 import { reasonOptions } from "./reason-options";
 import { ReasonsToNotAttend } from "@prisma/client";
-import DropdownMenuCancelLesson from "./dropdown-menu-cancel-lesosn";
+import DropdownMenuCancelLesson from "./dropdown-menu-cancel-lesson";
 import { Textarea } from "@/components/ui/textarea";
 
 const schema = z.object({

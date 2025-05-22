@@ -9,7 +9,6 @@ import { Member, User } from "@prisma/client";
 import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
-import { format } from "date-fns";
 import ExportWeekTeacherLessons from "./export-week-teacher-lessons";
 import { ptBR } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
@@ -80,9 +79,10 @@ const Page = async () => {
           to: new Date(lesson.time_end),
         },
         teacher_id: lesson.teacher_id,
-        attendance_ids: lesson.attendances.map(
-          (attendance) => attendance.student_id
-        ),
+        attendances: lesson.attendances.map((attendance) => ({
+          id: attendance.student_id,
+          replacement: attendance.replacement_id,
+        })),
         court_id: lesson.courts_id,
         tier: lesson.tier,
         status: lesson.status,
