@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { reasonOptions } from "../../reason-options";
 import { getMembers } from "../../../../panel/members/actions";
+import { $Enums } from "@prisma/client";
 
 const AttendanceManager = ({
   members = [],
@@ -32,9 +33,9 @@ const AttendanceManager = ({
   disabled = false,
 }: {
   members: Awaited<ReturnType<typeof getMembers>>;
-  value: { id: string; replacement: any }[];
-  onChange: (value: { id: string; replacement: any }[]) => void;
-  tier?: any;
+  value: { id: string; replacement: string | null }[];
+  onChange: (value: { id: string; replacement: string | null }[]) => void;
+  tier: $Enums.Tier;
   disabled?: boolean;
 }) => {
   return (

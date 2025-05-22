@@ -17,7 +17,10 @@ export const copyEvents = async (events: { event_id: string; event_type: EventTy
           ? new Date(new Date(current.time_end).setDate(new Date(current.time_end).getDate() + 7))
           : new Date(new Date(current.time_end).setMonth(new Date(current.time_end).getMonth() + 1));
         await createLesson({
-          attendance_ids: current.attendances.map((attendance) => attendance.student_id),
+          attendances_object: current.attendances.map((attendance) => ({
+            id: attendance.student_id,
+            replacement: attendance.replacement_id,
+          })),
           teacher_availability_id: current.teacher_availability_id,
           tier: current.tier,
           courts_id: current.courts_id,
@@ -70,7 +73,10 @@ export const copyEventsSpecific = async (events: { event_id: string; event_type:
           new Date(current.time_end).getSeconds()
         );
         await createLesson({
-          attendance_ids: current.attendances.map((attendance) => attendance.student_id),
+          attendances_object: current.attendances.map((attendance) => ({
+            id: attendance.student_id,
+            replacement: attendance.replacement_id,
+          })),
           teacher_availability_id: current.teacher_availability_id,
           tier: current.tier,
           courts_id: current.courts_id,
