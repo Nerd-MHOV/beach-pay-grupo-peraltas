@@ -110,11 +110,20 @@ const AttendanceManager = ({
                           content={
                             <Combobox
                               items={member.lesson_attendance
-                                .filter(
-                                  (att) =>
+                                .filter((att) => {
+                                  const twoMonthsAgo = new Date();
+                                  twoMonthsAgo.setMonth(
+                                    twoMonthsAgo.getMonth() - 2
+                                  );
+                                  return (
                                     att.reason &&
-                                    att.reason !== "no_justification"
-                                )
+                                    att.reason !== "no_justification" &&
+                                    !att.replacement_id &&
+                                    att.lesson.time_start &&
+                                    new Date(att.lesson.time_start) >
+                                      twoMonthsAgo
+                                  );
+                                })
                                 .map((lesson) => ({
                                   label: `${format(
                                     lesson.lesson.time_start,

@@ -54,7 +54,13 @@ const TableStudents = ({
         lesson: lesson.lesson,
       };
     })
-    .filter((lesson) => (filter ? lesson.status === filter : true))
+    .filter((lesson) =>
+      filter
+        ? lesson.status === filter ||
+          (filter === "Feita" &&
+            (lesson.status === "Reposição" || lesson.status === "Feita"))
+        : true
+    )
     .sort((a, b) => {
       if (a.lesson.time_start > b.lesson.time_start) {
         return -1;
