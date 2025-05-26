@@ -1,5 +1,10 @@
 {
   "version": "0.2.0",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
   "configurations": [
     {
       "name": "Next.js: debug full stack",
