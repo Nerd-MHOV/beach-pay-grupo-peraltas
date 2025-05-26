@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { Member } from "@prisma/client";
+import { Member } from "@beach-pay/database";
 import { format } from "date-fns";
 import React from "react";
 

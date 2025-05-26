@@ -2,7 +2,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateMember } from "../actions";
-import { Address, Member } from "@prisma/client";
+import { Address, Member } from "@beach-pay/database";
 
 const useUpdateMember = () => {
   const { toast } = useToast();
@@ -14,7 +14,7 @@ const useUpdateMember = () => {
         teacher_user_id?: string | null;
       },
       "created_at" | "updated_at" | "address_id"
-    >
+    >,
   ) => {
     try {
       const member = await updateMember(data);

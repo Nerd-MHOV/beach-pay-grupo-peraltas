@@ -4,7 +4,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Separator } from "@/components/ui/separator";
-import { $Enums, Lesson, LessonAttendance, Member } from "@prisma/client";
+import { $Enums, Lesson, LessonAttendance, Member } from "@beach-pay/database";
 import { Portal } from "@radix-ui/react-portal";
 import { AlertTriangle } from "lucide-react";
 import React from "react";
@@ -28,7 +28,7 @@ const AlertsMemberList = ({
     (lesson) =>
       new Date(lesson.lesson.time_start).getMonth() === new Date().getMonth() &&
       new Date(lesson.lesson.time_start).getFullYear() ===
-        new Date().getFullYear()
+        new Date().getFullYear(),
   ).length;
   const lessonAlert = member.class_amount - lessonsInThisMonth <= 0;
   if (lessonAlert) color = "text-red-600";

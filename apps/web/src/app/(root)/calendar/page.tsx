@@ -5,7 +5,7 @@ import CalendarClientComponent, {
 } from "./calendar-client-component";
 import { getAvailability } from "./availability/actions";
 import { getMembers } from "@/app/(root)/panel/members/actions";
-import { Member, User } from "@prisma/client";
+import { Member, User } from "@beach-pay/database";
 import { verifySession } from "@/lib/session";
 import { getLessons } from "./lesson/actions";
 import { getTournaments } from "../panel/tournaments/actions";
@@ -40,7 +40,7 @@ const Page = async () => {
       title: `${formatInTimeZone(
         availability.time_start,
         "America/Sao_Paulo",
-        "HH:mm"
+        "HH:mm",
       )}-${availability.teacher.name}`,
       start: availability.time_start,
       end: availability.time_end,
@@ -65,7 +65,7 @@ const Page = async () => {
         "HH:mm",
         {
           locale: ptBR,
-        }
+        },
       )}-${lesson.tier}${lesson.attendances.length}-${lesson.teacher.name}`,
       start: lesson.time_start,
       end: lesson.time_end,

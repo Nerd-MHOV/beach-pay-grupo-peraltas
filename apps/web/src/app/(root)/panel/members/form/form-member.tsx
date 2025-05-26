@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
 import CalendarPickerInput from "@/components/calendarPickerInput";
-import { Address, Member, Tier, User } from "@prisma/client";
+import { Address, Member, Tier, User } from "@beach-pay/database";
 import useCreateMember from "./use-create-member";
 import useUpdateMember from "./use-update-member";
 import { formSchema } from "./schema";

@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Address, Arena } from "@prisma/client";
+import { Address, Arena } from "@beach-pay/database";
 import AddressForm from "@/components/address-form";
 import { useQueryClient } from "@tanstack/react-query";
 import SimpleInput from "@/components/simple-input";
@@ -62,7 +62,7 @@ const formSchema = z.object({
         .refine((val) => !val || val.length === 8, {
           message: "O CEP deve ter 8 dígitos.",
         })
-        .optional()
+        .optional(),
     )
     .nullable(),
 });
@@ -82,7 +82,7 @@ const FormCreateArena = ({
         address: Omit<Address, "created_at" | "updated_at">;
       },
       "created_at" | "updated_at"
-    >
+    >,
   ) => {
     try {
       const updatedArena = await updateArena(data);
@@ -105,7 +105,7 @@ const FormCreateArena = ({
         address: Omit<Address, "id" | "created_at" | "updated_at">;
       },
       "id" | "created_at" | "updated_at" | "address_id"
-    >
+    >,
   ) => {
     try {
       const newArena = await createArena(data);

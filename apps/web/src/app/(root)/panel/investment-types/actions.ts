@@ -1,7 +1,6 @@
 "use server";
-import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { InvestmentType } from "@prisma/client";
+import { db, InvestmentType } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export async function createInvestmentType(

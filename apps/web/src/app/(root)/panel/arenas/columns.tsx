@@ -1,6 +1,6 @@
 "use client";
 
-import { Address, Arena } from "@prisma/client";
+import { Address, Arena } from "@beach-pay/database";
 import {
   DropdownMenu,
   DropdownMenuContent,

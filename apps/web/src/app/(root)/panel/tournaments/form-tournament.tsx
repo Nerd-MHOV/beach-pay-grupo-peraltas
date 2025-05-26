@@ -30,7 +30,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { $Enums, Tournament } from "@prisma/client";
+import { $Enums, Tournament } from "@beach-pay/database";
 
 const formSchema = z.object({
   name: z
@@ -78,7 +78,7 @@ const FormTournament = ({
   });
 
   const createTournamentFn = async (
-    values: Omit<Tournament, "id" | "created_at" | "updated_at">
+    values: Omit<Tournament, "id" | "created_at" | "updated_at">,
   ) => {
     try {
       const created = await createTournament(values);
@@ -101,7 +101,7 @@ const FormTournament = ({
   };
 
   const updateTournamentFn = async (
-    values: Omit<Tournament, "created_at" | "updated_at">
+    values: Omit<Tournament, "created_at" | "updated_at">,
   ) => {
     try {
       await updateTournament(values);
@@ -224,7 +224,7 @@ const FormTournament = ({
                       variant={"outline"}
                       className={cn(
                         "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        !field.value && "text-muted-foreground",
                       )}
                       disabled={field.disabled}
                     >

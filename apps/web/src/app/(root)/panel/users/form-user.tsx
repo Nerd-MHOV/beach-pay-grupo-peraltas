@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { $Enums, User } from "@prisma/client";
+import { $Enums, User } from "@beach-pay/database";
 import { createUser, updateUser } from "./actions";
 import {
   Select,
@@ -76,7 +76,7 @@ const FormUser = ({
   const formSchema = getFormSchema(!!user);
   const query = useQueryClient();
   const updateUserFn = async (
-    data: Omit<User, "created_at" | "updated_at" | "password">
+    data: Omit<User, "created_at" | "updated_at" | "password">,
   ) => {
     try {
       const updatedUser = await updateUser(data);
@@ -94,7 +94,7 @@ const FormUser = ({
   };
 
   const createUserFn = async (
-    data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">
+    data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">,
   ) => {
     try {
       const newUser = await createUser(data);

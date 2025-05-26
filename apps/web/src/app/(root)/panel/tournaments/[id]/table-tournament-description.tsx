@@ -13,7 +13,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { RowInput } from "jspdf-autotable";
 import { Row } from "@tanstack/react-table";
 import { getTournamentById } from "../actions";
-import { Investment, InvestmentType } from "@prisma/client";
+import { Investment, InvestmentType } from "@beach-pay/database";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -28,11 +28,11 @@ const TableTournamentDescription = ({
         const newacc = acc;
         if (newacc.some((e) => e.athlete_id === curr.athlete_id)) {
           const index = newacc.findIndex(
-            (e) => e.athlete_id === curr.athlete_id
+            (e) => e.athlete_id === curr.athlete_id,
           );
           newacc[index].total += curr.investments.reduce(
             (acci, curri) => acci + curri.value,
-            0
+            0,
           );
           newacc[index].subRows?.push(...curr.investments);
         } else {
@@ -41,7 +41,7 @@ const TableTournamentDescription = ({
             athlete: curr.athlete.name,
             total: curr.investments.reduce(
               (acci, curri) => acci + curri.value,
-              0
+              0,
             ),
             subRows: curr.investments,
             pix_key: curr.athlete.pix_key || "",
@@ -60,7 +60,7 @@ const TableTournamentDescription = ({
             })[]
           | undefined;
         pix_key: string;
-      }[]
+      }[],
     )
     .map((tr) => ({
       ...tr,
@@ -71,7 +71,7 @@ const TableTournamentDescription = ({
     }));
 
   const pdfDetails: (row: Row<(typeof datamap)[number]>) => RowInput[] = (
-    row
+    row,
   ) => {
     const rowData: RowInput[] = [
       row.getVisibleCells().map((cell) => ({
@@ -124,7 +124,7 @@ const TableTournamentDescription = ({
   );
 
   const csvDetails: (row: Row<(typeof datamap)[number]>) => string[] = (
-    row
+    row,
   ) => {
     const rowData = [
       row
@@ -148,7 +148,7 @@ const TableTournamentDescription = ({
       rowData[0]
         .split(",")
         .map(() => "")
-        .join(",")
+        .join(","),
     );
     return rowData;
   };

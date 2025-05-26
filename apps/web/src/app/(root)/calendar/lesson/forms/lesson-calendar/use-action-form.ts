@@ -1,4 +1,4 @@
-import { Lesson } from "@prisma/client";
+import { Lesson } from "@beach-pay/database";
 import { createLesson, updateLesson } from "../../actions";
 import { useToast } from "@/hooks/use-toast";
 

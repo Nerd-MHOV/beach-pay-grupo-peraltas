@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Investment, InvestmentTournament } from "@prisma/client";
+import { Investment, InvestmentTournament } from "@beach-pay/database";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -80,7 +80,7 @@ export const columnsGroup: InvestmentColumns[] = [
     cell: ({ row }) => {
       const totalValue = row.original.investments.reduce(
         (acc, curr) => acc + curr.value,
-        0
+        0,
       );
       return (
         <span>

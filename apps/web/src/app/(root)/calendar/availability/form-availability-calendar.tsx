@@ -19,7 +19,7 @@ import LoadingData from "@/components/LoadingData";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
 import { createAvailability, updateAvailability } from "./actions";
-import { $Enums, TeacherAvailability } from "@prisma/client";
+import { $Enums, TeacherAvailability } from "@beach-pay/database";
 import DialogDeleteAvailabilityCalendar from "./dialog-delete-availability-calendar";
 
 const schema = z.object({

@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db";
+import { db } from "@beach-pay/database";
 import { unstable_cache } from "next/cache";
 
 export const getCourts = unstable_cache(

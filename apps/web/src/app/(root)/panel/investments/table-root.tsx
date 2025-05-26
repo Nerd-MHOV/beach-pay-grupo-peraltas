@@ -1,5 +1,5 @@
 "use client";
-import { Member } from "@prisma/client";
+import { Member } from "@beach-pay/database";
 import DialogInvestmentAthlete from "./(single)/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "./(tournament)/dialog-investment-tournament";
 import { Label } from "@/components/ui/label";

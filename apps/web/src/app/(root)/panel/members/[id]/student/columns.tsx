@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DialogLesson from "./dialog-lesson";
-import { Lesson } from "@prisma/client";
+import { Lesson } from "@beach-pay/database";
 
 const StatusLessonColumnsObject = {
   Reposição: "bg-green-200 text-green-800",

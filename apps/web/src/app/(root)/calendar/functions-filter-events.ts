@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/core/index.js";
 import { FilterEventsProps } from "./calendar-client-component";
-import { Member, User } from "@prisma/client";
+import { Member, User } from "@beach-pay/database";
 
 export const FilterdEvents = (
   currentUserId: string,

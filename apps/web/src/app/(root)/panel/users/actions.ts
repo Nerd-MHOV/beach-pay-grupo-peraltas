@@ -1,7 +1,6 @@
 "use server"
 
-import db from "@/core/infra/db"
-import { User } from "@prisma/client";
+import { db, User } from "@beach-pay/database";
 import { hashSync } from "bcryptjs";
 import { revalidateTag, unstable_cache } from "next/cache"
 

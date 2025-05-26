@@ -7,7 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import FormInvestmentAthlete from "./form-investment-athlete";
-import { Member, Investment } from "@prisma/client";
+import { Member, Investment } from "@beach-pay/database";
 import React, { JSX } from "react";
 import { format } from "date-fns";
 

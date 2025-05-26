@@ -10,7 +10,7 @@ import {
 import { Plus } from "lucide-react";
 import React from "react";
 import FormMember from "./form-member";
-import { Member } from "@prisma/client";
+import { Member } from "@beach-pay/database";
 
 const DialogMember = async ({
   trigger,

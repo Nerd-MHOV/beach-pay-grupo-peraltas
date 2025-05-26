@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { InvestmentType } from "@prisma/client";
+import { InvestmentType } from "@beach-pay/database";
 import { MoreHorizontal } from "lucide-react";
 import DialogCreateInvestmentType from "./dialog-create-investment-type";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
@@ -43,7 +43,7 @@ export const columns: ExtendedColumnDef<InvestmentType, undefined>[] = [
         <span>
           {can_see
             .map(
-              (item) => roleOptions.find((role) => role.value === item)?.label
+              (item) => roleOptions.find((role) => role.value === item)?.label,
             )
             .join(", ")}
         </span>

@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { reasonOptions } from "../../reason-options";
 import { getMembers } from "../../../../panel/members/actions";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@beach-pay/database";
 
 const AttendanceManager = ({
   members = [],
@@ -49,7 +49,7 @@ const AttendanceManager = ({
             items={
               members
                 .filter(
-                  (ath) => !(value.map((att) => att.id) || []).includes(ath.id)
+                  (ath) => !(value.map((att) => att.id) || []).includes(ath.id),
                 )
                 .map((ath) => ({
                   label: ath.name,
@@ -79,7 +79,7 @@ const AttendanceManager = ({
             <div className="p-4">
               {value?.map((studentAttendance, index) => {
                 const member = members.find(
-                  (find) => find.id === studentAttendance.id
+                  (find) => find.id === studentAttendance.id,
                 );
                 if (!member) return null;
                 return (
@@ -114,7 +114,7 @@ const AttendanceManager = ({
                                 .filter((att) => {
                                   const twoMonthsAgo = new Date();
                                   twoMonthsAgo.setMonth(
-                                    twoMonthsAgo.getMonth() - 2
+                                    twoMonthsAgo.getMonth() - 2,
                                   );
                                   return (
                                     att.reason &&
@@ -128,10 +128,10 @@ const AttendanceManager = ({
                                 .map((lesson) => ({
                                   label: `${format(
                                     lesson.lesson.time_start,
-                                    "dd/MM/yyyy"
+                                    "dd/MM/yyyy",
                                   )} - ${
                                     reasonOptions.find(
-                                      (ro) => ro.value === lesson.reason
+                                      (ro) => ro.value === lesson.reason,
                                     )?.label ?? ""
                                   }`,
                                   value: lesson.id,

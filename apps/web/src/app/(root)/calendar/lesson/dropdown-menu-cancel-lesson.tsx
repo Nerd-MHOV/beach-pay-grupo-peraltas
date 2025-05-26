@@ -9,7 +9,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import React from "react";
 import { cancelLesson } from "./actions";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@beach-pay/database";
 
 const DropdownMenuCancelLesson = ({
   id,

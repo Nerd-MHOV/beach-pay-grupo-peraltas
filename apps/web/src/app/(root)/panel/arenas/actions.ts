@@ -1,7 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db";
-import { Address, Arena } from "@prisma/client";
+import { db, Address, Arena } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getArenas = unstable_cache(

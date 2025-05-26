@@ -1,6 +1,5 @@
 "use server";
-import db from "@/core/infra/db";
-import { Lesson, ReasonsToNotAttend } from "@prisma/client";
+import { Lesson, ReasonsToNotAttend, db } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getLessons = unstable_cache(

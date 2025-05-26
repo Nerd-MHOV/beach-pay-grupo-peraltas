@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db";
+import { db } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getFixedValues = unstable_cache(
@@ -11,7 +11,7 @@ export const getFixedValues = unstable_cache(
   {
     tags: ["update-fixed-values"],
     revalidate: 60,
-  }
+  },
 );
 
 export async function updateFixedValues(data: {

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import FormTournament from "./form-tournament";
-import { Tournament } from "@prisma/client";
+import { Tournament } from "@beach-pay/database";
 
 const DialogCreateTournament = ({
   trigger,

@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Member, Investment, InvestmentTournament } from "@prisma/client";
+import { Member, Investment, InvestmentTournament } from "@beach-pay/database";
 import FormInvestmentTournament from "./form-investment-tournament";
 
 const DialogGroupInvestmentAthlete = ({

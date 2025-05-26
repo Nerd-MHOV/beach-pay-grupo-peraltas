@@ -18,7 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Combobox } from "@/components/combobox";
 import { reasonOptions } from "./reason-options";
-import { ReasonsToNotAttend } from "@prisma/client";
+import { ReasonsToNotAttend } from "@beach-pay/database";
 import DropdownMenuCancelLesson from "./dropdown-menu-cancel-lesson";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -39,7 +39,7 @@ const schema = z.object({
             path: ["attendance_realtion", "reason"],
           });
         }
-      })
+      }),
   ),
   observation: z.string().optional(),
 });
@@ -136,8 +136,8 @@ const FormLessonClosure = ({
                                       field.value.map((item, i) =>
                                         i === index
                                           ? { ...item, reason: value }
-                                          : item
-                                      )
+                                          : item,
+                                      ),
                                     );
                                   }}
                                 />
@@ -154,8 +154,8 @@ const FormLessonClosure = ({
                                 field.value.map((item, i) =>
                                   i === index
                                     ? { ...item, presence: !att_field.presence }
-                                    : item
-                                )
+                                    : item,
+                                ),
                               );
                             }}
                           />

@@ -1,4 +1,4 @@
-import { ReasonsToNotAttend } from "@prisma/client";
+import { ReasonsToNotAttend } from "@beach-pay/database";
 
 export const reasonOptions: {
   label: string;

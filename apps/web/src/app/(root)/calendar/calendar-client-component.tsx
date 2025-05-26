@@ -9,7 +9,7 @@ import brLocale from "@fullcalendar/core/locales/pt-br";
 import SidebarMenuCalendar from "./sidebar-menu-calendar";
 import DialogEventCalendar from "./dialog-event-calendar";
 import { EventInput } from "@fullcalendar/core/index.js";
-import { $Enums, Member, LessonStatus, User } from "@prisma/client";
+import { $Enums, Member, LessonStatus, User } from "@beach-pay/database";
 import { FilterdEvents } from "./functions-filter-events";
 import { subDays } from "date-fns";
 import HoverCardEventCalendar from "./hover-card-event-calendar";
@@ -105,13 +105,13 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
       const isSelected = prevSelectedEvents.some(
         (selectedEvent) =>
           selectedEvent.event_type === event.event_type &&
-          selectedEvent.event_id === event.event_id
+          selectedEvent.event_id === event.event_id,
       );
       if (isSelected) {
         return prevSelectedEvents.filter(
           (selectedEvent) =>
             selectedEvent.event_type !== event.event_type ||
-            selectedEvent.event_id !== event.event_id
+            selectedEvent.event_id !== event.event_id,
         );
       } else {
         return [...prevSelectedEvents, event];
@@ -181,7 +181,7 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
               } else {
                 setDialogOpen(true);
                 setFormFields(
-                  eventChange.event.extendedProps as FormFieldProps
+                  eventChange.event.extendedProps as FormFieldProps,
                 );
               }
             }}
@@ -189,7 +189,7 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
               currentUserId,
               events,
               filterEvents,
-              teachers
+              teachers,
             )}
             locales={[brLocale]}
             locale={"pt-br"}
@@ -204,7 +204,7 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
               return arg.event.extendedProps.formSelected !== "class" ? (
                 <div className="event-title flex items-center gap-2">
                   {selectedEvents.some(
-                    (selectedEvent) => selectedEvent.event_id === arg.event.id
+                    (selectedEvent) => selectedEvent.event_id === arg.event.id,
                   ) && <Checkbox checked />}
                   {arg.event.title}
                 </div>
@@ -212,7 +212,8 @@ const CalendarClientComponent: React.FC<CalendarClientComponentProps> = ({
                 <HoverCardEventCalendar
                   prev={
                     selectedEvents.some(
-                      (selectedEvent) => selectedEvent.event_id === arg.event.id
+                      (selectedEvent) =>
+                        selectedEvent.event_id === arg.event.id,
                     ) && <Checkbox checked />
                   }
                   id={arg.event.extendedProps.id}

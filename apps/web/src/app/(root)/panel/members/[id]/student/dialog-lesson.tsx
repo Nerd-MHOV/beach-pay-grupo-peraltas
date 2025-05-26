@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Lesson } from "@prisma/client";
+import { Lesson } from "@beach-pay/database";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import React, { Suspense } from "react";
 

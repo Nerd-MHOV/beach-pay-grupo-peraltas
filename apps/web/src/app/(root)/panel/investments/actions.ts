@@ -1,7 +1,6 @@
 "use server";
-import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { Investment, InvestmentTournament } from "@prisma/client";
+import { db, Investment, InvestmentTournament } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getInvestments = async (athlete_id?: string) => {

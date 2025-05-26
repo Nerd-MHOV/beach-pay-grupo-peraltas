@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import FormCreateArena from "./form-arena";
-import { Address, Arena } from "@prisma/client";
+import { Address, Arena } from "@beach-pay/database";
 
 const DialogCreateArena = ({
   trigger,

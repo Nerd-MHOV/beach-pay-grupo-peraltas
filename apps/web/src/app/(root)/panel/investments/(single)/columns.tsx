@@ -15,7 +15,7 @@ import {
   InvestmentTournament,
   InvestmentType,
   Tournament,
-} from "@prisma/client";
+} from "@beach-pay/database";
 import { format } from "date-fns";
 import { CircleCheck, CircleMinus, MoreHorizontal } from "lucide-react";
 import {

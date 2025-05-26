@@ -7,7 +7,7 @@ import React from "react";
 import { LogOut, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { deleteSession } from "@/lib/session";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@beach-pay/database";
 import { SidebarLinks } from "@/lib/sidebarlinks";
 
 const Sidebar = ({ role }: { role: UserRole }) => {
@@ -23,7 +23,7 @@ const Sidebar = ({ role }: { role: UserRole }) => {
         "h-screen transition-all duration-500 bg-slate-900 absolute md:static sm:static overflow-x-hidden ",
         activeSidebar
           ? "min-w-full md:min-w-80 sm:min-w-80 relative"
-          : "min-w-0 md:min-w-16"
+          : "min-w-0 md:min-w-16",
       )}
       style={{ direction: "rtl" }}
     >
@@ -61,7 +61,7 @@ const Sidebar = ({ role }: { role: UserRole }) => {
                                 after:bottom-[-48px] after:shadow-[35px_-35px_0_10px] after:shadow-background
                            
                             `
-                  : "hover:text-gray-300"
+                  : "hover:text-gray-300",
               )}
             >
               <Link

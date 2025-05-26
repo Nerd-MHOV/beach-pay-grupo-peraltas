@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { $Enums, Member } from "@prisma/client";
+import { $Enums, Member } from "@beach-pay/database";
 import { MoreHorizontal } from "lucide-react";
 import DialogInvestmentAthlete from "../investments/(single)/dialog-investment-athlete";
 import DialogGroupInvestmentAthlete from "../investments/(tournament)/dialog-investment-tournament";

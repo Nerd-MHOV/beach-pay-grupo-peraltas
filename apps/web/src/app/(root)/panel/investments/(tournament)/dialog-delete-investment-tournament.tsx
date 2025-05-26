@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { InvestmentTournament } from "@prisma/client";
+import { InvestmentTournament } from "@beach-pay/database";
 import { Trash2 } from "lucide-react";
 import { deleteInvestmentTournament } from "../actions";
 

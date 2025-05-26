@@ -17,7 +17,7 @@ import { z } from "zod";
 import { getMembers } from "@/app/(root)/panel/members/actions";
 import { Button } from "@/components/ui/button";
 import DateTimeRangePicker from "@/components/date-time-range-picker";
-import { $Enums, LessonStatus, Tier } from "@prisma/client";
+import { $Enums, LessonStatus, Tier } from "@beach-pay/database";
 import { getAvailability } from "../../../availability/actions";
 import { getCourts } from "../../../courts/actions";
 import DialogLessonClosure from "../../dialogs/dialog-lesson-closure";

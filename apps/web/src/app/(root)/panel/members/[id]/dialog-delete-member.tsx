@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Member } from "@prisma/client";
+import { Member } from "@beach-pay/database";
 import { Trash2 } from "lucide-react";
 import { deleteMember } from "../actions";
 

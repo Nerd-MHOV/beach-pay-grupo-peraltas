@@ -1,7 +1,7 @@
 "use client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ChevronsUpDown, FileUser } from "lucide-react";
-import { Investment, InvestmentType } from "@prisma/client";
+import { Investment, InvestmentType } from "@beach-pay/database";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";

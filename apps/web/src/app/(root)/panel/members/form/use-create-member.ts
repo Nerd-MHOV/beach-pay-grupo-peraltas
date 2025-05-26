@@ -1,6 +1,6 @@
 "use client";
 
-import { Address, Member } from "@prisma/client";
+import { Address, Member } from "@beach-pay/database";
 import { createMember } from "../actions";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";

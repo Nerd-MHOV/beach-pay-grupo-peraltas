@@ -3,7 +3,7 @@ import "server-only";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@beach-pay/database";
 
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
 

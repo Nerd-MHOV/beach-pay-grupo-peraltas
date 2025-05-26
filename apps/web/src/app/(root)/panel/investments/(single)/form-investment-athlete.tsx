@@ -16,7 +16,7 @@ import { z } from "zod";
 import { getInvestmentsType } from "../../investment-types/actions";
 import DialogCreateInvestmentType from "../../investment-types/dialog-create-investment-type";
 import { getMembers } from "@/app/(root)/panel/members/actions";
-import { Member, Investment } from "@prisma/client";
+import { Member, Investment } from "@beach-pay/database";
 import MoneyInput from "@/components/money-Input";
 import { Button } from "@/components/ui/button";
 import CalendarPickerInput from "@/components/calendarPickerInput";
@@ -49,7 +49,7 @@ const FormInvestmentAthlete = ({
 }) => {
   const { toast } = useToast();
   const [investmentProof, setInvestmentProof] = useState<string | null>(
-    investment?.proof || null
+    investment?.proof || null,
   );
 
   const { data: athletes } = useQuery({
@@ -63,7 +63,7 @@ const FormInvestmentAthlete = ({
   });
 
   const createInvestmentAthleteFn = async (
-    values: z.infer<typeof formSchema>
+    values: z.infer<typeof formSchema>,
   ) => {
     try {
       let file: string | null = null;
@@ -102,7 +102,7 @@ const FormInvestmentAthlete = ({
   };
 
   const updateInvestmentAthleteFn = async (
-    values: z.infer<typeof formSchema>
+    values: z.infer<typeof formSchema>,
   ) => {
     try {
       let file: string | null = null;

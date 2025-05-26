@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import FormUser from "./form-user";
-import { $Enums, User } from "@prisma/client";
+import { $Enums, User } from "@beach-pay/database";
 
 const DialogCreateUser = ({
   permission,

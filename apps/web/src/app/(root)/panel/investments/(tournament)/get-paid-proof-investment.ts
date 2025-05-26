@@ -1,4 +1,4 @@
-import { Investment } from "@prisma/client";
+import { Investment } from "@beach-pay/database";
 
 export function getPaidProofInvestment(investments?: Investment[]) {
   const paid = investments?.every((investment) => investment.paid)

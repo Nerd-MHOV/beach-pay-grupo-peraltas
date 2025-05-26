@@ -1,7 +1,7 @@
 "use server";
 
 import { compare } from "bcryptjs";
-import db from "../infra/db";
+import { db } from "@beach-pay/database";
 
 const login = async (data: { user: string; passwd: string }) => {
   try {

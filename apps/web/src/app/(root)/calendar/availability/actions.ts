@@ -1,7 +1,6 @@
 "use server";
 
-import db from "@/core/infra/db";
-import { TeacherAvailability } from "@prisma/client";
+import { db, TeacherAvailability } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 

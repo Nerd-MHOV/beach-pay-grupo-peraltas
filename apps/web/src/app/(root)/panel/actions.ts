@@ -1,5 +1,5 @@
 "use server";
-import db from "@/core/infra/db";
+import { db } from "@beach-pay/database";
 import { verifySession } from "@/lib/session";
 
 export async function getDashboard(data?: {

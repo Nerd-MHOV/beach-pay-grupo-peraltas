@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Tier } from "@prisma/client";
+import { Tier } from "@beach-pay/database";
 
 export const schema = z.object({
   teacher_id: z.string({

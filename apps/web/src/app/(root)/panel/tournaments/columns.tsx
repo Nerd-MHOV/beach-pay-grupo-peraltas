@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Arena, Tournament } from "@prisma/client";
+import { Arena, Tournament } from "@beach-pay/database";
 import { MoreHorizontal } from "lucide-react";
 import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
@@ -67,7 +67,7 @@ export const columns: tournamentsColumnsDef[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-            {/*
+              {/*
                     <DialogCreateTournament
                 tournament={row.original}
                 trigger={
@@ -80,7 +80,9 @@ export const columns: tournamentsColumnsDef[] = [
                 }
               />
               */}
-              <Link href={`/panel/tournaments/${row.original.id}`}>Detalhes</Link>
+              <Link href={`/panel/tournaments/${row.original.id}`}>
+                Detalhes
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

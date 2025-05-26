@@ -9,7 +9,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import React from "react";
-import { InvestmentType } from "@prisma/client";
+import { InvestmentType } from "@beach-pay/database";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { deleteInvestmentType } from "./actions";

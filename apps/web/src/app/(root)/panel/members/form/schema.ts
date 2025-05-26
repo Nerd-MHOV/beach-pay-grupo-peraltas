@@ -1,5 +1,5 @@
 import { cpfValidator } from "@/lib/utils";
-import { Tier } from "@prisma/client";
+import { Tier } from "@beach-pay/database";
 import { isDate } from "date-fns";
 import { z } from "zod";
 

@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InvestmentType, UserRole } from "@prisma/client";
+import { InvestmentType, UserRole } from "@beach-pay/database";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createInvestmentType, updateInvestmentType } from "./actions";
@@ -37,7 +37,7 @@ const FormCreateInvestmentType = ({
   // const queryClient = useQueryClient();
 
   const createInvestmentTypeFn = async (
-    data: Omit<InvestmentType, "id" | "created_at" | "updated_at">
+    data: Omit<InvestmentType, "id" | "created_at" | "updated_at">,
   ) => {
     try {
       const created = await createInvestmentType(data);
@@ -67,7 +67,7 @@ const FormCreateInvestmentType = ({
   };
 
   const updateInvestmentTypeFn = async (
-    data: Omit<InvestmentType, "created_at" | "updated_at">
+    data: Omit<InvestmentType, "created_at" | "updated_at">,
   ) => {
     try {
       const updated = await updateInvestmentType(data);

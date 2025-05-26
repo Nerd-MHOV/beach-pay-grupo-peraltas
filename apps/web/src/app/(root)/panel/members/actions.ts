@@ -1,8 +1,7 @@
 "use server";
 
-import db from "@/core/infra/db";
 import { verifySession } from "@/lib/session";
-import { Address, Member } from "@prisma/client";
+import { db, Address, Member } from "@beach-pay/database";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 const cachedMembers = unstable_cache(

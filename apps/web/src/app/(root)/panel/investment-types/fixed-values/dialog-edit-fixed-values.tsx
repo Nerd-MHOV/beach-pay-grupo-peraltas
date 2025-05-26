@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import FormEditFixedValues, { FixedValuesForm } from "./form-edit-fixed-values";
-import { FixedValues } from "@prisma/client";
+import { FixedValues } from "@beach-pay/database";
 
 const DialogEditFixedValues = ({
   fixedValues,
