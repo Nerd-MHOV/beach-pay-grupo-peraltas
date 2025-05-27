@@ -1,11 +1,10 @@
 {
   "name": "@beach-pay/database",
   "version": "1.0.0",
-  "main": "index.js",
-  "types": "index.d.ts",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./generated/prisma": "./generated/prisma/index.js"
   },
   "scripts": {
     "db:generate": "prisma generate",
@@ -23,6 +22,8 @@
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
+    "@beach-pay/eslint-config": "workspace:*",
+    "@beach-pay/typescript-config": "workspace:*",
     "@types/node": "^22.15.21",
     "prisma": "^6.7.0",
     "tsx": "^4.19.2"
