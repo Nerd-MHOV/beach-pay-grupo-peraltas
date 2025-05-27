@@ -37,15 +37,42 @@ export async function submitLogin(
   }
 
   // 2. login
-  const user = await login(validateFormData.data);
-  if (user.error || !user.user)
+
+  // NEXTJS LOGIN....
+  // const user = await login(validateFormData.data);
+  // if (user.error || !user.user)
+  //   return {
+  //     success: false,
+  //     message: user.error || "Erro ao logar, tente novamente!",
+  //   };
+  // const sessionParams = user.user;
+
+  // API LOGIN
+  const userResponse = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: validateFormData.data.user,
+      password: validateFormData.data.passwd,
+    }),
+  });
+
+  if (!userResponse.ok) {
+    const errorData = await userResponse.json();
     return {
       success: false,
-      message: user.error || "Erro ao logar, tente novamente!",
-    };
-
+      message: errorData.message || "Erro ao logar, tente novamente!",
+    }
+  }
+  const user = await userResponse.json();
+  const sessionParams = {
+    id: user.id,
+    role: user.role,
+  }
   // 3. create  a session
-  await createSession(user.user);
+  await createSession(sessionParams);
   return {
     success: true,
     message: "Logado com sucesso",

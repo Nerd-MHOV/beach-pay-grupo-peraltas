@@ -2,6 +2,6 @@ POST http://localhost:3001/auth/login/
 content-type: application/json
 
 {
-    "username": "piter",
-    "password": "parker"
+    "username": "admin",
+    "password": "IE530C@azf"
 }

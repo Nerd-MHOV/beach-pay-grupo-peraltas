@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@beach-pay/database/generated/prisma';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { hashSync } from 'bcryptjs';
 
 @Injectable()
-export class UsersService {
+export class UserService {
     constructor(private readonly db: PrismaService) { }
 
     async user(
@@ -20,21 +21,25 @@ export class UsersService {
         cursor?: Prisma.UserWhereUniqueInput;
         where?: Prisma.UserWhereInput,
         orderBy?: Prisma.UserOrderByWithRelationInput;
+        omit?: Prisma.UserOmit
     }): Promise<User[]> {
-        const { skip, take, cursor, where, orderBy } = params;
-
+        const { skip, take, cursor, where, orderBy, omit } = params;
         return this.db.user.findMany({
             skip,
             take,
             cursor,
             where,
             orderBy,
+            omit
         });
     }
 
     async createUser(data: Prisma.UserCreateInput): Promise<User> {
         return this.db.user.create({
-            data,
+            data: {
+                ...data,
+                passwd: hashSync(data.passwd, 10),
+            },
         });
     }
 

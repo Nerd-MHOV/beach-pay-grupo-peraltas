@@ -1,50 +1,25 @@
-import { User } from '@beach-pay/database/generated/prisma';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-
-
-type SignInInputDto = {
-    username: string;
-    password: string;
-};
-type SignInOutputDto = Omit<
-    User, "passwd" | "created_at" | "updated_at" | "teacher_id"
->;
-type AuthReturnDto = {
-    access_token: string;
-    username: string;
-    id: string;
-}
-
-
+import { UserService } from 'src/user/user.service';
+import { compare } from 'bcryptjs';
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService) { }
+    constructor(private userService: UserService) { }
 
-    async authenticate(input: SignInInputDto): Promise<AuthReturnDto> {
-        const user = await this.validateUser(input);
-        if (!user) {
-            throw new UnauthorizedException();
-        }
+    async validateLocalUser(username: string, password: string) {
+        const user = await this.userService.user({
+            user: username,
+        })
+        if (!user)
+            throw new UnauthorizedException('Usuário ou Senha não conferem');
+        const isPasswordMatched = await compare(password, user.passwd);
+        if (!isPasswordMatched)
+            throw new UnauthorizedException('Usuário ou Senha não conferem');
+
         return {
-            access_token: 'fake-access-token',
             id: user.id,
+            role: user.role,
             username: user.user,
         }
-    }
 
-    async validateUser(data: SignInInputDto): Promise<SignInOutputDto | null> {
-        const { username, password } = data;
-        const user = await this.usersService.user({ user: username });
-        if (user && user.passwd === password) {
-            return {
-                id: user.id,
-                user: user.user,
-                role: user.role,
-                name: user.name,
-                email: user.email,
-            };
-        }
-        return null;
     }
 }

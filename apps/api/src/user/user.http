@@ -1,0 +1,18 @@
+
+
+GET http://localhost:3001/user/
+###
+GET http://localhost:3001/user/cmb5c5gp70001ow9p5qagjp11
+###
+POST http://localhost:3001/user/create/
+content-type: application/json
+
+{
+  "user": "new user",
+  "passwd": "securepassword",
+  "name": "New User",
+  "role": "operational",
+  "email": "newuser@example.com"
+}
+###
+DELETE http://localhost:3001/user/cmb6oybwl0001ow3xwdf3mqbc
