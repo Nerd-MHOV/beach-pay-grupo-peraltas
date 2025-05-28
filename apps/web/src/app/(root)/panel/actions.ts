@@ -10,7 +10,7 @@ export async function getDashboard(data?: {
 }) {
 
   const session = await verifySession();
-  const user = await db.user.findFirst({ where: { id: session?.userId } });
+  const user = await db.user.findFirst({ where: { id: session?.user.id } });
   if (!user) {
     return null;
   }

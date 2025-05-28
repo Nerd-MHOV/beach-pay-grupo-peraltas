@@ -5,12 +5,23 @@ import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 import { UserRole } from "@beach-pay/database";
 
+export type Session = {
+  user: {
+    id: string;
+    role: UserRole;
+    name: string;
+  }
+  accessToken: string;
+  refreshToken: string;
+}
+
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
 const cookie = {
   name: "session",
   options: {
     httpOnly: true,
+    secure: true,
     sameSite: "lax" as const,
     path: "/",
   },
@@ -36,14 +47,10 @@ export async function decrypt(session: string) {
   }
 }
 
-export async function createSession(user: {
-  id: string;
-  role: string;
-}) {
+export async function createSession(payload: Session) {
   const expires = new Date(Date.now() + cookie.duration);
   const session = await encrypt({
-    userId: user.id,
-    userRole: user.role,
+    ...payload,
     expires
   });
   (await cookies()).set(cookie.name, session, { ...cookie.options, expires });
@@ -53,18 +60,42 @@ export async function createSession(user: {
 export async function verifySession(redirectToLogin = true) {
   const ck = (await cookies()).get(cookie.name)?.value || "";
   const session = await decrypt(ck);
-  if (!session?.userId || !session?.userRole) {
+  if (!session?.user) {
     if (redirectToLogin) redirect("/login");
     return null;
   }
 
   return {
-    userId: session.userId as string,
-    userRole: session.userRole as UserRole
+    user: session.user as Session["user"],
+    accessToken: session.accessToken as string,
+    refreshToken: session.refreshToken as string,
   };
 }
 
 export async function deleteSession() {
   (await cookies()).delete(cookie.name);
   redirect("/login");
+}
+
+export async function updateToken({ accessToken, refreshToken }: {
+  accessToken: string;
+  refreshToken: string;
+}) {
+  const ck = (await cookies()).get(cookie.name)?.value;
+  if (!ck) {
+    return null;
+  }
+  const session = await decrypt(ck);
+  if (!session?.user)
+    throw new Error("Sessão invalida ou expirada");
+
+
+  const expires = new Date(Date.now() + cookie.duration);
+  const newSession = await encrypt({
+    ...session,
+    accessToken,
+    refreshToken,
+    expires
+  });
+  (await cookies()).set(cookie.name, newSession, { ...cookie.options, expires });
 }

@@ -1,6 +1,6 @@
 "use server";
-import login from "@/core/user/login";
-import { createSession } from "@/lib/session";
+import { BACKEND_URL } from "@/lib/constants";
+import { createSession, updateToken } from "@/lib/session";
 import { z } from "zod";
 
 const LoginSchema = z.object({
@@ -48,7 +48,7 @@ export async function submitLogin(
   // const sessionParams = user.user;
 
   // API LOGIN
-  const userResponse = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
+  const userResponse = await fetch(`${BACKEND_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -66,15 +66,43 @@ export async function submitLogin(
       message: errorData.message || "Erro ao logar, tente novamente!",
     }
   }
-  const user = await userResponse.json();
-  const sessionParams = {
-    id: user.id,
-    role: user.role,
-  }
+  const response = await userResponse.json();
+
   // 3. create  a session
-  await createSession(sessionParams);
+  await createSession({
+    user: {
+      id: response.id,
+      role: response.role,
+      name: response.name,
+    },
+    accessToken: response.accessToken,
+    refreshToken: response.refreshToken,
+  });
   return {
     success: true,
     message: "Logado com sucesso",
   };
+}
+
+
+export const refreshToken = async (oldRefreshToken: string) => {
+  try {
+    const response = await fetch(`${BACKEND_URL}/auth/refresh`, {
+      method: "POST",
+      body: JSON.stringify({
+        refresh: oldRefreshToken,
+      }),
+    });
+    if (!response.ok)
+      throw new Error("Erro ao atualizar o token");
+
+    const { accessToken, refreshToken } = await response.json();
+
+    await updateToken({ accessToken, refreshToken });
+
+    return accessToken;
+
+  } catch {
+    return null;
+  }
 }

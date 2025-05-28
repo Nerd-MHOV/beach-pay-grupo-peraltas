@@ -1,8 +1,28 @@
 "use server"
 
+import { verifySession } from "@/lib/session";
 import { db, User } from "@beach-pay/database";
 import { hashSync } from "bcryptjs";
 import { revalidateTag, unstable_cache } from "next/cache"
+import { BACKEND_URL } from "@/lib/constants";
+import { authFetch } from "@/lib/auth-fetch";
+
+
+// FIXME: REMOVE THIS FUNCTION PLS 
+export const exampleWithToken = async () => {
+  // const session = await verifySession();
+  // const response = await fetch(`${BACKEND_URL}/auth/protected`, {
+  //   headers: {
+  //     Authorization: `Bearer ${session?.accessToken}`,
+  //   },
+  // });
+  const response = await authFetch(`${BACKEND_URL}/auth/protected`);
+  const result = await response.json();
+  return result;
+}
+
+
+
 
 export const getUserById = async (id: string) => {
   const user = await db.user.findFirst({

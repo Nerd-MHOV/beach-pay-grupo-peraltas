@@ -72,12 +72,12 @@ export async function getMembers(props?: {
   student?: boolean;
 }) {
   const session = await verifySession();
-  return await cachedMembers(session?.userId || "", props);
+  return await cachedMembers(session?.user.id || "", props);
 }
 
 export async function getMemberById(id: string) {
   const session = await verifySession();
-  const user = await db.user.findFirst({ where: { id: session?.userId } });
+  const user = await db.user.findFirst({ where: { id: session?.user.id } });
   if (!user) {
     return null;
   }

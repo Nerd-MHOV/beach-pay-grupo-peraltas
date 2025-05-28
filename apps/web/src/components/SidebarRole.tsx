@@ -4,8 +4,8 @@ import Sidebar from "./Sidebar";
 
 const SidebarRole = async () => {
   const session = await verifySession();
-  if (!session?.userRole) return;
-  return <Sidebar role={session.userRole} />;
+  if (!session?.user.role) return null;
+  return <Sidebar role={session.user.role} />;
 };
 
 export default SidebarRole;

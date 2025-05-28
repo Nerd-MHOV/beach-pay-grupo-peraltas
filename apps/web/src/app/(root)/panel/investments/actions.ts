@@ -5,7 +5,7 @@ import { revalidateTag, unstable_cache } from "next/cache";
 
 export const getInvestments = async (athlete_id?: string) => {
   const session = await verifySession();
-  return await cachedInvestments(session?.userId || "", athlete_id);
+  return await cachedInvestments(session?.user.id || "", athlete_id);
 }
 
 const cachedInvestments = unstable_cache(
@@ -62,7 +62,7 @@ const cachedInvestments = unstable_cache(
 
 export const getInvestmentTournaments = async () => {
   const session = await verifySession();
-  return await cachedInvestmentTournament(session?.userId || "");
+  return await cachedInvestmentTournament(session?.user.id || "");
 }
 
 const cachedInvestmentTournament = unstable_cache(
@@ -113,7 +113,7 @@ const cachedInvestmentTournament = unstable_cache(
 
 export const getInvestmentById = async (id: string) => {
   const session = await verifySession();
-  return await cachedInvestmentById(session?.userId || "", id);
+  return await cachedInvestmentById(session?.user.id || "", id);
 }
 const cachedInvestmentById = unstable_cache(
   async (userId: string, id: string) => {

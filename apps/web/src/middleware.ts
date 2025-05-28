@@ -12,16 +12,16 @@ export default async function middleware(req: NextRequest) {
   // 2. check for valid session
   const session = await verifySession(false);
   // 3. redirect unauthorized users
-  if (isProtectedRoute && !session?.userId) {
+  if (isProtectedRoute && !session?.user.id) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
-  if (currentPath === "/login" && session?.userId) {
+  if (currentPath === "/login" && session?.user.id) {
     return NextResponse.redirect(new URL("/panel", req.nextUrl));
   }
 
   // 4. check if user has access to the page
   const canAccess = canAccessPage({
-    role: session?.userRole || "",
+    role: session?.user.role || "",
     page: currentPath,
   })
 

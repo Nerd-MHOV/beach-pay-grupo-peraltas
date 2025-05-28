@@ -5,3 +5,7 @@ content-type: application/json
     "username": "admin",
     "password": "IE530C@azf"
 }
+
+###
+GET http://localhost:3001/auth/protected/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4MzgwNTQ0LCJleHAiOjE3NDg0NjY5NDR9.zkQQXFGS6U_9Sbi4kV-Yck0oBNRTXkjpKQvYVLSU8eE

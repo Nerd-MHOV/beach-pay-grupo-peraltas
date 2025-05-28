@@ -3,6 +3,6 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await verifySession();
-  if (session?.userRole === "teacher") redirect("/calendar");
+  if (session?.user.role === "teacher") redirect("/calendar");
   redirect("/panel");
 }
