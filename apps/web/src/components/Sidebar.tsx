@@ -6,40 +6,34 @@ import Link from "next/link";
 import React from "react";
 import { LogOut, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { deleteSession } from "@/lib/session";
 import { UserRole } from "@beach-pay/database";
 import { SidebarLinks } from "@/lib/sidebarlinks";
+import { logout } from "@/app/login/actions";
 
 const Sidebar = ({ role }: { role: UserRole }) => {
   const { activeSidebar, dispatch } = useSidebar();
   const pathname = usePathname();
   const links = SidebarLinks.filter((link) => link.role.includes(role));
-  const logout = async () => {
-    await deleteSession();
+  const handleLogout = async () => {
+    // await deleteSession();
+    await logout();
   };
   return (
     <div
       className={cn(
         "h-screen transition-all duration-500 bg-slate-900 absolute md:static sm:static overflow-x-hidden ",
-        activeSidebar
-          ? "min-w-full md:min-w-80 sm:min-w-80 relative"
-          : "min-w-0 md:min-w-16",
+        activeSidebar ? "min-w-full md:min-w-80 sm:min-w-80 relative" : "min-w-0 md:min-w-16",
       )}
       style={{ direction: "rtl" }}
     >
       <div className="w-full relative h-screen" style={{ direction: "ltr" }}>
         <ul className="absolute w-full h-full flex flex-col gap-2 ">
           <li className="list-none mb-10 pointer-events-none mt-1 relative">
-            <Link
-              href="/panel"
-              className="flex whitespace-nowrap items-center  "
-            >
+            <Link href="/panel" className="flex whitespace-nowrap items-center  ">
               <span className="top-3 left-3 absolute ">
                 <Image src="/images/GP.png" alt="Logo" width={35} height={35} />
               </span>
-              <span className=" mt-4 ml-[70px] font-bold text-2xl text-white">
-                Beach Pay
-              </span>
+              <span className=" mt-4 ml-[70px] font-bold text-2xl text-white">Beach Pay</span>
             </Link>
           </li>
 
@@ -72,17 +66,16 @@ const Sidebar = ({ role }: { role: UserRole }) => {
                 <span className="relative ml-4">
                   <link.icon className="ml-1" width={22} height={22} />
                 </span>
-                <span className="py-3 ml-2 whitespace-normal text-lg">
-                  {link.title}
-                </span>
+                <span className="py-3 ml-2 whitespace-normal text-lg">{link.title}</span>
               </Link>
             </li>
           ))}
           <li className="flex-grow"></li>
+
           <li
             className="flex cursor-pointer items-center bg-[##060814] max-w-f gap-5 w-full text-white py-3 hover:text-gray-300"
             onClick={() => {
-              logout();
+              handleLogout();
             }}
           >
             <span className="relative ml-5 ">

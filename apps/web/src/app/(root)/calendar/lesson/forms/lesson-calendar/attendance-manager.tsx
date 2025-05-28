@@ -1,24 +1,13 @@
 import React from "react";
 import { Combobox } from "@/components/combobox";
 import { Button } from "@/components/ui/button";
-import {
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import DrawerMemberContents from "../../../../panel/members/[id]/modals/drawer-member-contents";
 import DashboardStudent from "../../../../panel/members/[id]/student/dashboard-student";
 import FormMember from "../../../../panel/members/form/form-member";
 import AlertsMemberList from "../../alerts-member-list";
 import DialogSelectReplacementLesson from "../../dialogs/dialog-select-replacement-lesson";
-import {
-  AlarmClockPlus,
-  CircleFadingPlus,
-  CirclePlus,
-  UserRoundCog,
-  X,
-} from "lucide-react";
+import { CircleFadingPlus, CirclePlus, UserRoundCog, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { reasonOptions } from "../../reason-options";
@@ -48,9 +37,7 @@ const AttendanceManager = ({
             disabled={disabled}
             items={
               members
-                .filter(
-                  (ath) => !(value.map((att) => att.id) || []).includes(ath.id),
-                )
+                .filter((ath) => !(value.map((att) => att.id) || []).includes(ath.id))
                 .map((ath) => ({
                   label: ath.name,
                   value: ath.id,
@@ -78,9 +65,7 @@ const AttendanceManager = ({
           <div className="h-32 rounded-md border overflow-auto py-1">
             <div className="p-4">
               {value?.map((studentAttendance, index) => {
-                const member = members.find(
-                  (find) => find.id === studentAttendance.id,
-                );
+                const member = members.find((find) => find.id === studentAttendance.id);
                 if (!member) return null;
                 return (
                   <div key={index}>
@@ -89,11 +74,7 @@ const AttendanceManager = ({
                         <DrawerMemberContents
                           id={member.id}
                           trigger={
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              disabled={disabled}
-                            >
+                            <Button variant="outline" size="icon" disabled={disabled}>
                               <UserRoundCog />
                             </Button>
                           }
@@ -113,26 +94,18 @@ const AttendanceManager = ({
                               items={member.lesson_attendance
                                 .filter((att) => {
                                   const twoMonthsAgo = new Date();
-                                  twoMonthsAgo.setMonth(
-                                    twoMonthsAgo.getMonth() - 2,
-                                  );
+                                  twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
                                   return (
                                     att.reason &&
                                     att.reason !== "no_justification" &&
                                     !att.replacement_id &&
                                     att.lesson.time_start &&
-                                    new Date(att.lesson.time_start) >
-                                      twoMonthsAgo
+                                    new Date(att.lesson.time_start) > twoMonthsAgo
                                   );
                                 })
                                 .map((lesson) => ({
-                                  label: `${format(
-                                    lesson.lesson.time_start,
-                                    "dd/MM/yyyy",
-                                  )} - ${
-                                    reasonOptions.find(
-                                      (ro) => ro.value === lesson.reason,
-                                    )?.label ?? ""
+                                  label: `${format(lesson.lesson.time_start, "dd/MM/yyyy")} - ${
+                                    reasonOptions.find((ro) => ro.value === lesson.reason)?.label ?? ""
                                   }`,
                                   value: lesson.id,
                                 }))}
@@ -164,11 +137,7 @@ const AttendanceManager = ({
                                   : ""
                               }
                             >
-                              {studentAttendance.replacement ? (
-                                <CirclePlus />
-                              ) : (
-                                <CircleFadingPlus />
-                              )}
+                              {studentAttendance.replacement ? <CirclePlus /> : <CircleFadingPlus />}
                             </Button>
                           }
                         />

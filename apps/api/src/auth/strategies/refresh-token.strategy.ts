@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { AuthJwtPayload } from "../types/auth-jwtPayload";
 import { AuthService } from "../auth.service";
 import refreshConfig from "../config/refresh.config";
+import { Request } from "express";
 
 
 @Injectable()
@@ -19,11 +20,13 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, "refresh-jw
             jwtFromRequest: ExtractJwt.fromBodyField("refresh"),
             secretOrKey: refreshTokenConfig.secret,
             ignoreExpiration: false,
+            passReqToCallback: true,
         })
     }
 
-    validate(payload: AuthJwtPayload) {
+    validate(req: Request, payload: AuthJwtPayload) {
         const userId = payload.sub;
-        return this.authService.validateRegreshToken(userId)
+        const refreshToken = req.body.refresh;
+        return this.authService.validateRefreshToken(userId, refreshToken)
     }
 }

@@ -45,14 +45,15 @@ enum ReasonsToNotAttend {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  name       String
-  user       String   @unique
-  passwd     String
-  email      String
-  role       UserRole @default(operational)
-  teacher_id String?  @unique
-  teacher    Member?  @relation(fields: [teacher_id, name], references: [id, name])
+  id                   String   @id @default(cuid())
+  name                 String
+  user                 String   @unique
+  passwd               String
+  email                String
+  role                 UserRole @default(operational)
+  teacher_id           String?  @unique
+  teacher              Member?  @relation(fields: [teacher_id, name], references: [id, name])
+  hashed_refresh_token String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

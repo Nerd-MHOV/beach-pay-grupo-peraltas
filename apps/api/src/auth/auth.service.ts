@@ -8,6 +8,7 @@ import { ConfigType } from '@nestjs/config';
 @Injectable()
 export class AuthService {
 
+
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
@@ -36,6 +37,7 @@ export class AuthService {
 
     async login(userId: string, name: string, role: UserRole) {
         const { accessToken, refreshToken } = await this.generateToken(userId);
+        await this.userService.updateRefreshToken(userId, refreshToken);
         return {
             id: userId,
             name,
@@ -70,21 +72,17 @@ export class AuthService {
         }
     }
 
-    async validateRegreshToken(userId: string) {
-        const user = await this.userService.user({
-            id: userId,
-        });
-        if (!user)
-            throw new UnauthorizedException('Usuário não encontrado');
-
-        return {
-            id: user.id
-        }
+    async validateRefreshToken(userId: string, refreshToken: string) {
+        const user = await this.userService.user({ id: userId });
+        if (!user) throw new UnauthorizedException('Usuário não encontrado');
+        const refreshTokenMatched = await compare(refreshToken, user.hashed_refresh_token);
+        if (!refreshTokenMatched) throw new UnauthorizedException('Refresh token inválido');
+        return { id: user.id }
     }
 
     async refreshToken(userId: string, name: string, role: UserRole) {
-
         const { accessToken, refreshToken } = await this.generateToken(userId);
+        await this.userService.updateRefreshToken(userId, refreshToken);
         return {
             id: userId,
             name,
@@ -92,5 +90,9 @@ export class AuthService {
             accessToken,
             refreshToken
         };
+    }
+
+    async signOut(userId: string) {
+        return await this.userService.updateRefreshToken(userId, null);
     }
 }

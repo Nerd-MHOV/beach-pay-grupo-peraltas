@@ -2,7 +2,8 @@
 
 GET http://localhost:3001/user/
 ###
-GET http://localhost:3001/user/cmb5c5gp70001ow9p5qagjp11
+GET http://localhost:3001/user/cm9d2pdws0001owyluixxizeb
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDY2NjExLCJleHAiOjE3NDg0NjY2NzF9.q0LqlKsyw4g1rQCMzc_gyO5TwXeGfSdiSsE4AUkbhw0
 ###
 POST http://localhost:3001/user/create/
 content-type: application/json

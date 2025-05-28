@@ -5,6 +5,7 @@ import { hashSync } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
+
     constructor(private readonly db: PrismaService) { }
 
     async user(
@@ -58,6 +59,14 @@ export class UserService {
     async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
         return this.db.user.delete({
             where,
+        });
+    }
+
+    async updateRefreshToken(userId: string, refreshToken: string | null) {
+        const hashedRT = refreshToken ? await hashSync(refreshToken, 10) : null;
+        return this.db.user.update({
+            where: { id: userId },
+            data: { hashed_refresh_token: hashedRT },
         });
     }
 }

@@ -1,6 +1,7 @@
 "use server";
+import { authFetch } from "@/lib/auth-fetch";
 import { BACKEND_URL } from "@/lib/constants";
-import { createSession, updateToken } from "@/lib/session";
+import { createSession, deleteSession, updateToken } from "@/lib/session";
 import { z } from "zod";
 
 const LoginSchema = z.object({
@@ -105,4 +106,11 @@ export const refreshToken = async (oldRefreshToken: string) => {
   } catch {
     return null;
   }
+}
+
+export const logout = async () => {
+  await authFetch(`${BACKEND_URL}/auth/logout`, {
+    method: "POST",
+  });
+  await deleteSession();
 }
