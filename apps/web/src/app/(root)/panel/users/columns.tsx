@@ -14,27 +14,21 @@ import SelectComponentColumn from "@/components/tables/columns/selectColumn";
 import { DataTableColumnHeader } from "@/components/tables/columns/sortingColumn";
 import { ExtendedColumnDef } from "@/components/ui/data-table";
 
-type UserWithoutPassword = Omit<User, "passwd">;
+type UserWithoutPassword = Omit<User, "passwd" | "hashed_refresh_token">;
 export const columns: ExtendedColumnDef<UserWithoutPassword, undefined>[] = [
   SelectComponentColumn as ExtendedColumnDef<UserWithoutPassword, undefined>,
   {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Nome" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
     accessorKey: "name",
     label: "Nome",
   },
   {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="E-mail" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="E-mail" />,
     accessorKey: "email",
     label: "E-mail",
   },
   {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Nivel" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nivel" />,
     accessorKey: "role",
     label: "Nivel",
   },

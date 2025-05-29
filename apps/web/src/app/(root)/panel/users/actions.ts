@@ -65,7 +65,7 @@ export const getUsers = unstable_cache(
   }
 )
 
-export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">) => {
+export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id" | "hashed_refresh_token">) => {
   const { passwd, ...rest } = data;
 
   const user = await db.user.create({
@@ -78,7 +78,7 @@ export const createUser = async (data: Omit<User, "id" | "created_at" | "updated
   return user;
 }
 
-export const updateUser = async (data: Omit<User, "created_at" | "updated_at">) => {
+export const updateUser = async (data: Omit<User, "created_at" | "updated_at" | "hashed_refresh_token">) => {
 
   const { passwd, ...rest } = data;
   const user = await db.user.update({

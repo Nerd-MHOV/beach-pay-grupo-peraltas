@@ -20,7 +20,6 @@ import DrawerMemberContents from "./[id]/modals/drawer-member-contents";
 import DashboardAthlete from "./[id]/dashboard-athlete";
 import DashboardTeacher from "./[id]/dashboard-teacher";
 import DashboardStudent from "./[id]/student/dashboard-student";
-import DialogMember from "./form/dialog-member";
 import FormMember from "./form/form-member";
 
 export type MemberTable = Member & {
@@ -35,36 +34,26 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   SelectComponentColumn as ExtendedColumnDef<Member, undefined>,
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Nome" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
     label: "Nome",
   },
   {
     accessorKey: "responsible",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Responsável" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
     label: "Responsável",
   },
   {
     accessorKey: "age",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Idade" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Idade" />,
     label: "Idade",
   },
   {
     accessorKey: "phone",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Número" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Número" />,
     label: "Número",
     cell: ({ row }) => {
       const member = row.original;
-      return member.phone
-        .replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, "($2) $3-$4")
-        .replace(/\+/g, "");
+      return member.phone.replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, "($2) $3-$4").replace(/\+/g, "");
     },
   },
   {
@@ -83,13 +72,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   },
   {
     accessorKey: "is_associated",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Associado"
-        filterOptions={filterBoolean}
-      />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Associado" filterOptions={filterBoolean} />,
     label: "Associado",
     cell: ({ row }) => {
       const member = row.original;
@@ -98,13 +81,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   },
   {
     accessorKey: "is_student",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Aluno"
-        filterOptions={filterBoolean}
-      />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Aluno" filterOptions={filterBoolean} />,
     label: "Aluno",
     cell: ({ row }) => {
       const member = row.original;
@@ -113,13 +90,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   },
   {
     accessorKey: "is_athlete",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Atleta"
-        filterOptions={filterBoolean}
-      />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Atleta" filterOptions={filterBoolean} />,
     label: "Atleta",
     cell: ({ row }) => {
       const member = row.original;
@@ -128,13 +99,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
   },
   {
     accessorKey: "is_teacher",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Professor"
-        filterOptions={filterBoolean}
-      />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Professor" filterOptions={filterBoolean} />,
     label: "Professor",
     cell: ({ row }) => {
       const member = row.original;
@@ -159,11 +124,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
           <DropdownMenuContent align="end">
             {member.is_athlete && (
               <>
-                <DropdownMenuItem
-                  onClick={() =>
-                    navigator.clipboard.writeText(member.pix_key || "")
-                  }
-                >
+                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(member.pix_key || "")}>
                   Copy Chave PIX
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -194,11 +155,7 @@ export const columns: ExtendedColumnDef<Member, undefined>[] = [
                   />
                 </DropdownMenuItem>
 
-                <DropdownMenuItem
-                  onClick={() =>
-                    navigator.clipboard.writeText(member.pix_key || "")
-                  }
-                >
+                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(member.pix_key || "")}>
                   Copy Chave PIX
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

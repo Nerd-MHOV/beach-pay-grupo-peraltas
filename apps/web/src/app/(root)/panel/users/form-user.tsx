@@ -1,14 +1,7 @@
 "use client";
 import React from "react";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
@@ -16,13 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { $Enums, User } from "@beach-pay/database";
 import { createUser, updateUser } from "./actions";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import roleOptions from "@/components/role-options";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -68,16 +55,14 @@ const FormUser = ({
   permission,
   onCreate,
 }: {
-  user?: Omit<User, "passwd">;
+  user?: Omit<User, "passwd" | "hashed_refresh_token">;
   permission?: $Enums.UserRole;
   onCreate?: (user: User) => void;
 }) => {
   const { toast } = useToast();
   const formSchema = getFormSchema(!!user);
   const query = useQueryClient();
-  const updateUserFn = async (
-    data: Omit<User, "created_at" | "updated_at" | "password">,
-  ) => {
+  const updateUserFn = async (data: Omit<User, "created_at" | "updated_at" | "passwordd" | "hashed_refresh_token">) => {
     try {
       const updatedUser = await updateUser(data);
       toast({
@@ -94,7 +79,7 @@ const FormUser = ({
   };
 
   const createUserFn = async (
-    data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id">,
+    data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id" | "hashed_refresh_token">,
   ) => {
     try {
       const newUser = await createUser(data);
@@ -241,9 +226,7 @@ const FormUser = ({
 
         <Input type="hidden" {...form.register("role")} />
         <div className="flex w-full justify-end mt-5">
-          <Button isLoading={form.formState.isSubmitting}>
-            {user ? "Atualizar" : "Adicionar"}
-          </Button>
+          <Button isLoading={form.formState.isSubmitting}>{user ? "Atualizar" : "Adicionar"}</Button>
         </div>
       </form>
     </Form>

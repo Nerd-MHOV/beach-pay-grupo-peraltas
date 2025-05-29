@@ -17,7 +17,7 @@ const DialogCreateUser = ({
   onCreate,
 }: {
   trigger: React.JSX.Element;
-  user?: Omit<User, "passwd">;
+  user?: Omit<User, "passwd" | "hashed_refresh_token">;
   permission?: $Enums.UserRole;
   onCreate?: (user: User) => void;
 }) => {
