@@ -31,6 +31,7 @@ export class AuthService {
             id: user.id,
             role: user.role,
             username: user.user,
+            name: user.name,
         }
 
     }
@@ -68,7 +69,8 @@ export class AuthService {
             throw new UnauthorizedException('Usuário não encontrado');
 
         return {
-            id: user.id
+            id: user.id,
+            role: user.role,
         }
     }
 

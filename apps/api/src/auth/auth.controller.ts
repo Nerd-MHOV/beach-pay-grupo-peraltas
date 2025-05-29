@@ -3,6 +3,7 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { AuthService } from './auth.service';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { Public } from './decorators/public.decorator';
+import { Roles } from './decorators/roles.decorator';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
@@ -14,6 +15,7 @@ export class AuthController {
         return this.authService.login(req.user.id, req.user.username, req.user.role);
     }
 
+    @Roles('admin')
     @Get("protected")
     getAll(@Request() req) {
         return "Protected route. This is your user id: " + req.user.id;

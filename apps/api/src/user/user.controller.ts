@@ -2,6 +2,7 @@
 import { Body, ConflictException, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -14,7 +15,6 @@ export class UserController {
                 passwd: true,
             }
         });
-
     }
 
     @Get(":id")
@@ -25,6 +25,7 @@ export class UserController {
         return rest;
     }
 
+    @Roles('admin')
     @Delete(":id")
     async deleteUser(@Param('id') id: string) {
         const user = await this.usersService.user({ id });
@@ -33,6 +34,7 @@ export class UserController {
         return rest;
     }
 
+    @Roles('admin')
     @Post("create")
     async createUser(@Body() createUserDto: CreateUserDto) {
         const user = await this.usersService.user({ user: createUserDto.user });
