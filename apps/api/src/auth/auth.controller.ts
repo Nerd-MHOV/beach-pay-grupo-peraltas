@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { AuthService } from './auth.service';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { Public } from './decorators/public.decorator';
 import { Roles } from './decorators/roles.decorator';
+import { CaslService } from 'src/casl/casl.service';
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(
+        private readonly authService: AuthService,
+        private readonly abilityService: CaslService
+    ) { }
 
     @Public()
     @UseGuards(LocalAuthGuard)
@@ -18,6 +22,8 @@ export class AuthController {
     @Roles('admin')
     @Get("protected")
     getAll(@Request() req) {
+        const ability = this.abilityService.ability
+        if (!ability.can('read', 'all')) throw new UnauthorizedException("Não autorizado");
         return "Protected route. This is your user id: " + req.user.id;
     }
 

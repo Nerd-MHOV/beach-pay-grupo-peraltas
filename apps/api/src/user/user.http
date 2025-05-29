@@ -1,15 +1,30 @@
+@token = {{Login.response.body.$.accessToken}}
+
+# @name Login
+POST http://localhost:3001/auth/login/
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "IE530C@azf"
+}
 
 
+###
+# @name getUser
 GET http://localhost:3001/user/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDc5NTA2LCJleHAiOjE3NDg0ODMxMDZ9.Rwy3fQnZdtDscWxteOldseJHliplZXLNqojM3yU3lKA
+Authorization: Bearer {{token}}
+
+
 ###
 GET http://localhost:3001/user/cm9d2pdws0001owyluixxizeb
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDY3NzcyLCJleHAiOjE3NDg0Njc4MzJ9.h6eSK60MJtDQeIsOD2zDRILpe76fdtZlbfUNpwbE5i8
+Authorization: Bearer {{token}}
+
 
 ### CREATE USER
 POST http://localhost:3001/user/create/
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDY3MjA5LCJleHAiOjE3NDg0NjcyNjl9.vFqYa2ckb2_PwfTSlm7aD_ViP99D6zlSnUNsCGHmJH4
+Authorization: Bearer {{token}}
 
 {
   "user": "new user",
@@ -18,6 +33,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd
   "role": "operational",
   "email": "newuser@example.com"
 }
+
+
 ###
 DELETE http://localhost:3001/user/cmb6owika0001ow1885vt2got
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDY3ODM3LCJleHAiOjE3NDg0Njc4OTd9.0mT6hnGA5B8tQJFJSMY81-9oCUPFQF-8omq_01OPQDE
+Authorization: Bearer {{token}}

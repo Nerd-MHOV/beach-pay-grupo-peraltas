@@ -3,11 +3,13 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { ROLES_KEY } from 'src/auth/decorators/roles.decorator';
+import { CaslService } from 'src/casl/casl.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
+    private abilityService: CaslService,
   ) { }
   canActivate(
     context: ExecutionContext,
@@ -22,7 +24,8 @@ export class RolesGuard implements CanActivate {
     }
 
     const user = context.switchToHttp().getRequest().user;
-    console.log("Required roles:", requiredRoles, user);
+    this.abilityService.createForUser(user);
+
     const hasRequiredRole = requiredRoles.some(role => user.role === role);
     return hasRequiredRole;
   }

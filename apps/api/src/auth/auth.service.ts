@@ -5,6 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@beach-pay/database';
 import refreshConfig from './config/refresh.config';
 import { ConfigType } from '@nestjs/config';
+import { CaslService } from 'src/casl/casl.service';
+import { packRules } from '@casl/ability/extra';
 @Injectable()
 export class AuthService {
 
@@ -12,6 +14,7 @@ export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
+        private readonly abilityService: CaslService,
 
         @Inject(refreshConfig.KEY)
         private readonly refreshTokenConfig: ConfigType<typeof refreshConfig>,
@@ -37,7 +40,7 @@ export class AuthService {
     }
 
     async login(userId: string, name: string, role: UserRole) {
-        const { accessToken, refreshToken } = await this.generateToken(userId);
+        const { accessToken, refreshToken } = await this.generateToken(userId, role);
         await this.userService.updateRefreshToken(userId, refreshToken);
         return {
             id: userId,
@@ -48,8 +51,14 @@ export class AuthService {
         }
     }
 
-    async generateToken(userId: string) {
-        const payload = { sub: userId };
+    async generateToken(userId: string, role: UserRole) {
+        const user = await this.userService.user({ id: userId });
+        const ability = user ? this.abilityService.createForUser(user).rules : [];
+        const payload = {
+            sub: userId,
+            role,
+            permissions: packRules(ability),
+        };
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload),
             this.jwtService.signAsync(payload, this.refreshTokenConfig)
@@ -83,7 +92,7 @@ export class AuthService {
     }
 
     async refreshToken(userId: string, name: string, role: UserRole) {
-        const { accessToken, refreshToken } = await this.generateToken(userId);
+        const { accessToken, refreshToken } = await this.generateToken(userId, role);
         await this.userService.updateRefreshToken(userId, refreshToken);
         return {
             id: userId,

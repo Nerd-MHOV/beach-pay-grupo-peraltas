@@ -1,3 +1,6 @@
+@token = {{Login.response.body.$.accessToken}}
+
+# @name Login
 POST http://localhost:3001/auth/login/
 content-type: application/json
 
@@ -5,10 +8,13 @@ content-type: application/json
     "username": "admin",
     "password": "IE530C@azf"
 }
-###
-POST http://localhost:3001/auth/logout/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDY1NjAwLCJleHAiOjE3NDg0NjU2NjB9.lWPBYaxxuzM4XNM5dkt6KDJHZaORPl8wu2ir6cneFMI
 
 ###
+# @name Logout
+POST http://localhost:3001/auth/logout/
+Authorization: Bearer {{token}}
+
+###
+# @name ProtectedRouterTest
 GET http://localhost:3001/auth/protected/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbTlkMnBkd3MwMDAxb3d5bHVpeHhpemViIiwiaWF0IjoxNzQ4NDc4ODAzLCJleHAiOjE3NDg0ODI0MDN9.wqqyCBwC1JQdVFpXm9gd_OEOfwqx49d3jPzk7tsPW6c
+Authorization: Bearer {{token}}

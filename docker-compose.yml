@@ -27,7 +27,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    command: sh -c "pnpm db:generate && pnpm db:deploy && pnpm start"
+    command: sh -c "pnpm db:deploy && pnpm start"
 
   web:
     build:
@@ -37,5 +37,7 @@ services:
       - "3000"
     env_file:
       - ./apps/web/.env # só para dev
+    command: sh -c "pnpm db:deploy && pnpm start"
+
 volumes:
   pgdata:

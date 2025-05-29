@@ -3,16 +3,26 @@ import { Body, ConflictException, Controller, Delete, Get, Param, Post } from '@
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { CaslService } from 'src/casl/casl.service';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly usersService: UserService) { }
+    constructor(
+        private readonly usersService: UserService,
+        private readonly abilityService: CaslService,
+    ) { }
 
+    @Roles('admin', 'operational')
     @Get()
     async getUsers() {
+        const ability = this.abilityService.ability;
+        const accessibleBy = this.abilityService.accessibleBy;
         return await this.usersService.users({
             omit: {
                 passwd: true,
+            },
+            where: {
+                AND: [accessibleBy(ability, "read").User]
             }
         });
     }
@@ -35,7 +45,7 @@ export class UserController {
     }
 
     @Roles('admin')
-    @Post("create")
+    @Post("")
     async createUser(@Body() createUserDto: CreateUserDto) {
         const user = await this.usersService.user({ user: createUserDto.user });
         if (user) throw new ConflictException("Usuário já existe");

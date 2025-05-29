@@ -3,11 +3,12 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from 'src/auth/decorators/public.decorator';
+import { CaslService } from 'src/casl/casl.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
     constructor(
-        private readonly reflector: Reflector
+        private readonly reflector: Reflector,
     ) {
         super();
     }

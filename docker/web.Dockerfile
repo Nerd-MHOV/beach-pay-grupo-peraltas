@@ -6,6 +6,8 @@ COPY . .
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --filter @beach-pay/web...
+RUN pnpm db:generate
+
 
 WORKDIR /app/apps/web
 
