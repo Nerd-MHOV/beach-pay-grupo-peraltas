@@ -37,7 +37,5 @@ services:
       - "3000"
     env_file:
       - ./apps/web/.env # só para dev
-    environment:
-      - DATABASE_URL=prisma+postgres://local_user:password@localhost:5432/beach-pay
 volumes:
   pgdata:

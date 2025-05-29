@@ -2,7 +2,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { UserRole } from '@beach-pay/database/generated/prisma';
+import { UserRole } from '@beach-pay/database';
 import refreshConfig from './config/refresh.config';
 import { ConfigType } from '@nestjs/config';
 @Injectable()

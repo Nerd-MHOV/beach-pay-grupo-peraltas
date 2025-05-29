@@ -6,4 +6,4 @@ dist/
 build/
 
 # Prisma generated files
-/generated/
+generated/

@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    ".": "./src/index.ts",
-    "./generated/prisma": "./generated/prisma/index.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
+    "prebuild": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev --skip-generate",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "build": "tsc",
+    "postbuild": "cp -r src/generated dist/generated"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

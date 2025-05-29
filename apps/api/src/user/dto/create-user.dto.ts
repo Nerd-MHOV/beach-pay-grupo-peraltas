@@ -1,4 +1,4 @@
-import { User } from "@beach-pay/database/generated/prisma";
+import { User } from "@beach-pay/database";
 import { IsEmail, IsString } from "class-validator";
 
 export class CreateUserDto {
