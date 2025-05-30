@@ -23,6 +23,12 @@ const rolePermissionsMap: Record<UserRole, DefinePermissions> = {
         can('manage', 'all');
     },
     operational: (user, { can }) => {
+        can("manage", 'User', {
+            OR: [
+                { id: user.id },
+                { role: 'teacher' },
+            ]
+        });
         can('manage', 'Investment', {
             investment_type: {
                 can_see: {
@@ -31,7 +37,9 @@ const rolePermissionsMap: Record<UserRole, DefinePermissions> = {
             }
         })
     },
-    teacher: (user, { can }) => { },
+    teacher: (user, { can }) => {
+        can("read", 'User', { id: user.id });
+    },
 }
 
 @Injectable({ scope: Scope.DEFAULT })

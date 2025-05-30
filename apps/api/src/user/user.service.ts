@@ -9,9 +9,9 @@ export class UserService {
     constructor(private readonly db: PrismaService) { }
 
     async user(
-        userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+        userWhereUniqueInput: Prisma.UserWhereInput | Prisma.UserWhereUniqueInput,
     ): Promise<User | null> {
-        return this.db.user.findUnique({
+        return this.db.user.findFirst({
             where: userWhereUniqueInput,
         })
     }
@@ -51,7 +51,10 @@ export class UserService {
         const { where, data } = params;
 
         return this.db.user.update({
-            data,
+            data: {
+                ...data,
+                passwd: data.passwd ? hashSync(data.passwd, 10) : undefined,
+            },
             where,
         });
     }

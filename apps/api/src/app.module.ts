@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { CaslModule } from './casl/casl.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -14,4 +15,8 @@ import { CaslModule } from './casl/casl.module';
     CaslModule
   ],
 })
-export class AppModule { }
+export class AppModule {
+  confiugure(consumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

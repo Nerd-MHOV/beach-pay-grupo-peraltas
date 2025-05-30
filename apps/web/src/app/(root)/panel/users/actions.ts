@@ -1,62 +1,48 @@
 "use server"
 
-import { verifySession } from "@/lib/session";
-import { db, User } from "@beach-pay/database";
+import { db, Prisma, User } from "@beach-pay/database";
 import { hashSync } from "bcryptjs";
 import { revalidateTag, unstable_cache } from "next/cache"
 import { BACKEND_URL } from "@/lib/constants";
-import { authFetch } from "@/lib/auth-fetch";
+import { authFetch, VerifySessionType } from "@/lib/auth-fetch";
+import { verifySession } from "@/lib/session";
 
 
-// FIXME: REMOVE THIS FUNCTION PLS 
-export const exampleWithToken = async () => {
-  // const session = await verifySession();
-  // const response = await fetch(`${BACKEND_URL}/auth/protected`, {
-  //   headers: {
-  //     Authorization: `Bearer ${session?.accessToken}`,
-  //   },
-  // });
-  const response = await authFetch(`${BACKEND_URL}/auth/protected`);
-  const result = await response.json();
-  return result;
+
+
+export const getUserById = async (id: string): Promise<Omit<User, "passwd">> => {
+  const session = await verifySession();
+  return await cashedUserById(id, session);
 }
-
-
-
-
-export const getUserById = async (id: string) => {
-  const user = await db.user.findFirst({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      user: true,
-      role: true,
-      created_at: true,
-      updated_at: true,
+const cashedUserById = unstable_cache(
+  async (id: string, session: VerifySessionType): Promise<Omit<User, "passwd">> => {
+    const response = await authFetch(`${BACKEND_URL}/user/${id}`, {}, session);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Erro ao buscar usuário");
     }
-  });
-  return user;
+    const user = await response.json();
+    return user;
+  },
+  ["user"],
+  {
+    tags: ["update-user", "create-user"],
+  }
+)
+
+
+
+export const getUsers = async () => {
+  const session = await verifySession();
+  return await cashedUsers(session);
 }
-
-
-
-export const getUsers = unstable_cache(
-  async () => {
-    const users = await db.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        user: true,
-        role: true,
-        teacher_id: true,
-        created_at: true,
-        updated_at: true,
-      }
-    });
-
+const cashedUsers = unstable_cache(
+  async (session: VerifySessionType): Promise<Omit<User, "passwd">[]> => {
+    const response = await authFetch(`${BACKEND_URL}/user`, {}, session);
+    const users = await response.json();
+    if (!response.ok) {
+      throw new Error(users.message || "Erro ao buscar usuários");
+    }
     return users;
   },
   ["users"],
@@ -65,50 +51,58 @@ export const getUsers = unstable_cache(
   }
 )
 
-export const createUser = async (data: Omit<User, "id" | "created_at" | "updated_at" | "teacher_id" | "hashed_refresh_token">) => {
-  const { passwd, ...rest } = data;
-
-  const user = await db.user.create({
-    data: {
-      ...rest,
-      passwd: hashSync(passwd, 10),
-    }
+export const createUser = async (data: Prisma.UserCreateInput) => {
+  const response = await authFetch(`${BACKEND_URL}/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Erro ao criar usuário");
+  }
+  const user = await response.json();
   revalidateTag("create-user");
   return user;
 }
 
 export const updateUser = async (data: Omit<User, "created_at" | "updated_at" | "hashed_refresh_token">) => {
-
-  const { passwd, ...rest } = data;
-  const user = await db.user.update({
-    where: { id: data.id },
-    data: {
-      ...rest,
-      ...(passwd.length > 2 ? { passwd: hashSync(passwd, 10) } : {}),
-      updated_at: new Date(),
+  console.log(data);
+  const response = await authFetch(`${BACKEND_URL}/user/${data.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      ...data,
+      passwd: data.passwd ? data.passwd : undefined,
+    }),
   });
+  const user = await response.json();
+  if (!response.ok) {
+    throw new Error(user.message || "Erro ao atualizar usuário");
+  }
   revalidateTag("update-user");
   return user;
 }
 
 export const getTeacherUsers = async (id?: string | null) => {
-  const users = await db.user.findMany({
-    where: {
-      OR: [
-        {
-          role: "teacher",
-          teacher_id: null,
-        },
-        {
-          id: id ?? undefined,
-        }
-      ]
-    },
-    omit: {
-      passwd: true,
-    },
-  });
-  return users;
-};
+  const session = await verifySession();
+  return await cashedTeacherUsers(session, id);
+}
+const cashedTeacherUsers = unstable_cache(
+  async (session: VerifySessionType, id?: string | null): Promise<Omit<User, "passwd">[]> => {
+    const response = await authFetch(`${BACKEND_URL}/user/teachers/${id || ""}`, {}, session);
+    const users = await response.json();
+    if (!response.ok) {
+      throw new Error(users.message || "Erro ao buscar professores");
+    }
+    return users;
+  },
+  ["teachers"],
+  {
+    tags: ["update-user", "create-user"],
+  }
+);

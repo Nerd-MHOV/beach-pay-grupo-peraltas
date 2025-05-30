@@ -1,5 +1,5 @@
 @token = {{Login.response.body.$.accessToken}}
-
+@userId = {{Login.response.body.$.id}}
 # @name Login
 POST http://localhost:3001/auth/login/
 content-type: application/json
@@ -15,14 +15,13 @@ content-type: application/json
 GET http://localhost:3001/user/
 Authorization: Bearer {{token}}
 
-
 ###
 GET http://localhost:3001/user/cm9d2pdws0001owyluixxizeb
 Authorization: Bearer {{token}}
 
 
 ### CREATE USER
-POST http://localhost:3001/user/create/
+POST http://localhost:3001/user/
 content-type: application/json
 Authorization: Bearer {{token}}
 
