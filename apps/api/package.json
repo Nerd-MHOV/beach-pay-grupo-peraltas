@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:deploy": "pnpm --filter @beach-pay/database exec prisma migrate deploy && pnpm --filter @beach-pay/database exec prisma generate"
+    "db:deploy": "pnpm --filter @beach-pay/database exec pnpm build && pnpm --filter @beach-pay/database exec prisma migrate deploy && pnpm --filter @beach-pay/database exec prisma generate"
   },
   "dependencies": {
     "@beach-pay/database": "workspace:*",

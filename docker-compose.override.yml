@@ -3,9 +3,18 @@ services:
   web:
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - DATABASE_URL=postgresql://local_user:password@host.docker.internal:5432/beach-pay-nestjs
   api:
     ports:
       - "3001:3001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - DATABASE_URL=postgresql://local_user:password@host.docker.internal:5432/beach-pay-nestjs
+
   # db:
   #   ports:
   #     - "5432:5432"
