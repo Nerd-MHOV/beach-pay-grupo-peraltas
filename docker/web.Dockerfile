@@ -6,8 +6,9 @@ COPY . .
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN apk add --no-cache openssl
+RUN pnpm install --filter @beach-pay/database...
+RUN pnpm --filter @beach-pay/web db:migrate... 
 RUN pnpm install --filter @beach-pay/web...
-RUN pnpm db:generate
 
 WORKDIR /app/apps/web
 

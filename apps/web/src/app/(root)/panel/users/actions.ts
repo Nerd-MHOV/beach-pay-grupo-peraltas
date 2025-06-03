@@ -69,7 +69,6 @@ export const createUser = async (data: Prisma.UserCreateInput) => {
 }
 
 export const updateUser = async (data: Omit<User, "created_at" | "updated_at" | "hashed_refresh_token">) => {
-  console.log(data);
   const response = await authFetch(`${BACKEND_URL}/user/${data.id}`, {
     method: "PATCH",
     headers: {
